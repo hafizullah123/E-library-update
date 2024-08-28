@@ -79,7 +79,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <!-- <a class="navbar-brand" href="#">Shikh Zayed university digital library</a> -->
-      <a class="nav-link" href="" style="color: white;" data-en="Shikh Zayed university digital library" data-ps="شیخ زاید برښنایی کتاب تون" data-fa="کتاب خانه پوهنتون شیخ زاید"></a>
+      <a class="nav-link" href="" style="color: white;" data-en="Kabul Education university digital library" data-ps="کابل ښونی اوروزنی پوهنتون" data-fa="کابل ښونی اوروزنی پوهنتون"></a>
 
       <button
         class="navbar-toggler"
