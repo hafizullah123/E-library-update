@@ -1,6 +1,4 @@
 <?php
-
-
 session_start();
 
 // Check if the user is logged in
@@ -54,8 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $conn->real_escape_string($_POST['name']);
     $number = $conn->real_escape_string($_POST['number']);
     $part = $conn->real_escape_string($_POST['part']);
+    $total = $conn->real_escape_string($_POST['total']);
     
-    $sql = "INSERT INTO book (name, number, part) VALUES ('$name', '$number', '$part')";
+    $sql = "INSERT INTO book (name, number, part, total) VALUES ('$name', '$number', '$part', '$total')";
     
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Book added successfully');</script>";
@@ -65,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fetch data to display
-$sql = "SELECT * FROM book";
+$sql = "SELECT name, number, part, total FROM book";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -115,6 +114,14 @@ $result = $conn->query($sql);
         .form-container input[type="text"],
         .form-container input[type="number"],
         .search-box input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container select {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 5px 0;
@@ -178,7 +185,20 @@ $result = $conn->query($sql);
         <form method="POST" action="">
             <input type="text" name="name" placeholder="<?php echo translate('placeholder_name'); ?>" required>
             <input type="number" name="number" placeholder="<?php echo translate('placeholder_number'); ?>" required>
-            <input type="text" name="part" placeholder="<?php echo translate('placeholder_part'); ?>" required>
+            <select name="part" required>
+                <option value=""><?php echo translate('placeholder_select_part'); ?></option>
+                <?php
+                // Fetch parts from part table
+                $part_sql = "SELECT part_name FROM part";
+                $part_result = $conn->query($part_sql);
+                if ($part_result->num_rows > 0) {
+                    while($part_row = $part_result->fetch_assoc()) {
+                        echo "<option value='".htmlspecialchars($part_row['part_name'])."'>".htmlspecialchars($part_row['part_name'])."</option>";
+                    }
+                }
+                ?>
+            </select>
+            <input type="number" name="total" placeholder="<?php echo translate('placeholder_total'); ?>" required>
             <input type="submit" value="<?php echo translate('button_add_book'); ?>">
         </form>
     </div>
@@ -190,10 +210,10 @@ $result = $conn->query($sql);
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th><?php echo translate('th_name'); ?></th>
                 <th><?php echo translate('th_number'); ?></th>
                 <th><?php echo translate('th_part'); ?></th>
+                <th><?php echo translate('th_total'); ?></th>
             </tr>
         </thead>
         <tbody id="book-table">
@@ -202,10 +222,10 @@ $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     echo "<tr>
-                            <td>" . htmlspecialchars($row["id"]) . "</td>
                             <td>" . htmlspecialchars($row["name"]) . "</td>
                             <td>" . htmlspecialchars($row["number"]) . "</td>
                             <td>" . htmlspecialchars($row["part"]) . "</td>
+                            <td>" . htmlspecialchars($row["total"]) . "</td>
                           </tr>";
                 }
             } else {
@@ -229,26 +249,22 @@ document.getElementById('search').addEventListener('input', function() {
             const tableBody = document.getElementById('book-table');
             tableBody.innerHTML = '';
 
-            if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="4" class="no-records"><?php echo translate('no_records_found'); ?></td></tr>';
-            } else {
-                data.forEach(book => {
-                    const row = document.createElement('tr');
-
-                    row.innerHTML = `
-                        <td>${book.id}</td>
-                        <td>${book.name}</td>
-                        <td>${book.number}</td>
-                        <td>${book.part}</td>
+            if (data.length > 0) {
+                data.forEach(item => {
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.number}</td>
+                            <td>${item.part}</td>
+                            <td>${item.total}</td>
+                        </tr>
                     `;
-
-                    tableBody.appendChild(row);
                 });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan='4' class='no-records'><?php echo translate('no_records_found'); ?></td></tr>`;
             }
-        })
-        .catch(error => console.error('Error fetching data:', error));
+        });
 });
 </script>
-
 </body>
 </html>
