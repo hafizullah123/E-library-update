@@ -146,18 +146,11 @@
     </script>
   </head>
   <body>
-    <!-- Language Selector -->
-    <div class="container my-3">
-      <select id="languageSelector" class="form-control" onchange="changeLanguage()">
-        <option value="en">English</option>
-        <option value="ps">Pashto</option>
-        <option value="fa">Dari</option>
-      </select>
-    </div>
+    
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="nav-link" href="#" style="color: white;" data-en="Kabul Education University Digital Library" data-ps="کابل ښونی او روزنی پوهنتون" data-fa="کابل آموزشی پوهنتون"></a>
+      <a class="nav-link" href="#" style="color: white;" data-en="Kabul Education University Digital Library" data-ps="کابل ښونی او روزنی پوهنتون" data-fa="     پوهنتون"></a>
 
       <button
         class="navbar-toggler"
@@ -173,11 +166,19 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="about.html" data-en="About" data-ps="زموږ په اړه" data-fa="درباره ما">About</a>
+            <a class="nav-link" href="about.php" data-en="About" data-ps="زموږ په اړه" data-fa="درباره ما">About</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="login.php" data-en="Login" data-ps="ننوتل" data-fa="ورود">Login</a>
           </li>
+          <li><!-- Language Selector -->
+    <div class="container my-3">
+      <select id="languageSelector" class="form-control" onchange="changeLanguage()">
+        <option value="en">English</option>
+        <option value="ps">Pashto</option>
+        <option value="fa">Dari</option>
+      </select>
+    </div></li>
         </ul>
       </div>
     </nav>
@@ -191,13 +192,25 @@
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="IMG/1.jpg" alt="First slide" />
+          <img src="image/ss.jpg" alt="First slide" />
         </div>
         <div class="carousel-item">
-          <img src="IMG/2.jpg" alt="Second slide" />
+          <img src="image/s8.jpg" alt="Second slide" />
         </div>
         <div class="carousel-item">
-          <img src="IMG/3.jpg" alt="Third slide" />
+          <img src="image/s7.jpg" alt="Third slide" />
+        </div>
+        <div class="carousel-item">
+          <img src="image/s5.jpg" alt="Third slide" />
+        </div>
+        <div class="carousel-item">
+          <img src="image/s3.jpg" alt="Third slide" />
+        </div>
+        <div class="carousel-item">
+          <img src="image/s1.jpg" alt="Third slide" />
+        </div>
+        <div class="carousel-item">
+          <img src="image/s2.jpg" alt="Third slide" />
         </div>
       </div>
       <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -219,7 +232,7 @@
         <div class="col-md-4 box" data-toggle="modal" data-target="#modal1">
           <img src="IMG/4.JPG" alt="Image 1" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Computer sense faculty" data-ps="کمپیوترساینس پوهنځی" data-fa="فاکولته علم کامپیوتر"></h5>
+            <h5 class="mt-3" data-en="Computer sense faculty" data-ps="کمپیوترساینس پوهنځی" data-fa="پوهنځی کمپیوتر ساینس "></h5>
           </div>
         </div>
 
@@ -237,13 +250,62 @@
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
             <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
           </div>
+     
+    </div>
+
+    <!-- box four -->
+    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+          <img src="IMG/6.JPG" alt="Image 3" />
+          <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
+            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+          </div>
+        </div>
+     
+    <!-- box five -->
+    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+          <img src="IMG/6.JPG" alt="Image 3" />
+          <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
+            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+          </div>
+        </div>
+     
+    <!-- box sex -->
+    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+          <img src="IMG/6.JPG" alt="Image 3" />
+          <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
+            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+          </div>
+        </div>
+     
+    <!-- box senven  -->
+    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+          <img src="IMG/6.JPG" alt="Image 3" />
+          <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
+            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+          </div>
+        </div>
+      
+    <!-- box eight -->
+    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+          <img src="IMG/6.JPG" alt="Image 3" />
+          <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
+            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+          </div>
+        </div>
+      
+    <!-- box nonthe -->
+    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+          <img src="IMG/6.JPG" alt="Image 3" />
+          <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
+            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Modals -->
     <!-- Modal 1 -->
-    <div class="modal fade custom-modal" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1Label" aria-hidden="true">
+    <!-- <div class="modal fade custom-modal" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1Label" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -257,10 +319,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Modal 2 -->
-    <div class="modal fade custom-modal" id="modal2" tabindex="-1" role="dialog" aria-labelledby="modal2Label" aria-hidden="true">
+    <!-- <div class="modal fade custom-modal" id="modal2" tabindex="-1" role="dialog" aria-labelledby="modal2Label" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -274,10 +336,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Modal 3 -->
-    <div class="modal fade custom-modal" id="modal3" tabindex="-1" role="dialog" aria-labelledby="modal3Label" aria-hidden="true">
+    <!-- <div class="modal fade custom-modal" id="modal3" tabindex="-1" role="dialog" aria-labelledby="modal3Label" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -291,7 +353,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Gallery -->
     
