@@ -230,74 +230,74 @@
       <div class="row">
         <!-- Box 1 -->
         <div class="col-md-4 box" data-toggle="modal" data-target="#modal1">
-          <img src="IMG/4.JPG" alt="Image 1" />
+          <img src="image/n1.JPG" alt="Image 1" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Computer sense faculty" data-ps="کمپیوترساینس پوهنځی" data-fa="پوهنځی کمپیوتر ساینس "></h5>
+            <h5 class="mt-3" data-en="Faculty of natural sciences" data-ps="د تعلمی او مسلکی علومو پوهنځی" data-fa=" پوهنځی علوم تربیتی و مسلکی "></h5>
           </div>
         </div>
 
         <!-- Box 2 -->
         <div class="col-md-4 box" data-toggle="modal" data-target="#modal2">
-          <img src="IMG/5.JPG" alt="Image 2" />
+          <img src="image/l.webp" alt="Image 2" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="English language faculty" data-ps="انګلیسي ژبې پوهنځی" data-fa="فاکولته زبان انگلیسی"></h5>
+            <h5 class="mt-3" data-en="Faculty of literature" data-ps="د ژبو او ادبیاتو پوهنځی" data-fa="پوهنځی زبان و ادبیات"></h5>
           </div>
         </div>
 
         <!-- Box 3 -->
         <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/co.webp" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en=" Faculty of Computer sciences" data-ps=" د کمپیوټر ساینس پوهنځی" data-fa="پوهنځی کمپیوترساینس"></h5>
           </div>
      
     </div>
 
     <!-- box four -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/i.webp" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en=" Faculty of Islamic sciences" data-ps="د اسلامی علوم پوهنځی" data-fa="پوهنځی علوم اسلامی"></h5>
           </div>
         </div>
      
     <!-- box five -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/h.jpeg" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en="Faculty of Social Sciences" data-ps=" د ټولنیزو علوم پوهنځی" data-fa="پوهنځی علوم اجتماعی "></h5>
           </div>
         </div>
      
     <!-- box sex -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/g.webp" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en="Faculty of Natural Sciences" data-ps="د طبیعی علومو پوهنځی" data-fa="پوهنځی علوم طبیعی"></h5>
           </div>
         </div>
      
     <!-- box senven  -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/cyco.jpg" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en="Faculty of Psychology" data-ps="د اروا پوهنې پوهنځی" data-fa="پوهنځی روانشناسی"></h5>
           </div>
         </div>
       
     <!-- box eight -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/crket.JPG" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en="Faculty of Physical Education and Sports Sciences" data-ps="د فزیکي زده کړو او سپورت علومو پوهنځی" data-fa="پوهنځی تر بیت بدنی "></h5>
           </div>
         </div>
       
     <!-- box nonthe -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="IMG/6.JPG" alt="Image 3" />
+          <img src="image/edu.webp" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Engineering faculty" data-ps="انجنیرۍ پوهنځی" data-fa="فاکولته مهندسی"></h5>
+            <h5 class="mt-3" data-en="Faculty of Special Education" data-ps="د اختصاصی زده کړو پوهنځی" data-fa="پوهنځی تعلیمات اختصاصی"></h5>
           </div>
         </div>
       </div>
@@ -356,49 +356,74 @@
     </div> -->
 
     <!-- Gallery -->
-    
+    <h2 style="display: flex; justify-content: center; align-items: center; height: 8vh; text-align: center; font-size: 2rem; color: #333;">
+    Gallery
+</h2>
+
     <div class="container mt-5">
         <div class="row">
             <!-- Gallery Item 1 -->
             <div class="col-md-4">
                 <div class="gallery-item">
-                    <img src="IMG/7.JPG" alt="Gallery Image 1" class="gallery-image">
-                    <div class="gallery-overlay">Image 1</div>
+                    <img src="image/b.jpg" alt="Gallery Image 1" class="gallery-image">
+                    <div class="gallery-overlay">بند آمیر</div>
                 </div>
             </div>
             <!-- Gallery Item 2 -->
             <div class="col-md-4">
                 <div class="gallery-item">
-                    <img src="IMG/8.JPG" alt="Gallery Image 2" class="gallery-image">
-                    <div class="gallery-overlay">Image 2</div>
+                    <img src="image/b1.jpg" alt="Gallery Image 2" class="gallery-image">
+                    <div class="gallery-overlay">بند آمیر</div>
                 </div>
             </div>
             <!-- Gallery Item 3 -->
             <div class="col-md-4">
                 <div class="gallery-item">
-                    <img src="IMG/9.JPG" alt="Gallery Image 3" class="gallery-image">
-                    <div class="gallery-overlay">Image 3</div>
+                    <img src="image/b2.jpg" alt="Gallery Image 3" class="gallery-image">
+                    <div class="gallery-overlay">بند آمیر</div>
                 </div>
             </div>
             <!-- Gallery Item 4 -->
             <div class="col-md-4">
                 <div class="gallery-item">
-                    <img src="IMG/9.JPG" alt="Gallery Image 4" class="gallery-image">
-                    <div class="gallery-overlay">Image 4</div>
+                    <img src="image/n5.jpg" alt="Gallery Image 4" class="gallery-image">
+                    <div class="gallery-overlay">نورستان</div>
                 </div>
             </div>
             <!-- Gallery Item 5 -->
             <div class="col-md-4">
                 <div class="gallery-item">
-                    <img src="IMG/5.JPG" alt="Gallery Image 5" class="gallery-image">
-                    <div class="gallery-overlay">Image 5</div>
+                    <img src="image/n2.jpg" alt="Gallery Image 5" class="gallery-image">
+                    <div class="gallery-overlay">نورستان</div>
                 </div>
             </div>
             <!-- Gallery Item 6 -->
             <div class="col-md-4">
                 <div class="gallery-item">
-                    <img src="IMG/6.JPG" alt="Gallery Image 6" class="gallery-image">
-                    <div class="gallery-overlay">Image 6</div>
+                    <img src="image/n4.jpg" alt="Gallery Image 6" class="gallery-image">
+                    <div class="gallery-overlay">نورستان</div>
+                </div>
+            </div>
+
+             <!-- Gallery Item 7 -->
+             <div class="col-md-4">
+                <div class="gallery-item">
+                    <img src="image/g4.jpeg" alt="Gallery Image 6" class="gallery-image">
+                    <div class="gallery-overlay">شاه دوشمشیره</div>
+                </div>
+            </div>
+             <!-- Gallery Item 8 -->
+             <div class="col-md-4">
+                <div class="gallery-item">
+                    <img src="image/g5.jpeg" alt="Gallery Image 6" class="gallery-image">
+                    <div class="gallery-overlay">دار الامان ماڼی</div>
+                </div>
+            </div>
+             <!-- Gallery Item 9 -->
+             <div class="col-md-4">
+                <div class="gallery-item">
+                    <img src="image/g7.jpg" alt="Gallery Image 6" class="gallery-image">
+                    <div class="gallery-overlay">کابل</div>
                 </div>
             </div>
         </div>
