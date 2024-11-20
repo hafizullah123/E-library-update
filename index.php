@@ -150,7 +150,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="nav-link" href="#" style="color: white;" data-en="Kabul Education University Digital Library" data-ps="کابل ښونی او روزنی پوهنتون" data-fa="     پوهنتون"></a>
+      <a class="nav-link" href="#" style="color: white;" data-en="Kabul Education University Digital Library" data-ps=" کابل ښونې او روزنې پوهنتون دیجیتلی کتابتون" data-fa="       پوهنتون تعلیم وتربیه کابل  کتابخانه دیجیتلی"></a>
 
       <button
         class="navbar-toggler"
