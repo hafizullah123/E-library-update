@@ -7,7 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php?action=login");
     exit;
 }
+
 include 'connection.php';
+
 // Define a function to get localized text
 function getLocalizedText($key, $lang) {
     $translations = [
@@ -176,6 +178,7 @@ $result = $conn->query($sql);
             text-align: right;
         }
         <?php endif; ?>
+
         .container-box {
             background-color: #f8f9fa;
             padding: 20px;
@@ -183,10 +186,7 @@ $result = $conn->query($sql);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
-        .search-input {
-            border-radius: 5px;
-        }
-        .search-btn {
+        .search-input, .search-btn {
             border-radius: 5px;
         }
         .modal-dialog {
@@ -223,12 +223,30 @@ $result = $conn->query($sql);
             font-size: 16px;
         }
         .table th {
-            background-color: #f2f2f2; /* Gray background for table headers */
-            color: #333; /* Text color for table headers */
-            font-weight: bold; /* Bold font weight for table headers */
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
         }
         .icon-column {
-            width: 150px; /* Adjusted width */
+            width: 150px;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 576px) {
+            .search-input, .search-btn {
+                font-size: 14px;
+                padding: 10px;
+            }
+            table th, table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+            .book-name-column, .author-column, .genre-column {
+                display: none;
+            }
+            .icon-column {
+                width: auto;
+            }
         }
     </style>
 </head>
@@ -271,47 +289,42 @@ $result = $conn->query($sql);
             <thead>
                 <tr>
                     <th><?php echo getLocalizedText('cover_image', $lang); ?></th>
-                    <th><?php echo getLocalizedText('book_name', $lang); ?></th>
-                    <th><?php echo getLocalizedText('author_name', $lang); ?></th>
-                    <th><?php echo getLocalizedText('genre', $lang); ?></th>
+                    <th class="book-name-column"><?php echo getLocalizedText('book_name', $lang); ?></th>
                     <th class="icon-column"><?php echo getLocalizedText('actions', $lang); ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()) : ?>
                     <tr>
-                        <td><img src="<?php echo htmlspecialchars($row['cover_image']); ?>" alt="Cover Image" class="img-thumbnail book-image" data-toggle="modal" data-target="#bookModal-<?php echo $row['book_id']; ?>"></td>
-                        <td class="truncate"><?php echo htmlspecialchars($row['book_name']); ?></td>
-                        <td class="truncate"><?php echo htmlspecialchars($row['author_name']); ?></td>
-                        <td class="truncate"><?php echo htmlspecialchars($row['genre']); ?></td>
-                        <td class="text-center">
-                            <a href="<?php echo htmlspecialchars($row['pdf']); ?>" class="btn btn-sm btn-primary" download>
-                                <i class="fas fa-download"></i>
-                            </a>
+                        <td><img src="<?php echo $row['cover_image']; ?>" class="book-image" alt="Book Cover"></td>
+                        <td class="book-name-column"><?php echo $row['book_name']; ?></td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#bookModal<?php echo $row['book_id']; ?>"><?php echo getLocalizedText('view_details', $lang); ?></button>
+                            <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-success"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
                         </td>
                     </tr>
 
-                    <!-- Modal for Book Details -->
-                    <div class="modal fade" id="bookModal-<?php echo $row['book_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel-<?php echo $row['book_id']; ?>" aria-hidden="true">
+                    <!-- Modal -->
+                    <div class="modal fade" id="bookModal<?php echo $row['book_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="bookModalLabel-<?php echo $row['book_id']; ?>"><?php echo htmlspecialchars($row['book_name']); ?></h5>
+                                    <h5 class="modal-title" id="bookModalLabel"><?php echo $row['book_name']; ?></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <img src="<?php echo htmlspecialchars($row['cover_image']); ?>" alt="Cover Image" class="img-thumbnail modal-cover-image mb-3">
-                                    <p><strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>
-                                    <p><strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong> <?php echo htmlspecialchars($row['isbn_number']); ?></p>
-                                    <p><strong><?php echo getLocalizedText('genre', $lang); ?>:</strong> <?php echo htmlspecialchars($row['genre']); ?></p>
-                                    <p><strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong> <?php echo htmlspecialchars($row['publication_date']); ?></p>
-                                    <p><strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong> <?php echo htmlspecialchars($row['publisher']); ?></p>
-                                    <p><strong><?php echo getLocalizedText('description', $lang); ?>:</strong> <span class="modal-description"><?php echo htmlspecialchars($row['description']); ?></span></p>
+                                    <img src="<?php echo $row['cover_image']; ?>" class="modal-cover-image" alt="Cover Image">
+                                    <p><strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo $row['author_name']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong> <?php echo $row['isbn_number']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong> <?php echo $row['publication_date']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong> <?php echo $row['publisher']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('description', $lang); ?>:</strong> <?php echo $row['description']; ?></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo getLocalizedText('close', $lang); ?></button>
+                                    <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-primary"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
                                 </div>
                             </div>
                         </div>
@@ -319,18 +332,14 @@ $result = $conn->query($sql);
                 <?php endwhile; ?>
             </tbody>
         </table>
-    <?php else : ?>
-        <p class="text-center"><?php echo getLocalizedText('no_books_found', $lang); ?></p>
+    <?php else: ?>
+        <p><?php echo getLocalizedText('no_books_found', $lang); ?></p>
     <?php endif; ?>
 </div>
 
+<!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-<?php
-// Close the database connection
-$conn->close();
-?>
