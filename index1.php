@@ -194,16 +194,16 @@
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="image/sm3.jpg" alt="First slide" />
+          <img src="image/ss.jpg" alt="First slide" />
         </div>
         <div class="carousel-item">
-          <img src="image/sm1.jpg" alt="Second slide" />
+          <img src="image/s8.jpg" alt="Second slide" />
         </div>
         <div class="carousel-item">
-          <img src="image/sm2.jpg" alt="Third slide" />
+          <img src="image/s7.jpg" alt="Third slide" />
         </div>
-        <!-- <div class="carousel-item">
-          <img src="image/sm3.jpg" alt="Third slide" />
+        <div class="carousel-item">
+          <img src="image/s5.jpg" alt="Third slide" />
         </div>
         <div class="carousel-item">
           <img src="image/s3.jpg" alt="Third slide" />
@@ -213,7 +213,7 @@
         </div>
         <div class="carousel-item">
           <img src="image/s2.jpg" alt="Third slide" />
-        </div> -->
+        </div>
       </div>
       <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
