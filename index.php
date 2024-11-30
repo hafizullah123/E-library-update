@@ -232,17 +232,17 @@
       <div class="row">
         <!-- Box 1 -->
         <div class="col-md-4 box" data-toggle="modal" data-target="#modal1">
-          <img src="image/n1.JPG" alt="Image 1" />
+          <img src="image/econo.JPG" alt="Image 1" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Faculty of natural sciences" data-ps="د تعلمی او مسلکی علومو پوهنځی" data-fa=" پوهنځی علوم تربیتی و مسلکی "></h5>
+            <h5 class="mt-3" data-en="Faculty of Economics " data-ps="د اقتصاد پوهنځی" data-fa=" پوهنځی اقتصاد "></h5>
           </div>
         </div>
 
         <!-- Box 2 -->
         <div class="col-md-4 box" data-toggle="modal" data-target="#modal2">
-          <img src="image/l.webp" alt="Image 2" />
+          <img src="image/mes.jpg" alt="Image 2" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Faculty of literature" data-ps="د ژبو او ادبیاتو پوهنځی" data-fa="پوهنځی زبان و ادبیات"></h5>
+            <h5 class="mt-3" data-en="Faculty of Geology and mine" data-ps="د جیولوژی او معدن پوهنځی" data-fa="پوهنځی جیولوژی و معدن"></h5>
           </div>
         </div>
 
@@ -265,43 +265,43 @@
      
     <!-- box five -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="image/h.jpeg" alt="Image 3" />
+          <img src="image/edu.webp" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Faculty of Social Sciences" data-ps=" د ټولنیزو علوم پوهنځی" data-fa="پوهنځی علوم اجتماعی "></h5>
+            <h5 class="mt-3" data-en="Faculty of Education and training" data-ps=" د ښونې اوروزنې پوهنځی" data-fa="پوهنځی تعلیم وتربیه  "></h5>
           </div>
         </div>
      
     <!-- box sex -->
     <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
-          <img src="image/g.webp" alt="Image 3" />
+          <img src="image/n1.jpg" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
-            <h5 class="mt-3" data-en="Faculty of Natural Sciences" data-ps="د طبیعی علومو پوهنځی" data-fa="پوهنځی علوم طبیعی"></h5>
+            <h5 class="mt-3" data-en="Faculty of Agriculture " data-ps="د کرنې  پوهنځی" data-fa="پوهنځی زراعت"></h5>
           </div>
         </div>
      
     <!-- box senven  -->
-    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+    <!-- <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
           <img src="image/cyco.jpg" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
             <h5 class="mt-3" data-en="Faculty of Psychology" data-ps="د اروا پوهنې پوهنځی" data-fa="پوهنځی روانشناسی"></h5>
           </div>
-        </div>
+        </div> -->
       
     <!-- box eight -->
-    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+    <!-- <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
           <img src="image/crket.JPG" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
             <h5 class="mt-3" data-en="Faculty of Physical Education and Sports Sciences" data-ps="د فزیکي زده کړو او سپورت علومو پوهنځی" data-fa="پوهنځی تر بیت بدنی "></h5>
           </div>
-        </div>
+        </div> -->
       
     <!-- box nonthe -->
-    <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
+    <!-- <div class="col-md-4 box" data-toggle="modal" data-target="#modal3">
           <img src="image/edu.webp" alt="Image 3" />
           <div class="d-flex justify-content-center align-items-center" style="height: 20vh;">
             <h5 class="mt-3" data-en="Faculty of Special Education" data-ps="د اختصاصی زده کړو پوهنځی" data-fa="پوهنځی تعلیمات اختصاصی"></h5>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -441,24 +441,24 @@
             <h5>Quick Links</h5>
             <ul class="list-unstyled footer-links">
               <li><a href="#" data-en="Home" data-ps="کور" data-fa="خانه">Home</a></li>
-              <li><a href="#" data-en="About" data-ps="زموږ په اړه" data-fa="درباره ما">About</a></li>
+              <li><a href="about.php" data-en="About" data-ps="زموږ په اړه" data-fa="درباره ما">About</a></li>
               <li><a href="#" data-en="Contact" data-ps="اړیکه" data-fa="تماس">Contact</a></li>
             </ul>
           </div>
           <div class="col-md-4">
             <h5>Social Media</h5>
             <ul class="list-unstyled">
-              <li><a href="#" data-en="Facebook" data-ps="فیس بوک" data-fa="فیس‌بوک">Facebook</a></li>
-              <li><a href="#" data-en="Twitter" data-ps="ټویټر" data-fa="توییتر">Twitter</a></li>
-              <li><a href="#" data-en="Instagram" data-ps="انسټاګرام" data-fa="اینستاگرام">Instagram</a></li>
+              <li><a href="https://www.facebook.com/www.smgu.edu.af" data-en="Facebook" data-ps="فیس بوک" data-fa="فیس‌بوک">Facebook</a></li>
+              <li><a href="https://x.com/i/flow/login?redirect_after_login=%2FSMG_University" data-en="Twitter" data-ps="ټویټر" data-fa="توییتر">Twitter</a></li>
+              <li><a href="https://www.youtube.com/channel/UCc2mgYejVj7sX17YTFr5pAA" data-en="YouTube" data-ps=" یوټوب" data-fa="یوتوب">YouTube</a></li>
             </ul>
           </div>
           <div class="col-md-4">
             <h5>Contact Information</h5>
             <ul class="list-unstyled">
-              <li><a href="mailto:info@example.com" data-en="info@example.com" data-ps="info@example.com" data-fa="info@example.com">info@example.com</a></li>
-              <li><a href="tel:+1234567890" data-en="+123 456 7890" data-ps="+123 456 7890" data-fa="+123 456 7890">+123 456 7890</a></li>
-              <li>123 Main Street, City, Country</li>
+              <li><a href="mailto:info@smgu.edu.af" data-en="info@smgu.edu.af" data-ps="info@smgu.edu.af" data-fa="info@smgu.edu.af">info@smgu.edu.af</a></li>
+              <li><a href="tel:+93(0)799505012" data-en="0799505012" data-ps="0799505012" data-fa="0799505012">0799505012</a></li>
+              <li>Northeast Aybak City, Samangan, Afghanistan</li>
             </ul>
           </div>
         </div>
