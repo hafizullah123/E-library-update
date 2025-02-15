@@ -16,6 +16,7 @@ $lang = array(
         "publication_date" => "د خپریدو نیټه",
         "publisher" => "خپرونکی",
         "actions" => "عملونه"
+         "type" => "ډول"
     ),
     "modal_title" => "د کتاب توضیحات",
     "modal_labels" => array(
@@ -25,7 +26,8 @@ $lang = array(
         "genre" => "ژانر",
         "publication_date" => "د خپریدو نیټه",
         "publisher" => "خپرونکی",
-        "description" => "تفصیل"
+        "description" => "تفصیل",
+          "type" => "ډول"
     ),
     "no_books_found" => "هیڅ کتاب ونه موندل شو.",
     "download_pdf" => "PDF ښکته کړئ"

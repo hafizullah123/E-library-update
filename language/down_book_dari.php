@@ -16,7 +16,8 @@ $lang = array(
         "isbn_number" => "ISBN",
         "publication_date" => "تاریخ انتشار",
         "publisher" => "ناشر",
-        "actions" => "اقدامات"
+        "actions" => "اقدامات",
+        "type" => "نوعیت"
     ),
     "modal_title" => "جزئیات کتاب",
     "modal_labels" => array(
@@ -26,7 +27,8 @@ $lang = array(
         "genre" => "ژانر",
         "publication_date" => "تاریخ انتشار",
         "publisher" => "ناشر",
-        "description" => "توضیحات"
+        "description" => "توضیحات",
+        "type" => "نوعیت"
     ),
     "no_books_found" => "کتابی پیدا نشد.",
     "download_pdf" => "دانلود PDF"

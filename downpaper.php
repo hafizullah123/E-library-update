@@ -126,6 +126,8 @@ function getFirstFiveWords($text) {
                     <th><?php echo $translations['author']; ?></th>
                     <th><?php echo $translations['publication_date']; ?></th>
                     <th><?php echo $translations['actions']; ?></th>
+                    <!-- <th><?php echo $translations['type']; ?></th> -->
+
                 </tr>
             </thead>
             <tbody>
@@ -170,6 +172,10 @@ function getFirstFiveWords($text) {
                         <div class="modal-description"><?php echo htmlspecialchars($row['description']); ?></div>
                         <p><strong><?php echo $translations['author']; ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>
                         <p><strong><?php echo $translations['publication_date']; ?>:</strong> <?php echo htmlspecialchars($row['publication_date']); ?></p>
+
+
+                        <p><strong><?php echo $translations['type']; ?>:</strong> <?php echo htmlspecialchars($row['type']); ?></p>
+
                         <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> <?php echo $translations['modal_download']; ?></a>
                     </div>
                 </div>

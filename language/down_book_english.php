@@ -15,7 +15,8 @@ $lang = array(
         "isbn_number" => "ISBN",
         "publication_date" => "Publication Date",
         "publisher" => "Publisher",
-        "actions" => "Actions"
+        "actions" => "Actions",
+        "type" => "type"
     ),
     "modal_title" => "Book Details",
     "modal_labels" => array(
@@ -25,7 +26,8 @@ $lang = array(
         "genre" => "Genre",
         "publication_date" => "Publication Date",
         "publisher" => "Publisher",
-        "description" => "Description"
+        "description" => "Description",
+         "type" => "type"
     ),
     "no_books_found" => "No books found.",
     "download_pdf" => "Download PDF"

@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updateDescription = mysqli_real_escape_string($conn, $_POST['updateDescription']);
     $updateAuthor = mysqli_real_escape_string($conn, $_POST['updateAuthor']);
     $updatePublicationDate = $_POST['updatePublicationDate'];
+    $type = $_POST['type'];
 
     // Handle PDF file upload if provided
     $updatePDF = $_FILES['updatePDF'];
@@ -102,10 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($pdf_tmp, $pdf_path);
 
         // Update query with PDF file path
-        $sql = "UPDATE research_papers SET title='$updateTitle', description='$updateDescription', author_name='$updateAuthor', publication_date='$updatePublicationDate', pdf='$pdf_name' WHERE paper_id=$paper_id";
+        $sql = "UPDATE research_papers SET title='$updateTitle', description='$updateDescription', author_name='$updateAuthor', publication_date='$updatePublicationDate', pdf='$pdf_name', type= '$type' WHERE paper_id=$paper_id";
     } else {
         // Update query without changing the PDF file
-        $sql = "UPDATE research_papers SET title='$updateTitle', description='$updateDescription', author_name='$updateAuthor', publication_date='$updatePublicationDate' WHERE paper_id=$paper_id";
+        $sql = "UPDATE research_papers SET title='$updateTitle', description='$updateDescription', author_name='$updateAuthor', publication_date='$updatePublicationDate', type= '$type' WHERE paper_id=$paper_id";
     }
 
     // Execute the update query
