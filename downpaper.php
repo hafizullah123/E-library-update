@@ -141,7 +141,7 @@ function getFirstFiveWords($text) {
                             <td><?php echo htmlspecialchars($row['author_name']); ?></td>
                             <td><?php echo htmlspecialchars($row['publication_date']); ?></td>
                             <td class="icon-column">
-                                <a href="uploads/<?php echo htmlspecialchars($row['pdf']); ?>" class="btn btn-success" download><i class="fas fa-download"></i> <?php echo $translations['download']; ?></a>
+                                <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" class="btn btn-success" download><i class="fas fa-download"></i> <?php echo $translations['download']; ?></a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -170,7 +170,7 @@ function getFirstFiveWords($text) {
                         <div class="modal-description"><?php echo htmlspecialchars($row['description']); ?></div>
                         <p><strong><?php echo $translations['author']; ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>
                         <p><strong><?php echo $translations['publication_date']; ?>:</strong> <?php echo htmlspecialchars($row['publication_date']); ?></p>
-                        <a href="uploads/<?php echo htmlspecialchars($row['pdf']); ?>" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> <?php echo $translations['modal_download']; ?></a>
+                        <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> <?php echo $translations['modal_download']; ?></a>
                     </div>
                 </div>
             </div>

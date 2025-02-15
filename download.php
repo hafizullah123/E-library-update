@@ -1,4 +1,5 @@
 <?php
+// Start the session
 session_start();
 
 // Check if the user is logged in
@@ -8,30 +9,34 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-include 'connection.php';
-
-// Check if the file ID is provided
-if (!isset($_GET['file_id'])) {
-    echo "Invalid file request.";
+// Check if the file_id parameter is provided in the URL
+if (!isset($_GET['file_id']) || empty($_GET['file_id'])) {
+    echo "Invalid file request. File ID is missing or empty.";
     exit;
 }
 
-$file_id = intval($_GET['file_id']);
+// Sanitize and validate the file_id parameter
+$file_id = intval($_GET['file_id']); // Convert to integer
 
-// Fetch file details from the database
-$sql = "SELECT pdf FROM books WHERE id = ?";
+// Include database connection
+include 'connection.php';
+
+// Query to retrieve the file details
+$sql = "SELECT name, pdf FROM books WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $file_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Check if a file was found
 if ($result->num_rows > 0) {
+    // Fetch the file details
     $file = $result->fetch_assoc();
-    $file_path = $file['pdf'];
+    $file_path = $file['pdf']; // Path to the file from the database
 
     // Check if the file exists on the server
     if (file_exists($file_path)) {
-        // Set headers for file download
+        // Send appropriate headers to initiate a file download
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . basename($file_path) . '"');
@@ -44,13 +49,15 @@ if ($result->num_rows > 0) {
         readfile($file_path);
         exit;
     } else {
-        echo "The requested file does not exist.";
+        // File does not exist on the server
+        echo "The requested file does not exist on the server.";
     }
 } else {
+    // File ID not found in the database
     echo "File not found in the database.";
 }
 
-// Close the statement and database connection
+// Close the statement and the database connection
 $stmt->close();
 $conn->close();
 ?>

@@ -53,7 +53,9 @@ $lang_files = [
         'add_book_paper' => 'Add Book and Papers',
         'update_books' => 'Update Books',
         'update_schedule' => 'Update Schedule',
+        
         'report' => 'Report',
+        'paper report' => 'Report',
         'books_count' => 'Books Count',
         'papers_count' => 'Papers Count',
         'users_count' => 'Users Count',
@@ -88,6 +90,7 @@ $lang_files = [
         'update_books' => 'کتابونه تازه کړئ',
         'update_schedule' => 'مهالوېش تازه کړئ',
         'report' => 'راپور',
+        'paper report' => 'مقلو شمیر',
         'books_count' => 'د کتابونو شمېر',
         'papers_count' => 'د مقالو شمېر',
         'users_count' => 'د کارونکو شمېر',
@@ -122,6 +125,7 @@ $lang_files = [
         'update_books' => 'بروزرسانی کتاب‌ها',
         'update_schedule' => 'بروزرسانی برنامه',
         'report' => 'گزارش',
+        'paper report' => 'تعداد مقاله',
         'books_count' => 'تعداد کتاب‌ها',
         'papers_count' => 'تعداد مقاله‌ها',
         'users_count' => 'تعداد کاربران',
@@ -280,6 +284,7 @@ if ($genres_result->num_rows > 0) {
                     <a class="dropdown-item" href="update_schedul.php"><?php echo $lang['update_schedule']; ?></a>
                     <a class="dropdown-item" href="report.php"><?php echo $lang['report']; ?></a>
                     <a class="dropdown-item" href="genre.php"><?php echo $lang['report']; ?></a>
+                    <a class="dropdown-item" href="paper_count.php"><?php echo $lang['paper report']; ?></a>
                 </div>
             </li>
             <li class="nav-item dropdown">

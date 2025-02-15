@@ -27,6 +27,7 @@ function getLocalizedText($key, $lang) {
                 'publication_date' => 'د خپریدو نیټه:',
                 'paper_abstract' => 'خلاصه:',
                 'pdf_file' => 'PDF فایل:',
+                'type' => 'ډول:',
                 'add_paper' => 'مقاله اضافه کړئ',
                 'success_message' => 'مقاله په بریالیتوب سره اضافه شوه',
                 'error_message' => 'د مقالې په اضافه کولو کې تېروتنه: '
@@ -40,6 +41,7 @@ function getLocalizedText($key, $lang) {
                 'publication_date' => 'تاریخ انتشار:',
                 'paper_abstract' => 'چکیده:',
                 'pdf_file' => 'فایل PDF:',
+                'type' => 'نوعیت',
                 'add_paper' => 'افزودن مقاله',
                 'success_message' => 'مقاله با موفقیت اضافه شد',
                 'error_message' => 'خطا در افزودن مقاله: '
@@ -53,6 +55,7 @@ function getLocalizedText($key, $lang) {
                 'publication_date' => 'Publication Date:',
                 'paper_abstract' => 'Abstract:',
                 'pdf_file' => 'PDF File:',
+                'type'=> 'type:',
                 'add_paper' => 'Add Paper',
                 'success_message' => 'Research paper added successfully',
                 'error_message' => 'Error adding research paper: '
@@ -68,17 +71,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $researcherName = isset($_POST["researcherName"]) ? $_POST["researcherName"] : "";
     $publicationDate = isset($_POST["paperPublicationDate"]) ? $_POST["paperPublicationDate"] : "";
     $paperAbstract = isset($_POST["paperAbstract"]) ? $_POST["paperAbstract"] : "";
+    $type = isset($_POST["type"]) ? $_POST["type"] : "";
+
 
     // Upload PDF file
-    $pdfName = "";
-    if ($_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
-        $pdfName = $_FILES['pdf']['name'];
+    $pdfName = ""; 
+
+    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
+        $pdfName = str_replace(" ", "_", $_FILES['pdf']['name']); // Fix spaces in file name
         $pdfTemp = $_FILES['pdf']['tmp_name'];
-        move_uploaded_file($pdfTemp, 'paper/' . $pdfName);
+        $uploadDir = 'paper/';
+    
+        // Ensure the folder exists
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+    
+        // Move uploaded file
+        if (move_uploaded_file($pdfTemp, $uploadDir . $pdfName)) {
+            echo "File uploaded successfully: <a href='$uploadDir$pdfName'>$pdfName</a>";
+        } else {
+            echo "File upload failed!";
+        }
+    } else {
+        echo "Error: " . $_FILES['pdf']['error']; // Show error if upload fails
     }
+    
 
     // Insert research paper into the database (sanitization needed)
-    $sql = "INSERT INTO research_papers (title, author_name, publication_date, description, pdf) VALUES ('$paperTitle', '$researcherName', '$publicationDate', '$paperAbstract', '$pdfName')";
+    $sql = "INSERT INTO research_papers (title, author_name, publication_date, description, pdf,type) VALUES ('$paperTitle', '$researcherName', '$publicationDate', '$paperAbstract', '$pdfName','$type')";
     if (mysqli_query($conn, $sql)) {
         $message = getLocalizedText('success_message', $lang);
     } else {
@@ -156,6 +177,10 @@ mysqli_close($conn);
                 <div class="form-group">
                     <label for="pdf"><?php echo getLocalizedText('pdf_file', $lang); ?></label>
                     <input type="file" class="form-control-file" id="pdf" name="pdf">
+                </div>
+                <div class="form-group">
+                    <label for="pdf"><?php echo getLocalizedText('type', $lang); ?></label>
+                    <input type="text" class="form-control-file" id="type" name="type">
                 </div>
                 <button type="submit" class="btn btn-primary"><?php echo getLocalizedText('add_paper', $lang); ?></button>
             </form>
