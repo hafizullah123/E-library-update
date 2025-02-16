@@ -12,6 +12,7 @@ return [
     'download' => 'ډاونلوډ',
     'author' => 'لیکوال',
     'publication_date' => 'د خپریدو نیټه',
+    'type' => 'ډول',
     'description' => 'توضیحات',
     'actions' => 'عملونه',
     'modal_close' => 'بندول',

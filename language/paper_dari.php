@@ -12,6 +12,7 @@ return [
     'download' => 'دانلود',
     'author' => 'نویسنده',
     'publication_date' => 'تاریخ انتشار',
+    'type' => 'نوعیت',
     'description' => 'توضیحات',
     'actions' => 'اقدامات',
     'modal_close' => 'بستن',

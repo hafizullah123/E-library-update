@@ -12,6 +12,7 @@ return [
     'download' => 'Download',
     'author' => 'Author',
     'publication_date' => 'Publication Date',
+    'type' => 'type',
     'description' => 'Description',
     'actions' => 'Actions',
     'modal_close' => 'Close',

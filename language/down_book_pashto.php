@@ -15,7 +15,7 @@ $lang = array(
         "isbn_number" => "ISBN",
         "publication_date" => "د خپریدو نیټه",
         "publisher" => "خپرونکی",
-        "actions" => "عملونه"
+        "actions" => "عملونه",
          "type" => "ډول"
     ),
     "modal_title" => "د کتاب توضیحات",
