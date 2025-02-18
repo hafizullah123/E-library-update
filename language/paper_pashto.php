@@ -1,7 +1,7 @@
 
 <?php
 return [
-    'title' => 'څیړنې مقالې وګورئ',
+    'title' => 'څیړنې  وګورئ',
     'library' => 'کتابتون',
     'books' => 'کتابونه',
     'papers' => 'مقالې',
@@ -13,6 +13,9 @@ return [
     'author' => 'لیکوال',
     'publication_date' => 'د خپریدو نیټه',
     'type' => 'ډول',
+    'guider' => 'لارښود استاد',
+    'department' =>'پوهنځی',
+    'section' => 'ډیپارټمنټ',
     'description' => 'توضیحات',
     'actions' => 'عملونه',
     'modal_close' => 'بندول',

@@ -1,7 +1,7 @@
 
 <?php
 return [
-    'title' => 'مشاهده مقالات پژوهشی',
+    'title' => 'مشاهده تحقیقات ',
     'library' => 'کتابخانه',
     'books' => 'کتاب‌ها',
     'papers' => 'مقالات',
@@ -13,6 +13,9 @@ return [
     'author' => 'نویسنده',
     'publication_date' => 'تاریخ انتشار',
     'type' => 'نوعیت',
+    'guider' => ' استاد رهنما',
+    'department' =>'پوهنځی',
+    'section' => 'دیپارتمنت',
     'description' => 'توضیحات',
     'actions' => 'اقدامات',
     'modal_close' => 'بستن',
