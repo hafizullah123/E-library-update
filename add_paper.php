@@ -28,7 +28,10 @@ function getLocalizedText($key, $lang) {
                 'paper_abstract' => 'خلاصه:',
                 'pdf_file' => 'PDF فایل:',
                 'type' => 'ډول:',
-                'add_paper' => 'مقاله اضافه کړئ',
+                'guider' => 'لار ښود ښوونکی: ',
+                'department' => 'پوهنځی:',
+                'section' => 'ډیپارټمنټ:',
+                'add_paper' => ' اضافه کړئ',
                 'success_message' => 'مقاله په بریالیتوب سره اضافه شوه',
                 'error_message' => 'د مقالې په اضافه کولو کې تېروتنه: '
             ];
@@ -37,12 +40,15 @@ function getLocalizedText($key, $lang) {
             $translations = [
                 'home' => 'خانه',
                 'paper_title' => 'عنوان مقاله:',
-                'researcher_name' => 'نام پژوهشگر:',
+                'researcher_name' => 'نام محقق:',
                 'publication_date' => 'تاریخ انتشار:',
-                'paper_abstract' => 'چکیده:',
+                'paper_abstract' => 'خلاصه:',
                 'pdf_file' => 'فایل PDF:',
                 'type' => 'نوعیت',
-                'add_paper' => 'افزودن مقاله',
+                'guider' => 'استاد راهنما:',
+                'department' => 'پوهنځی:',
+                'section' => 'دیپارتمنت:',
+                'add_paper' => 'افزودن',
                 'success_message' => 'مقاله با موفقیت اضافه شد',
                 'error_message' => 'خطا در افزودن مقاله: '
             ];
@@ -55,8 +61,11 @@ function getLocalizedText($key, $lang) {
                 'publication_date' => 'Publication Date:',
                 'paper_abstract' => 'Abstract:',
                 'pdf_file' => 'PDF File:',
-                'type'=> 'type:',
-                'add_paper' => 'Add Paper',
+                'type'=> 'Type:',
+                'guider' => 'Guider:',
+                'department' => 'Section:',
+                'section' => 'Department:',
+                'add_paper' => 'Add ',
                 'success_message' => 'Research paper added successfully',
                 'error_message' => 'Error adding research paper: '
             ];
@@ -72,7 +81,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $publicationDate = isset($_POST["paperPublicationDate"]) ? $_POST["paperPublicationDate"] : "";
     $paperAbstract = isset($_POST["paperAbstract"]) ? $_POST["paperAbstract"] : "";
     $type = isset($_POST["type"]) ? $_POST["type"] : "";
-
+    $guider = isset($_POST["guider"]) ? $_POST["guider"] : "";
+    $department = isset($_POST["department"]) ? $_POST["department"] : "";
+    $section = isset($_POST["section"]) ? $_POST["section"] : "";
 
     // Upload PDF file
     $pdfName = ""; 
@@ -99,7 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 
     // Insert research paper into the database (sanitization needed)
-    $sql = "INSERT INTO research_papers (title, author_name, publication_date, description, pdf,type) VALUES ('$paperTitle', '$researcherName', '$publicationDate', '$paperAbstract', '$pdfName','$type')";
+    $sql = "INSERT INTO research_papers (title, author_name, publication_date, description, pdf, type, guider, department, section) 
+            VALUES ('$paperTitle', '$researcherName', '$publicationDate', '$paperAbstract', '$pdfName', '$type', '$guider', '$department', '$section')";
     if (mysqli_query($conn, $sql)) {
         $message = getLocalizedText('success_message', $lang);
     } else {
@@ -156,34 +168,47 @@ mysqli_close($conn);
 
         <h2 class="mt-4"><?php echo getLocalizedText('add_paper', $lang); ?></h2>
         <p><?php echo $message; ?></p> <!-- Display message here -->
-        <div id="addPaper">
-            <form id="addPaperForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="paperTitle"><?php echo getLocalizedText('paper_title', $lang); ?></label>
-                    <input type="text" class="form-control" id="paperTitle" name="paperTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="researcherName"><?php echo getLocalizedText('researcher_name', $lang); ?></label>
-                    <input type="text" class="form-control" id="researcherName" name="researcherName" required>
-                </div>
-                <div class="form-group">
-                    <label for="paperPublicationDate"><?php echo getLocalizedText('publication_date', $lang); ?></label>
-                    <input type="date" class="form-control" id="paperPublicationDate" name="paperPublicationDate">
-                </div>
-                <div class="form-group">
-                    <label for="paperAbstract"><?php echo getLocalizedText('paper_abstract', $lang); ?></label>
-                    <textarea class="form-control" id="paperAbstract" name="paperAbstract" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="pdf"><?php echo getLocalizedText('pdf_file', $lang); ?></label>
-                    <input type="file" class="form-control-file" id="pdf" name="pdf">
-                </div>
-                <div class="form-group">
-                    <label for="pdf"><?php echo getLocalizedText('type', $lang); ?></label>
-                    <input type="text" class="form-control-file" id="type" name="type">
-                </div>
-                <button type="submit" class="btn btn-primary"><?php echo getLocalizedText('add_paper', $lang); ?></button>
-            </form>
+        <div id="addPaper">  
+    <form id="addPaperForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">  
+        <div class="form-group">  
+            <label for="type"><?php echo getLocalizedText('type', $lang); ?></label>  
+            <input type="text" class="form-control" id="type" name="type" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="paperTitle"><?php echo getLocalizedText('paper_title', $lang); ?></label>  
+            <input type="text" class="form-control" id="paperTitle" name="paperTitle" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="researcherName"><?php echo getLocalizedText('researcher_name', $lang); ?></label>  
+            <input type="text" class="form-control" id="researcherName" name="researcherName" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="guider"><?php echo getLocalizedText('guider', $lang); ?></label>  
+            <input type="text" class="form-control" id="guider" name="guider" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="department"><?php echo getLocalizedText('department', $lang); ?></label>  
+            <input type="text" class="form-control" id="department" name="department" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="section"><?php echo getLocalizedText('section', $lang); ?></label>  
+            <input type="text" class="form-control" id="section" name="section" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="paperPublicationDate"><?php echo getLocalizedText('publication_date', $lang); ?></label>  
+            <input type="date" class="form-control" id="paperPublicationDate" name="paperPublicationDate" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="paperAbstract"><?php echo getLocalizedText('paper_abstract', $lang); ?></label>  
+            <textarea class="form-control" id="paperAbstract" name="paperAbstract" rows="3"></textarea>  
+        </div>  
+        <div class="form-group">  
+            <label for="pdf"><?php echo getLocalizedText('pdf_file', $lang); ?></label>  
+            <input type="file" class="form-control-file" id="pdf" name="pdf" required>  
+        </div>  
+        <button type="submit" class="btn btn-primary"><?php echo getLocalizedText('add_paper', $lang); ?></button>  
+    </form>  
+</div>
         </div>
     </div>
 

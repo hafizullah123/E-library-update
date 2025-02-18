@@ -1,251 +1,220 @@
-<?php  
-session_start();  
+<?php
+session_start();
+include 'connection.php';
 
-// Check if the user is logged in  
-if (!isset($_SESSION['user_id'])) {  
-    header("Location: index.php?action=login");  
-    exit;  
-}  
+// Initialize message variable
+$message = "";
 
-include 'connection.php';  
+// Handle language switching
+if (isset($_GET['lang'])) {
+    $lang = $_GET['lang'];
+    $_SESSION['lang'] = $lang;
+} else {
+    if (!isset($_SESSION['lang'])) {
+        $_SESSION['lang'] = 'en'; // Default language
+    }
+    $lang = $_SESSION['lang'];
+}
 
-// Detect and load the selected language  
-$lang = $_GET['lang'] ?? 'en';  
-$dir = 'ltr';  
+// Localization function
+function getLocalizedText($key, $lang) {
+    switch ($lang) {
+        case 'ps':
+            $translations = [
+                'home' => 'کور',
+                'paper_title' => 'د مقالې سرلیک:',
+                'researcher_name' => 'د څیړونکي نوم:',
+                'publication_date' => 'د خپریدو نیټه:',
+                'paper_abstract' => 'خلاصه:',
+                'pdf_file' => 'PDF فایل:',
+                'type' => 'ډول:',
+                'guider' => 'لار ښود ښوونکی: ',
+                'department' => 'پوهنځی:',
+                'section' => 'ډیپارټمنټ:',
+                'add_paper' => ' اضافه کړئ',
+                'success_message' => 'مقاله په بریالیتوب سره اضافه شوه',
+                'error_message' => 'د مقالې په اضافه کولو کې تېروتنه: '
+            ];
+            break;
+        case 'fa':
+            $translations = [
+                'home' => 'خانه',
+                'paper_title' => 'عنوان مقاله:',
+                'researcher_name' => 'نام محقق:',
+                'publication_date' => 'تاریخ انتشار:',
+                'paper_abstract' => 'خلاصه:',
+                'pdf_file' => 'فایل PDF:',
+                'type' => 'نوعیت',
+                'guider' => 'استاد راهنما:',
+                'department' => 'پوهنځی:',
+                'section' => 'دیپارتمنت:',
+                'add_paper' => 'افزودن',
+                'success_message' => 'مقاله با موفقیت اضافه شد',
+                'error_message' => 'خطا در افزودن مقاله: '
+            ];
+            break;
+        default:
+            $translations = [
+                'home' => 'Home',
+                'paper_title' => 'Paper Title:',
+                'researcher_name' => 'Researcher Name:',
+                'publication_date' => 'Publication Date:',
+                'paper_abstract' => 'Abstract:',
+                'pdf_file' => 'PDF File:',
+                'type'=> 'Type:',
+                'guider' => 'Guider:',
+                'department' => 'Section:',
+                'section' => 'Department:',
+                'add_paper' => 'Add ',
+                'success_message' => 'Research paper added successfully',
+                'error_message' => 'Error adding research paper: '
+            ];
+            break;
+    }
+    return $translations[$key] ?? $key;
+}
 
-switch ($lang) {  
-    case 'ps':  
-        $lang_file = "language/paper_pashto.php";  
-        $dir = 'rtl';  
-        break;  
-    case 'dr':  
-        $lang_file = "language/paper_dari.php";  
-        $dir = 'rtl';  
-        break;  
-    case 'en':  
-    default:  
-        $lang_file = "language/paper_english.php";  
-        $dir = 'ltr';  
-        break;  
-}  
+// Handle add research paper form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $paperTitle = isset($_POST["paperTitle"]) ? $_POST["paperTitle"] : "";
+    $researcherName = isset($_POST["researcherName"]) ? $_POST["researcherName"] : "";
+    $publicationDate = isset($_POST["paperPublicationDate"]) ? $_POST["paperPublicationDate"] : "";
+    $paperAbstract = isset($_POST["paperAbstract"]) ? $_POST["paperAbstract"] : "";
+    $type = isset($_POST["type"]) ? $_POST["type"] : "";
+    $guider = isset($_POST["guider"]) ? $_POST["guider"] : "";
+    $department = isset($_POST["department"]) ? $_POST["department"] : "";
+    $section = isset($_POST["section"]) ? $_POST["section"] : "";
 
-$translations = include $lang_file;  
+    // Upload PDF file
+    $pdfName = ""; 
 
-// Fetch search query from URL parameters  
-$search_query = $_GET['search'] ?? '';  
+    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
+        $pdfName = str_replace(" ", "_", $_FILES['pdf']['name']); // Fix spaces in file name
+        $pdfTemp = $_FILES['pdf']['tmp_name'];
+        $uploadDir = 'paper/';
+    
+        // Ensure the folder exists
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+    
+        // Move uploaded file
+        if (move_uploaded_file($pdfTemp, $uploadDir . $pdfName)) {
+            echo "File uploaded successfully: <a href='$uploadDir$pdfName'>$pdfName</a>";
+        } else {
+            echo "File upload failed!";
+        }
+    } else {
+        echo "Error: " . $_FILES['pdf']['error']; // Show error if upload fails
+    }
+    
 
-// Construct the SQL query for retrieving the research papers  
-$sql = "SELECT paper_id, title, description, author_name, publication_date, pdf, type FROM research_papers";  
-if (!empty($search_query)) {  
-    $sql .= " WHERE title LIKE '%$search_query%' OR author_name LIKE '%$search_query%'";  
-}  
-$result = $conn->query($sql);  
+    // Insert research paper into the database (sanitization needed)
+    $sql = "INSERT INTO research_papers (title, author_name, publication_date, description, pdf, type, guider, department, section) 
+            VALUES ('$paperTitle', '$researcherName', '$publicationDate', '$paperAbstract', '$pdfName', '$type', '$guider', '$department', '$section')";
+    if (mysqli_query($conn, $sql)) {
+        $message = getLocalizedText('success_message', $lang);
+    } else {
+        $message = getLocalizedText('error_message', $lang) . $sql . "<br>" . mysqli_error($conn);
+    }
+}
 
-function getFirstFiveWords($text) {  
-    $words = explode(' ', $text);  
-    return implode(' ', array_slice($words, 0, 5));  
-}  
-?>  
+// Close connection
+mysqli_close($conn);
+?>
 
-<!DOCTYPE html>  
-<html lang="<?php echo $lang; ?>" dir="<?php echo $dir; ?>">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title><?php echo $translations['title']; ?></title>  
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
-    <style>  
-        /* Custom Styles */  
-        body {  
-            font-family: 'Arial', sans-serif;  
-            background-color: #f8f9fa;  
-        }  
-        .navbar {  
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  
-        }  
-        .container {  
-            margin-top: 20px;  
-        }  
-        .table-responsive {  
-            overflow-x: auto;  
-        }  
-        .table {  
-            width: 100%;  
-            margin-bottom: 1rem;  
-            background-color: #fff;  
-            border-collapse: collapse;  
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  
-        }  
-        .table th, .table td {  
-            padding: 12px;  
-            text-align: center;  
-            vertical-align: middle;  
-            border: 1px solid #dee2e6;  
-        }  
-        .table th {  
-            background-color: #343a40;  
-            color: #fff;  
-            font-weight: bold;  
-        }  
-        .table tbody tr:hover {  
-            background-color: #f1f1f1;  
-        }  
-        .btn-success {  
-            background-color: #28a745;  
-            border-color: #28a745;  
-            transition: background-color 0.3s;  
-        }  
-        .btn-success:hover {  
-            background-color: #218838;  
-            border-color: #1e7e34;  
-        }  
-        .modal-content {  
-            border-radius: 15px;  
-            border: none;  
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  
-        }  
-        .modal-header {  
-            background-color: #007bff;  
-            color: #fff;  
-            border-top-left-radius: 15px;  
-            border-top-right-radius: 15px;  
-        }  
-        .modal-title {  
-            font-weight: bold;  
-        }  
-        .modal-body {  
-            padding: 20px;  
-        }  
-        .modal-description {  
-            max-height: 200px;  
-            overflow-y: auto;  
-            margin-bottom: 20px;  
-        }  
-        .icon-column {  
-            width: 120px;  
-        }  
-        .truncate {  
-            white-space: nowrap;  
-            overflow: hidden;  
-            text-overflow: ellipsis;  
-        }  
-        @media (max-width: 768px) {  
-            .table th, .table td {  
-                padding: 8px;  
-            }  
-            .btn-success {  
-                padding: 5px 10px;  
-                font-size: 14px;  
-            }  
-        }  
-    </style>  
-</head>  
-<body>  
+<!DOCTYPE html>
+<html lang="<?php echo $lang; ?>" dir="<?php echo ($lang == 'ps' || $lang == 'fa') ? 'rtl' : 'ltr'; ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo getLocalizedText('add_paper', $lang); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 20px;
+            text-align: <?php echo ($lang == 'ps' || $lang == 'fa') ? 'right' : 'left'; ?>;
+        }
+        .form-control, .form-control-file, .btn {
+            text-align: <?php echo ($lang == 'ps' || $lang == 'fa') ? 'right' : 'left'; ?>;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Language Selection Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#"><?php echo getLocalizedText('language', $lang); ?></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboar.php"><?php echo getLocalizedText('home', $lang); ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?lang=en">English</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?lang=ps">پښتو</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?lang=fa"> دری</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">  
-    <a class="navbar-brand" href="#"><?php echo $translations['library']; ?></a>  
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">  
-        <span class="navbar-toggler-icon"></span>  
-    </button>  
-    <div class="collapse navbar-collapse" id="navbarNav">  
-        <ul class="navbar-nav ml-auto">  
-            <li class="nav-item">  
-                <a class="nav-link" href="downbook.php"><?php echo $translations['books']; ?></a>  
-            </li>  
-            <li class="nav-item active">  
-                <a class="nav-link" href="#"><?php echo $translations['papers']; ?> <span class="sr-only">(current)</span></a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="?lang=ps">پښتو</a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="?lang=dr">دری</a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="?lang=en">English</a>  
-            </li>  
-            <li class="nav-item">  
-                <a class="nav-link" href="logout.php"><?php echo $translations['logout']; ?></a>  
-            </li>  
-        </ul>  
-    </div>  
-</nav>  
-
-<div class="container mt-4">  
-    <form class="form-inline mb-3" method="get">  
-        <input type="hidden" name="lang" value="<?php echo htmlspecialchars($lang); ?>">  
-        <input class="form-control mr-sm-2" type="search" placeholder="<?php echo $translations['search_placeholder']; ?>" aria-label="Search" name="search" id="searchInput" value="<?php echo htmlspecialchars($search_query); ?>">  
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><?php echo $translations['search']; ?></button>  
-    </form>  
-
-    <div class="table-responsive">  
-        <table class="table table-bordered table-striped">  
-            <thead class="thead-dark">  
-                <tr>  
-                    <th><?php echo $translations['title']; ?></th>  
-                    <th class="d-none d-md-table-cell"><?php echo $translations['description']; ?></th>  
-                    <th class="d-none d-md-table-cell"><?php echo $translations['author']; ?></th>  
-                    <th class="d-none d-md-table-cell"><?php echo $translations['publication_date']; ?></th>  
-                    <th class="d-none d-md-table-cell"><?php echo $translations['type']; ?></th>  
-                    <th><?php echo $translations['actions']; ?></th>  
-                </tr>  
-            </thead>  
-            <tbody>  
-                <?php if ($result && $result->num_rows > 0): ?>  
-                    <?php while ($row = $result->fetch_assoc()): ?>  
-                        <tr>  
-                            <td>  
-                                <a href="#" data-toggle="modal" data-target="#paperModal_<?php echo $row['paper_id']; ?>">  
-                                    <?php echo htmlspecialchars($row['title']); ?>  
-                                </a>  
-                            </td>  
-                            <td class="d-none d-md-table-cell truncate"><?php echo htmlspecialchars(getFirstFiveWords($row['description'])); ?></td>  
-                            <td class="d-none d-md-table-cell"><?php echo htmlspecialchars($row['author_name']); ?></td>  
-                            <td class="d-none d-md-table-cell"><?php echo htmlspecialchars($row['publication_date']); ?></td>  
-                            <td class="d-none d-md-table-cell"><?php echo htmlspecialchars(array_key_exists('type', $row) && !empty($row['type']) ? $row['type'] : 'N/A'); ?></td>  
-                            <td class="icon-column">  
-                                <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" class="btn btn-success" download><i class="fas fa-download"></i> <?php echo $translations['download']; ?></a>  
-                            </td>  
-                        </tr>  
-                    <?php endwhile; ?>  
-                <?php else: ?>  
-                    <tr><td colspan="6"><?php echo $translations['no_papers']; ?></td></tr>  
-                <?php endif; ?>  
-            </tbody>  
-        </table>  
-    </div>  
-</div>  
-
-<!-- Modals -->  
-<?php if ($result && $result->num_rows > 0): ?>  
-    <?php $result->data_seek(0); ?>  
-    <?php while ($row = $result->fetch_assoc()): ?>  
-        <div class="modal fade" id="paperModal_<?php echo $row['paper_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="paperModalLabel_<?php echo $row['paper_id']; ?>" aria-hidden="true">  
-            <div class="modal-dialog modal-lg" role="document">  
-                <div class="modal-content">  
-                    <div class="modal-header">  
-                        <h5 class="modal-title"><?php echo htmlspecialchars($row['title']); ?></h5>  
-                        <button type="button" class="close" data-dismiss="modal" aria-label="<?php echo $translations['modal_close']; ?>">  
-                            <span aria-hidden="true">&times;</span>  
-                        </button>  
-                    </div>  
-                    <div class="modal-body">  
-                        <div class="modal-description"><?php echo htmlspecialchars($row['description']); ?></div>  
-                        <p><strong><?php echo $translations['author']; ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>  
-                        <p><strong><?php echo $translations['publication_date']; ?>:</strong> <?php echo htmlspecialchars($row['publication_date']); ?></p>  
-                        <p><strong><?php echo $translations['type']; ?>:</strong> <?php echo htmlspecialchars(array_key_exists('type', $row) && !empty($row['type']) ? $row['type'] : 'N/A'); ?></p>  
-                        <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> <?php echo $translations['modal_download']; ?></a>  
-                    </div>  
-                </div>  
-            </div>  
+        <h2 class="mt-4"><?php echo getLocalizedText('add_paper', $lang); ?></h2>
+        <p><?php echo $message; ?></p> <!-- Display message here -->
+        <div id="addPaper">  
+    <form id="addPaperForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">  
+        <div class="form-group">  
+            <label for="type"><?php echo getLocalizedText('type', $lang); ?></label>  
+            <input type="text" class="form-control" id="type" name="type" required>  
         </div>  
-    <?php endwhile; ?>  
-<?php endif; ?>  
+        <div class="form-group">  
+            <label for="paperTitle"><?php echo getLocalizedText('paper_title', $lang); ?></label>  
+            <input type="text" class="form-control" id="paperTitle" name="paperTitle" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="researcherName"><?php echo getLocalizedText('researcher_name', $lang); ?></label>  
+            <input type="text" class="form-control" id="researcherName" name="researcherName" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="guider"><?php echo getLocalizedText('guider', $lang); ?></label>  
+            <input type="text" class="form-control" id="guider" name="guider" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="department"><?php echo getLocalizedText('department', $lang); ?></label>  
+            <input type="text" class="form-control" id="department" name="department" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="section"><?php echo getLocalizedText('section', $lang); ?></label>  
+            <input type="text" class="form-control" id="section" name="section" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="paperPublicationDate"><?php echo getLocalizedText('publication_date', $lang); ?></label>  
+            <input type="date" class="form-control" id="paperPublicationDate" name="paperPublicationDate" required>  
+        </div>  
+        <div class="form-group">  
+            <label for="paperAbstract"><?php echo getLocalizedText('paper_abstract', $lang); ?></label>  
+            <textarea class="form-control" id="paperAbstract" name="paperAbstract" rows="3"></textarea>  
+        </div>  
+        <div class="form-group">  
+            <label for="pdf"><?php echo getLocalizedText('pdf_file', $lang); ?></label>  
+            <input type="file" class="form-control-file" id="pdf" name="pdf" required>  
+        </div>  
+        <button type="submit" class="btn btn-primary"><?php echo getLocalizedText('add_paper', $lang); ?></button>  
+    </form>  
+</div>
+        </div>
+    </div>
 
-<!-- Bootstrap and JavaScript -->  
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>  
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
-</body>  
+    <!-- Bootstrap and custom scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
