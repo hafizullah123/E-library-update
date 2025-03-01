@@ -1,194 +1,177 @@
-<?php  
-session_start();  
+<!DOCTYPE html>
+<html lang="<?php echo $lang; ?>" <?php echo ($lang == 'ps' || $lang == 'fa') ? 'dir="rtl"' : ''; ?>>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Books</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        <?php if ($lang == 'ps' || $lang == 'fa') : ?>
+        body {
+            direction: rtl;
+            text-align: right;
+        }
+        <?php endif; ?>
 
-// Check if the user is logged in  
-if (!isset($_SESSION['user_id'])) {  
-    header("Location: index.php?action=login");  
-    exit;  
-}  
+        .container-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .search-input, .search-btn {
+            border-radius: 5px;
+        }
+        .modal-dialog {
+            margin: 30px auto;
+        }
+        .modal-cover-image {
+            max-width: 100px;
+            height: auto;
+        }
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .modal-description {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .book-image {
+            max-width: 100px;
+            height: auto;
+        }
+        th, td {
+            white-space: nowrap;
+        }
+        .navbar-nav {
+            font-size: 14px;
+        }
+        .navbar-brand {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .navbar-toggler-icon {
+            font-size: 16px;
+        }
+        .table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        .icon-column {
+            width: 150px;
+        }
 
-include 'connection.php';  
+        @media (max-width: 576px) {
+            .search-input, .search-btn {
+                font-size: 14px;
+                padding: 10px;
+            }
+            table th, table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+            .book-name-column, .author-column, .genre-column {
+                display: none;
+            }
+            .icon-column {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#"><?php echo getLocalizedText('books', $lang); ?></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="index.php"><?php echo getLocalizedText('books', $lang); ?></a></li>
+            <li class="nav-item"><a class="nav-link" href="downpaper.php"><?php echo getLocalizedText('papers', $lang); ?></a></li>
+            <li class="nav-item"><a class="nav-link" href="logout.php"><?php echo getLocalizedText('logout', $lang); ?></a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo getLocalizedText('language', $lang); ?></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
+                    <a class="dropdown-item" href="?lang=en"><?php echo getLocalizedText('english', $lang); ?></a>
+                    <a class="dropdown-item" href="?lang=ps"><?php echo getLocalizedText('pashto', $lang); ?></a>
+                    <a class="dropdown-item" href="?lang=fa"><?php echo getLocalizedText('dari', $lang); ?></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-// Detect and load the selected language  
-$lang = $_GET['lang'] ?? 'en';  
-$dir = 'ltr';  
+<div class="container container-box">
+    <h2 class="text-center"><?php echo getLocalizedText('books', $lang); ?></h2>
+    <form method="GET" action="" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control search-input" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
+            <div class="input-group-append">
+                <button class="btn btn-primary search-btn" type="submit"><?php echo getLocalizedText('search_button', $lang); ?></button>
+            </div>
+        </div>
+    </form>
 
-switch ($lang) {  
-    case 'ps':  
-        $translations = [  
-            'title' => 'تحقیقي مقالې',  
-            'search' => 'لټون',  
-            'search_placeholder' => 'د سرلیک یا لیکوال له مخې لټون...',  
-            'author' => 'لیکوال',  
-            'publication_date' => 'د خپرېدو نیټه',  
-            'type' => 'ډول',  
-            'department' => 'د څانګې',  
-            'actions' => 'اقدامات',  
-            'no_papers' => 'هیڅ تحقیقي مقاله نه موندل شوه.',  
-            'logout' => 'وتل',  
-            'pashto' => 'پښتو',  
-            'dari' => 'دری',  
-            'english' => 'English',  
-            'modal_download' => 'مقاله ښکته کړئ',  
-            'description' => 'توضیحات',  
-            'close' => 'بندول', // Added for close button  
-            'books' => 'کتابونه', // Added Books translation  
-        ];  
-        $dir = 'rtl';  
-        break;  
-    case 'dr':  
-        $translations = [  
-            'title' => 'مقالات تحقیقی',  
-            'search' => 'جستجو',  
-            'search_placeholder' => 'جستجو بر اساس عنوان یا نویسنده...',  
-            'author' => 'نویسنده',  
-            'publication_date' => 'تاریخ نشر',  
-            'type' => 'نوع',  
-            'department' => 'بخش',  
-            'actions' => 'عملیات',  
-            'no_papers' => 'هیچ مقاله تحقیقی پیدا نشد.',  
-            'logout' => 'خروج',  
-            'pashto' => 'پښتو',  
-            'dari' => 'دری',   
-            'english' => 'English',  
-            'modal_download' => 'دانلود مقاله',  
-            'description' => 'توضیحات',  
-            'close' => 'بندول', // Added for close button  
-            'books' => 'کتابونه', // Added Books translation  
-        ];  
-        $dir = 'rtl';  
-        break;  
-    case 'en':  
-    default:  
-        $translations = [  
-            'title' => 'Research Papers',  
-            'search' => 'Search',  
-            'search_placeholder' => 'Search by title or author...',  
-            'author' => 'Author',  
-            'publication_date' => 'Publication Date',  
-            'type' => 'Type',  
-            'department' => 'Department',  
-            'actions' => 'Actions',  
-            'no_papers' => 'No research papers found.',  
-            'logout' => 'Logout',  
-            'pashto' => 'Pashto',  
-            'dari' => 'Dari',  
-            'modal_download' => 'Download Paper',  
-            'description' => 'Description',  
-            'english' => 'English',  
-            'close' => 'Close', // Added for close button  
-            'books' => 'Books', // Added Books translation  
-        ];  
-        $dir = 'ltr';   
-        break;   
-}  
+    <?php if ($result->num_rows > 0) : ?>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th><?php echo getLocalizedText('cover_image', $lang); ?></th>
+                    <th class="book-name-column"><?php echo getLocalizedText('book_name', $lang); ?></th>
+                    <th class="icon-column"><?php echo getLocalizedText('actions', $lang); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()) : ?>
+                    <tr>
+                        <td><img src="<?php echo $row['cover_image']; ?>" class="book-image" alt="Book Cover"></td>
+                        <td class="book-name-column"><?php echo $row['book_name']; ?></td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#bookModal<?php echo $row['book_id']; ?>"><?php echo getLocalizedText('view_details', $lang); ?></button>
+                            <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-success"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
+                        </td>
+                    </tr>
 
-// Fetch search query from URL parameters  
-$search_query = $_GET['search'] ?? '';  
+                    <div class="modal fade" id="bookModal<?php echo $row['book_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="bookModalLabel"><?php echo $row['book_name']; ?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="<?php echo $row['cover_image']; ?>" class="modal-cover-image" alt="Cover Image">
+                                    <p><strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo $row['author_name']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong> <?php echo $row['isbn_number']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong> <?php echo $row['publication_date']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong> <?php echo $row['publisher']; ?></p>
+                                    <p><strong><?php echo getLocalizedText('description', $lang); ?>:</strong> <?php echo $row['description']; ?></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo getLocalizedText('close', $lang); ?></button>
+                                    <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-primary"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p><?php echo getLocalizedText('no_books_found', $lang); ?></p>
+    <?php endif; ?>
+</div>
 
-// Construct the SQL query for retrieving the research papers  
-$sql = "SELECT paper_id, title, description, author_name, publication_date, pdf, type, department FROM research_papers";  
-if (!empty($search_query)) {  
-    $sql .= " WHERE title LIKE '%$search_query%' OR author_name LIKE '%$search_query%'";  
-}  
-$result = $conn->query($sql);  
-?>  
-<!DOCTYPE html>  
-<html lang="<?php echo htmlspecialchars($lang); ?>" dir="<?php echo htmlspecialchars($dir); ?>">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title><?php echo htmlspecialchars($translations['title']); ?></title>  
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">  
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
-</head>  
-<body class="bg-gray-100">  
-
-<nav class="bg-white shadow">  
-    <div class="max-w-7xl mx-auto px-6">  
-        <div class="flex justify-between items-center h-16">  
-            <a href="#" class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($translations['title']); ?></a>  
-            <div class="flex space-x-4">  
-                <a href="?lang=ps" class="text-blue-600"><?php echo htmlspecialchars($translations['pashto']); ?></a>  
-                <a href="?lang=dr" class="text-blue-600"><?php echo htmlspecialchars($translations['dari']); ?></a>  
-                <a href="?lang=en" class="text-blue-600"><?php echo htmlspecialchars($translations['english']); ?></a>  
-                <a href="books.php" class="text-blue-600"><?php echo htmlspecialchars($translations['books']); ?></a>  <!-- Books link added -->  
-                <a href="logout.php" class="text-blue-600"><?php echo htmlspecialchars($translations['logout']); ?></a>  
-            </div>  
-        </div>  
-    </div>  
-</nav>  
-
-<div class="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">  
-    <form class="mb-6 flex" method="get" action="">  
-        <input type="hidden" name="lang" value="<?php echo htmlspecialchars($lang); ?>">  
-        <input class="flex-grow border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:outline-none focus:ring focus:ring-blue-500" type="search" placeholder="<?php echo htmlspecialchars($translations['search_placeholder']); ?>" name="search" value="<?php echo htmlspecialchars($search_query); ?>">  
-        <button class="ml-2 bg-blue-600 text-white rounded-md px-4 py-2 shadow-md hover:bg-blue-700" type="submit"><?php echo htmlspecialchars($translations['search']); ?></button>  
-    </form>  
-
-    <div class="overflow-x-auto">  
-        <table class="min-w-full bg-white">  
-            <thead class="bg-gray-200">  
-                <tr>  
-                    <th class="py-3 px-4 text-left text-gray-600"><?php echo htmlspecialchars($translations['title']); ?></th>  
-                    <th class="hidden md:table-cell py-3 px-4 text-left text-gray-600"><?php echo htmlspecialchars($translations['author']); ?></th>  
-                    <th class="hidden md:table-cell py-3 px-4 text-left text-gray-600"><?php echo htmlspecialchars($translations['publication_date']); ?></th>  
-                    <th class="hidden md:table-cell py-3 px-4 text-left text-gray-600"><?php echo htmlspecialchars($translations['type']); ?></th>  
-                    <th class="hidden md:table-cell py-3 px-4 text-left text-gray-600"><?php echo htmlspecialchars($translations['department']); ?></th>  
-                    <th class="py-3 px-4 text-left text-gray-600"><?php echo htmlspecialchars($translations['actions']); ?></th>  
-                </tr>  
-            </thead>  
-            <tbody>  
-                <?php if ($result && $result->num_rows > 0): ?>  
-                    <?php while ($row = $result->fetch_assoc()): ?>  
-                        <tr class="border-t hover:bg-gray-50">  
-                            <td class="py-3 px-4 border-b">  
-                                <a href="#" class="text-blue-600 hover:underline" data-toggle="modal" data-target="#paperModal_<?php echo htmlspecialchars($row['paper_id']); ?>"><?php echo htmlspecialchars($row['title']); ?></a>  
-                            </td>  
-                            <td class="hidden md:table-cell py-3 px-4 border-b"><?php echo htmlspecialchars($row['author_name']); ?></td>  
-                            <td class="hidden md:table-cell py-3 px-4 border-b"><?php echo htmlspecialchars($row['publication_date']); ?></td>  
-                            <td class="hidden md:table-cell py-3 px-4 border-b"><?php echo htmlspecialchars($row['type']); ?></td>  
-                            <td class="hidden md:table-cell py-3 px-4 border-b"><?php echo htmlspecialchars($row['department']); ?></td>  
-                            <td class="py-3 px-4 border-b">  
-                                <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" class="bg-green-500 hover:bg-green-600 text-white text-sm py-1 px-2 rounded" download><?php echo htmlspecialchars($translations['modal_download']); ?></a>  
-                            </td>  
-                        </tr>  
-
-                        <!-- Modal for Paper Details -->  
-                        <div class="modal fade" id="paperModal_<?php echo htmlspecialchars($row['paper_id']); ?>" tabindex="-1" role="dialog" aria-labelledby="paperModalLabel_<?php echo htmlspecialchars($row['paper_id']); ?>" aria-hidden="true">  
-                            <div class="modal-dialog" role="document">  
-                                <div class="modal-content" dir="<?php echo htmlspecialchars($dir); ?>">  <!-- Set direction here -->  
-                                    <div class="modal-header">  
-                                        <h5 class="modal-title"><?php echo htmlspecialchars($row['title']); ?></h5>  
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">  
-                                            <span>&times;</span>  
-                                        </button>  
-                                    </div>  
-                                    <div class="modal-body">  
-                                        <p><strong><?php echo htmlspecialchars($translations['author']); ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>  
-                                        <p><strong><?php echo htmlspecialchars($translations['publication_date']); ?>:</strong> <?php echo htmlspecialchars($row['publication_date']); ?></p>  
-                                        <p><strong><?php echo htmlspecialchars($translations['type']); ?>:</strong> <?php echo htmlspecialchars($row['type']); ?></p>  
-                                        <p><strong><?php echo htmlspecialchars($translations['department']); ?>:</strong> <?php echo htmlspecialchars($row['department']); ?></p>  
-                                        <p><strong><?php echo htmlspecialchars($translations['description']); ?>:</strong> <?php echo htmlspecialchars($row['description']); ?></p>  
-                                    </div>  
-                                    <div class="modal-footer">  
-                                        <a href="paper/<?php echo htmlspecialchars($row['pdf']); ?>" class="btn btn-success"><?php echo htmlspecialchars($translations['modal_download']); ?></a>  
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo htmlspecialchars($translations['close']); ?></button>  
-                                    </div>  
-                                </div>  
-                            </div>  
-                        </div>  
-                    <?php endwhile; ?>  
-                <?php else: ?>  
-                    <tr><td colspan="6" class="py-4 text-center text-gray-600"><?php echo htmlspecialchars($translations['no_papers']); ?></td></tr>  
-                <?php endif; ?>  
-            </tbody>  
-        </table>  
-    </div>  
-</div>  
-
-<!-- Bootstrap and JavaScript -->  
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>  
-</body>  
-</html>  
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
