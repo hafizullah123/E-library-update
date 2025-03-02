@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-include 'connection.php';
+include 'connection.php'; // Include your database connection file
 
 // Define a function to get localized text
 function getLocalizedText($key, $lang) {
@@ -96,6 +96,27 @@ if (isset($_GET['lang'])) {
     $_SESSION['lang'] = $lang;
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
+}
+
+// Handle file download
+if (isset($_GET['download'])) {
+    $file = $_GET['download'];
+
+    // Check if the file exists
+    if (file_exists($file)) {
+        // Set headers to force download
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        exit;
+    } else {
+        echo "File not found.";
+    }
 }
 
 // Process form submission to add a new book
@@ -300,7 +321,7 @@ $result = $conn->query($sql);
                         <td class="book-name-column"><?php echo $row['book_name']; ?></td>
                         <td>
                             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#bookModal<?php echo $row['book_id']; ?>"><?php echo getLocalizedText('view_details', $lang); ?></button>
-                            <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-success"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
+                            <a href="?download=<?php echo $row['pdf']; ?>" class="btn btn-success"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
                         </td>
                     </tr>
 
@@ -324,7 +345,7 @@ $result = $conn->query($sql);
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo getLocalizedText('close', $lang); ?></button>
-                                    <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-primary"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
+                                    <a href="?download=<?php echo $row['pdf']; ?>" class="btn btn-primary"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
                                 </div>
                             </div>
                         </div>

@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-include 'connection.php';
+include 'connection.php'; // Include your database connection file
 
 // Define a function to get localized text
 function getLocalizedText($key, $lang) {
@@ -98,6 +98,27 @@ if (isset($_GET['lang'])) {
     exit;
 }
 
+// Handle file download
+if (isset($_GET['download'])) {
+    $file = $_GET['download'];
+
+    // Check if the file exists
+    if (file_exists($file)) {
+        // Set headers to force download
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        exit;
+    } else {
+        echo "File not found.";
+    }
+}
+
 // Process form submission to add a new book
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_id'])) {
     // Collect form data
@@ -169,177 +190,114 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Books</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        <?php if ($lang == 'ps' || $lang == 'fa') : ?>
-        body {
-            direction: rtl;
-            text-align: right;
-        }
-        <?php endif; ?>
-
-        .container-box {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-        .search-input, .search-btn {
-            border-radius: 5px;
-        }
-        .modal-dialog {
-            margin: 30px auto;
-        }
-        .modal-cover-image {
-            max-width: 100px;
-            height: auto;
-        }
-        .truncate {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .modal-description {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .book-image {
-            max-width: 100px;
-            height: auto;
-        }
-        th, td {
-            white-space: nowrap;
-        }
-        .navbar-nav {
-            font-size: 14px;
-        }
-        .navbar-brand {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .navbar-toggler-icon {
-            font-size: 16px;
-        }
-        .table th {
-            background-color: #f2f2f2;
-            color: #333;
-            font-weight: bold;
-        }
-        .icon-column {
-            width: 150px;
-        }
-
-        /* Responsive styling */
-        @media (max-width: 576px) {
-            .search-input, .search-btn {
-                font-size: 14px;
-                padding: 10px;
-            }
-            table th, table td {
-                font-size: 12px;
-                padding: 8px;
-            }
-            .book-name-column, .author-column, .genre-column {
-                display: none;
-            }
-            .icon-column {
-                width: auto;
-            }
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><?php echo getLocalizedText('books', $lang); ?></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php"><?php echo getLocalizedText('books', $lang); ?></a></li>
-            <li class="nav-item"><a class="nav-link" href="downpaper.php"><?php echo getLocalizedText('papers', $lang); ?></a></li>
-            <li class="nav-item"><a class="nav-link" href="logout.php"><?php echo getLocalizedText('logout', $lang); ?></a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo getLocalizedText('language', $lang); ?></a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
-                    <a class="dropdown-item" href="?lang=en"><?php echo getLocalizedText('english', $lang); ?></a>
-                    <a class="dropdown-item" href="?lang=ps"><?php echo getLocalizedText('pashto', $lang); ?></a>
-                    <a class="dropdown-item" href="?lang=fa"><?php echo getLocalizedText('dari', $lang); ?></a>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <a href="#" class="flex items-center py-4 px-2">
+                        <span class="font-semibold text-gray-500 text-lg"><?php echo getLocalizedText('books', $lang); ?></span>
+                    </a>
                 </div>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<div class="container container-box">
-    <h2 class="text-center"><?php echo getLocalizedText('books', $lang); ?></h2>
-    <form method="GET" action="" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control search-input" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
-            <div class="input-group-append">
-                <button class="btn btn-primary search-btn" type="submit"><?php echo getLocalizedText('search_button', $lang); ?></button>
-            </div>
-        </div>
-    </form>
-
-    <?php if ($result->num_rows > 0) : ?>
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th><?php echo getLocalizedText('cover_image', $lang); ?></th>
-                    <th class="book-name-column"><?php echo getLocalizedText('book_name', $lang); ?></th>
-                    <th class="icon-column"><?php echo getLocalizedText('actions', $lang); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $result->fetch_assoc()) : ?>
-                    <tr>
-                        <td><img src="<?php echo $row['cover_image']; ?>" class="book-image" alt="Book Cover"></td>
-                        <td class="book-name-column"><?php echo $row['book_name']; ?></td>
-                        <td>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#bookModal<?php echo $row['book_id']; ?>"><?php echo getLocalizedText('view_details', $lang); ?></button>
-                            <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-success"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
-                        </td>
-                    </tr>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="bookModal<?php echo $row['book_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="bookModalLabel"><?php echo $row['book_name']; ?></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <img src="<?php echo $row['cover_image']; ?>" class="modal-cover-image" alt="Cover Image">
-                                    <p><strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo $row['author_name']; ?></p>
-                                    <p><strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong> <?php echo $row['isbn_number']; ?></p>
-                                    <p><strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong> <?php echo $row['publication_date']; ?></p>
-                                    <p><strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong> <?php echo $row['publisher']; ?></p>
-                                    <p><strong><?php echo getLocalizedText('description', $lang); ?>:</strong> <?php echo $row['description']; ?></p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo getLocalizedText('close', $lang); ?></button>
-                                    <a href="download.php?file=<?php echo $row['pdf']; ?>" class="btn btn-primary"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
-                                </div>
-                            </div>
+                <div class="flex items-center space-x-3">
+                    <a href="index.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"><?php echo getLocalizedText('books', $lang); ?></a>
+                    <a href="downpaper.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"><?php echo getLocalizedText('papers', $lang); ?></a>
+                    <a href="logout.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"><?php echo getLocalizedText('logout', $lang); ?></a>
+                    <div class="relative">
+                        <button class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300" onclick="toggleLanguageDropdown()"><?php echo getLocalizedText('language', $lang); ?></button>
+                        <div id="languageDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden">
+                            <a href="?lang=en" class="block px-4 py-2 text-gray-800 hover:bg-green-500 hover:text-white"><?php echo getLocalizedText('english', $lang); ?></a>
+                            <a href="?lang=ps" class="block px-4 py-2 text-gray-800 hover:bg-green-500 hover:text-white"><?php echo getLocalizedText('pashto', $lang); ?></a>
+                            <a href="?lang=fa" class="block px-4 py-2 text-gray-800 hover:bg-green-500 hover:text-white"><?php echo getLocalizedText('dari', $lang); ?></a>
                         </div>
                     </div>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p><?php echo getLocalizedText('no_books_found', $lang); ?></p>
-    <?php endif; ?>
-</div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<!-- Bootstrap JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-center mb-8"><?php echo getLocalizedText('books', $lang); ?></h2>
+        <form method="GET" action="" class="mb-8">
+            <div class="flex justify-center">
+                <input type="text" name="search" class="w-64 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-r-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"><?php echo getLocalizedText('search_button', $lang); ?></button>
+            </div>
+        </form>
+
+        <?php if ($result->num_rows > 0) : ?>
+            <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                <table class="min-w-full">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><?php echo getLocalizedText('cover_image', $lang); ?></th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><?php echo getLocalizedText('book_name', $lang); ?></th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><?php echo getLocalizedText('actions', $lang); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php while ($row = $result->fetch_assoc()) : ?>
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <img src="<?php echo $row['cover_image']; ?>" class="w-16 h-16 object-cover rounded-lg" alt="Book Cover">
+                                </td>
+                                <td class="px-6 py-4"><?php echo $row['book_name']; ?></td>
+                                <td class="px-6 py-4">
+                                    <button onclick="toggleModal('bookModal<?php echo $row['book_id']; ?>')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"><?php echo getLocalizedText('view_details', $lang); ?></button>
+                                    <a href="?download=<?php echo $row['pdf']; ?>" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
+                                </td>
+                            </tr>
+
+                            <!-- Modal -->
+                            <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden" id="bookModal<?php echo $row['book_id']; ?>">
+                                <div class="bg-white rounded-lg w-11/12 md:w-1/2 p-6 max-h-[90vh] flex flex-col shadow-2xl">
+                                    <!-- Modal Header -->
+                                    <div class="flex justify-between items-center mb-4 pb-4 border-b">
+                                        <h3 class="text-xl font-bold"><?php echo $row['book_name']; ?></h3>
+                                        <button class="text-gray-500 hover:text-gray-700" onclick="toggleModal('bookModal<?php echo $row['book_id']; ?>')">&times;</button>
+                                    </div>
+                                    <!-- Modal Body (Scrollable) -->
+                                    <div class="overflow-y-auto flex-1 py-4">
+                                        <img src="<?php echo $row['cover_image']; ?>" class="w-48 h-48 object-cover rounded-lg mx-auto mb-6 shadow-md" alt="Cover Image">
+                                        <div class="space-y-4">
+                                            <p><strong class="text-gray-700"><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo $row['author_name']; ?></p>
+                                            <p><strong class="text-gray-700"><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong> <?php echo $row['isbn_number']; ?></p>
+                                            <p><strong class="text-gray-700"><?php echo getLocalizedText('publication_date', $lang); ?>:</strong> <?php echo $row['publication_date']; ?></p>
+                                            <p><strong class="text-gray-700"><?php echo getLocalizedText('publisher', $lang); ?>:</strong> <?php echo $row['publisher']; ?></p>
+                                            <p><strong class="text-gray-700"><?php echo getLocalizedText('description', $lang); ?>:</strong> <?php echo $row['description']; ?></p>
+                                        </div>
+                                    </div>
+                                    <!-- Modal Footer -->
+                                    <div class="mt-6 flex justify-end space-x-4 pt-4 border-t">
+                                        <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500" onclick="toggleModal('bookModal<?php echo $row['book_id']; ?>')"><?php echo getLocalizedText('close', $lang); ?></button>
+                                        <a href="?download=<?php echo $row['pdf']; ?>" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p class="text-center text-gray-500"><?php echo getLocalizedText('no_books_found', $lang); ?></p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Script for Modal Toggle -->
+    <script>
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('hidden');
+        }
+
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
