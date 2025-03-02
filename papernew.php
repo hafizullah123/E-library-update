@@ -1,3 +1,168 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: index.php?action=login");
+    exit;
+}
+
+include 'connection.php';
+
+// Define a function to get localized text
+function getLocalizedText($key, $lang) {
+    $translations = [
+        'en' => [
+            'book_name' => 'Book Name',
+            'author_name' => 'Author Name',
+            'isbn_number' => 'ISBN Number',
+            'genre' => 'Genre',
+            'publication_date' => 'Publication Date',
+            'publisher' => 'Publisher',
+            'description' => 'Description',
+            'view_details' => 'View Details',
+            'download_pdf' => 'Download PDF',
+            'search_placeholder' => 'Search by Name or ISBN',
+            'search_button' => 'Search',
+            'no_books_found' => 'No books found.',
+            'cover_image' => 'Cover Image',
+            'actions' => 'Actions',
+            'books' => 'Books',
+            'papers' => 'Papers',
+            'logout' => 'Logout',
+            'language' => 'Language',
+            'english' => 'English',
+            'pashto' => 'Pashto',
+            'dari' => 'Dari'
+        ],
+        'ps' => [
+            'book_name' => 'د کتاب نوم',
+            'author_name' => 'د لیکوال نوم',
+            'isbn_number' => 'آی ایس بی این نمبر',
+            'genre' => 'ژانر',
+            'publication_date' => 'د خپرېدو نېټه',
+            'publisher' => 'خپرونکی',
+            'description' => 'تشریح',
+            'view_details' => 'تفصیلات وګورئ',
+            'download_pdf' => 'PDF ډاونلوډ کړئ',
+            'search_placeholder' => 'د نوم یا ISBN په واسطه لټون وکړئ',
+            'search_button' => 'لټون',
+            'no_books_found' => 'هیڅ کتابونه ونه موندل شول.',
+            'cover_image' => 'پوښ عکس',
+            'actions' => 'عملونه',
+            'books' => 'کتابونه',
+            'papers' => 'لیکونه',
+            'logout' => 'وتل',
+            'language' => 'ژبه',
+            'english' => 'انګلیسي',
+            'pashto' => 'پښتو',
+            'dari' => 'دری'
+        ],
+        'fa' => [
+            'book_name' => 'نام کتاب',
+            'author_name' => 'نام نویسنده',
+            'isbn_number' => 'شماره شابک',
+            'genre' => 'ژانر',
+            'publication_date' => 'تاریخ انتشار',
+            'publisher' => 'ناشر',
+            'description' => 'توضیحات',
+            'view_details' => 'مشاهده جزئیات',
+            'download_pdf' => 'دانلود PDF',
+            'search_placeholder' => 'جستجو بر اساس نام یا ISBN',
+            'search_button' => 'جستجو',
+            'no_books_found' => 'هیچ کتابی یافت نشد.',
+            'cover_image' => 'تصویر جلد',
+            'actions' => 'اقدامات',
+            'books' => 'کتاب‌ها',
+            'papers' => 'مقالات',
+            'logout' => 'خروج',
+            'language' => 'زبان',
+            'english' => 'انگلیسی',
+            'pashto' => 'پشتو',
+            'dari' => 'دری'
+        ]
+    ];
+
+    return $translations[$lang][$key] ?? $key;
+}
+
+// Set the language based on a session variable or default to English
+$lang = $_SESSION['lang'] ?? 'en';
+
+// Process language change request
+if (isset($_GET['lang'])) {
+    $lang = $_GET['lang'];
+    $_SESSION['lang'] = $lang;
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+// Process form submission to add a new book
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_id'])) {
+    // Collect form data
+    $book_id = $_POST['book_id'];
+    $book_name = $_POST['book_name'];
+    $author_name = $_POST['author_name'];
+    $isbn_number = $_POST['isbn_number'];
+    $genre = $_POST['genre'];
+    $publication_date = $_POST['publication_date'];
+    $publisher = $_POST['publisher'];
+    $description = $_POST['description'];
+
+    // Handle file uploads
+    $cover_image = $_FILES['cover_image']['name'];
+    $pdf = $_FILES['pdf']['name'];
+
+    // Define target directories
+    $cover_image_target = "uploads/" . basename($cover_image);
+    $pdf_target = "uploads/" . basename($pdf);
+
+    // Move uploaded files to target directories
+    if ($cover_image && move_uploaded_file($_FILES['cover_image']['tmp_name'], $cover_image_target)) {
+        echo "Cover image uploaded successfully. ";
+    } else {
+        echo "Error uploading cover image. ";
+    }
+
+    if ($pdf && move_uploaded_file($_FILES['pdf']['tmp_name'], $pdf_target)) {
+        echo "PDF uploaded successfully.";
+    } else {
+        echo "Error uploading PDF.";
+    }
+
+    // Insert new book details into database
+    $sql = "INSERT INTO books (book_name, author_name, isbn_number, genre, cover_image, pdf, publication_date, publisher, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+
+    // Bind parameters
+    $stmt->bind_param("sssssssss", $book_name, $author_name, $isbn_number, $genre, $cover_image_target, $pdf_target, $publication_date, $publisher, $description);
+
+    // Execute statement
+    if ($stmt->execute()) {
+        echo "Book details inserted successfully.";
+    } else {
+        echo "Error inserting book details: " . $conn->error;
+    }
+
+    // Close statement
+    $stmt->close();
+}
+
+// Fetch category from URL parameters
+$category = $_GET['category'] ?? '';
+
+// Construct the SQL query for retrieving the books based on search query
+$sql = "SELECT * FROM books";
+if (!empty($_GET['search'])) {
+    $search_query = $_GET['search'];
+    $sql .= " WHERE book_name LIKE '%$search_query%' OR isbn_number LIKE '%$search_query%'";
+} else {
+    $search_query = '';
+}
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>" <?php echo ($lang == 'ps' || $lang == 'fa') ? 'dir="rtl"' : ''; ?>>
 <head>
@@ -66,6 +231,7 @@
             width: 150px;
         }
 
+        /* Responsive styling */
         @media (max-width: 576px) {
             .search-input, .search-btn {
                 font-size: 14px;
@@ -138,6 +304,7 @@
                         </td>
                     </tr>
 
+                    <!-- Modal -->
                     <div class="modal fade" id="bookModal<?php echo $row['book_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -170,6 +337,7 @@
     <?php endif; ?>
 </div>
 
+<!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
