@@ -1,235 +1,368 @@
 <?php
 session_start();
+
+// Define constants
 include 'connection.php';
 
-// Initialize message variable
-$message = "";
-
-// Handle language switching
+// Set language
 if (isset($_GET['lang'])) {
-    $lang = $_GET['lang'];
-    $_SESSION['lang'] = $lang;
-} else {
-    if (!isset($_SESSION['lang'])) {
-        $_SESSION['lang'] = 'en'; // Default language
-    }
-    $lang = $_SESSION['lang'];
+    $_SESSION['lang'] = $_GET['lang'];
 }
 
-// Localization function
-function getLocalizedText($key, $lang) {
-    switch ($lang) {
-        case 'ps':
-            $translations = [
-                'home' => 'کور',
-                'paper_title' => 'د مقالې سرلیک:',
-                'researcher_name' => 'د څیړونکي نوم:',
-                'publication_date' => 'د خپریدو نیټه:',
-                'paper_abstract' => 'خلاصه:',
-                'pdf_file' => 'PDF فایل:',
-                'type' => 'ډول:',
-                'guider' => 'لار ښود ښوونکی: ',
-                'department' => 'پوهنځی:',
-                'section' => 'ډیپارټمنټ:',
-                'add_paper' => ' اضافه کړئ',
-                'success_message' => 'مقاله په بریالیتوب سره اضافه شوه',
-                'error_message' => 'د مقالې په اضافه کولو کې تېروتنه: '
-            ];
+$lang_code = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
+
+// Load language file
+$lang_files = [
+    'en' => [
+        'title' => 'Login and Registration',
+        'login' => 'Login',
+        'register' => 'Register',
+        'username' => 'Username',
+        'password' => 'Password',
+        'email' => 'Email',
+        'register_button' => 'Register',
+        'login_button' => 'Login',
+        'already_have_account' => 'Already have an account?',
+        'dont_have_account' => "Don't have an account?",
+        'login_here' => 'Login here',
+        'register_here' => 'Register here',
+        'registration_successful' => 'Registration successful. Please log in.',
+        'registration_failed' => 'Registration failed. Please try again.',
+        'username_or_email_exists' => 'Username or email already exists.',
+        'invalid_credentials' => 'Invalid username or password.',
+        'logout' => 'Logout',
+        'welcome' => 'Welcome',
+        'admin_dashboard' => 'This is the admin dashboard.',
+        'labor_dashboard' => 'This is the labor dashboard.',
+        'user_dashboard' => 'This is the user dashboard.',
+    ],
+    'ps' => [
+        'title' => 'ننوتل او ثبتول',
+        'login' => 'ننوتل',
+        'register' => 'ثبتول',
+        'username' => 'کارن نوم',
+        'password' => 'پاسورډ',
+        'email' => 'بریښنالیک',
+        'register_button' => 'ثبتول',
+        'login_button' => 'ننوتل',
+        'already_have_account' => 'آیا حساب لرئ؟',
+        'dont_have_account' => 'حساب نلرئ؟',
+        'login_here' => 'دلته ننوتل',
+        'register_here' => 'دلته ثبتول',
+        'registration_successful' => 'ثبتول بریالي. مهرباني وکړئ ننوتل.',
+        'registration_failed' => 'ثبتول ناکام. مهرباني وکړئ بیا هڅه وکړئ.',
+        'username_or_email_exists' => 'کارن نوم یا بریښنالیک دمخه شتون لري.',
+        'invalid_credentials' => 'کارن نوم یا پاسورډ غلط دي.',
+        'logout' => 'وتل',
+        'welcome' => 'ښه راغلاست',
+        'admin_dashboard' => 'دا د مدیر ډشبورډ دی.',
+        'labor_dashboard' => 'دا د کارګر ډشبورډ دی.',
+        'user_dashboard' => 'دا د کارونکي ډشبورډ دی.',
+    ],
+    'fa' => [
+        'title' => 'ورود و ثبت نام',
+        'login' => 'ورود',
+        'register' => 'ثبت نام',
+        'username' => 'نام کاربری',
+        'password' => 'رمز عبور',
+        'email' => 'ایمیل',
+        'register_button' => 'ثبت نام',
+        'login_button' => 'ورود',
+        'already_have_account' => 'حساب کاربری دارید؟',
+        'dont_have_account' => 'حساب کاربری ندارید؟',
+        'login_here' => 'ورود کنید',
+        'register_here' => 'ثبت نام کنید',
+        'registration_successful' => 'ثبت نام موفقیت آمیز بود. لطفا وارد شوید.',
+        'registration_failed' => 'ثبت نام ناموفق بود. لطفا دوباره امتحان کنید.',
+        'username_or_email_exists' => 'نام کاربری یا ایمیل وجود دارد.',
+        'invalid_credentials' => 'نام کاربری یا رمز عبور نامعتبر است.',
+        'logout' => 'خروج',
+        'welcome' => 'خوش آمدید',
+        'admin_dashboard' => 'این داشبورد مدیریت است.',
+        'labor_dashboard' => 'این داشبورد کارگر است.',
+        'user_dashboard' => 'این داشبورد کاربر است.',
+    ],
+];
+
+$lang = $lang_files[$lang_code];
+
+// Determine text direction
+$dir = ($lang_code == 'ps' || $lang_code == 'fa') ? 'rtl' : 'ltr';
+
+// Registration logic
+if (isset($_POST['action']) && $_POST['action'] == 'register') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $email = $_POST['email'];
+    $user_type = 'user'; // Default user type
+
+    // Check if the username or email already exists
+    $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = ? OR email = ?");
+    $stmt->bind_param("ss", $username, $email);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $register_error = $lang['username_or_email_exists'];
+    } else {
+        // Insert the new user into the database
+        $stmt = $conn->prepare("INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $username, $password, $email, $user_type);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            $register_success = $lang['registration_successful'];
+        } else {
+            $register_error = $lang['registration_failed'];
+        }
+    }
+
+    $stmt->close();
+}
+
+// Login logic
+if (isset($_POST['action']) && $_POST['action'] == 'login') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $stmt = $conn->prepare("SELECT user_id, user_type FROM users WHERE username = ? AND password = ?");
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute();
+    $stmt->bind_result($user_id, $user_type);
+    $stmt->fetch();
+
+    if ($user_id) {
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['user_type'] = $user_type;
+        $_SESSION['username'] = $username;
+
+        switch ($user_type) {
+            case 'admin':
+                header("Location: dashboar.php");
+                break;
+
+            case 'public_manager':
+                    header("Location: add_book.php");
+                break;
+
+            case 'labor':
+                header("Location: book.php");
+                break;
+
+            case 'manager':
+                    header("Location: add_book.php");
+                break;
+                case 'entry':
+                    header("Location: entry_dashboard.php");
+                break;
+
+            case 'user':
+                header("Location: downbook.php");
+                break;
+            default:
+                header("Location: ?action=login");
+                break;
+        }
+        exit;
+    } else {
+        $login_error = $lang['invalid_credentials'];
+    }
+
+    $stmt->close();
+}
+
+if (isset($_GET['dashboard'])) {
+    switch ($_GET['dashboard']) {
+        case 'admin':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+                header("Location: ?action=login");
+                exit;
+            }
+            echo "<h1>{$lang['welcome']}, " . $_SESSION['username'] . "!</h1>";
+            echo "<p>{$lang['admin_dashboard']}</p>";
+            echo '<a href="?action=logout">' . $lang['logout'] . '</a>';
             break;
-        case 'fa':
-            $translations = [
-                'home' => 'خانه',
-                'paper_title' => 'عنوان مقاله:',
-                'researcher_name' => 'نام محقق:',
-                'publication_date' => 'تاریخ انتشار:',
-                'paper_abstract' => 'خلاصه:',
-                'pdf_file' => 'فایل PDF:',
-                'type' => 'نوعیت',
-                'guider' => 'استاد راهنما:',
-                'department' => 'پوهنځی:',
-                'section' => 'دیپارتمنت:',
-                'add_paper' => 'افزودن',
-                'success_message' => 'مقاله با موفقیت اضافه شد',
-                'error_message' => 'خطا در افزودن مقاله: '
-            ];
+        case 'labor':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'labor') {
+                header("Location: ?action=login");
+                exit;
+            }
+            echo "<h1>{$lang['welcome']}, " . $_SESSION['username'] . "!</h1>";
+            echo "<p>{$lang['labor_dashboard']}</p>";
+            echo '<a href="?action=logout">' . $lang['logout'] . '</a>';
+            break;
+        case 'user':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
+                header("Location: ?action=login");
+                exit;
+            }
+            echo "<h1>{$lang['welcome']}, " . $_SESSION['username'] . "!</h1>";
+            echo "<p>{$lang['user_dashboard']}</p>";
+            echo '<a href="?action=logout">' . $lang['logout'] . '</a>';
             break;
         default:
-            $translations = [
-                'home' => 'Home',
-                'paper_title' => 'Paper Title:',
-                'researcher_name' => 'Researcher Name:',
-                'publication_date' => 'Publication Date:',
-                'paper_abstract' => 'Abstract:',
-                'pdf_file' => 'PDF File:',
-                'type'=> 'Type:',
-                'guider' => 'Guider:',
-                'department' => 'Section:',
-                'section' => 'Department:',
-                'add_paper' => 'Add ',
-                'success_message' => 'Research paper added successfully',
-                'error_message' => 'Error adding research paper: '
-            ];
-            break;
+            header("Location: ?action=login");
+            exit;
     }
-    return $translations[$key] ?? $key;
+    exit;
 }
 
-// Handle add research paper form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $paperTitle = isset($_POST["paperTitle"]) ? $_POST["paperTitle"] : "";
-    $researcherName = isset($_POST["researcherName"]) ? $_POST["researcherName"] : "";
-    $publicationDate = isset($_POST["paperPublicationDate"]) ? $_POST["paperPublicationDate"] : "";
-    $paperAbstract = isset($_POST["paperAbstract"]) ? $_POST["paperAbstract"] : "";
-    $type = isset($_POST["type"]) ? $_POST["type"] : "";
-    $guider = isset($_POST["guider"]) ? $_POST["guider"] : "";
-    $department = isset($_POST["department"]) ? $_POST["department"] : "";
-    $section = isset($_POST["section"]) ? $_POST["section"] : "";
-
-    // Upload PDF file
-    $pdfName = ""; 
-
-    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
-        $pdfName = str_replace(" ", "_", $_FILES['pdf']['name']); // Fix spaces in file name
-        $pdfTemp = $_FILES['pdf']['tmp_name'];
-        $uploadDir = 'paper/';
-    
-        // Ensure the folder exists
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-    
-        // Move uploaded file
-        if (move_uploaded_file($pdfTemp, $uploadDir . $pdfName)) {
-            echo "File uploaded successfully: <a href='$uploadDir$pdfName'>$pdfName</a>";
-        } else {
-            echo "File upload failed!";
-        }
-    } else {
-        echo "Error: " . $_FILES['pdf']['error']; // Show error if upload fails
-    }
-    
-
-    // Insert research paper into the database (sanitization needed)
-    $sql = "INSERT INTO research_papers (title, author_name, publication_date, description, pdf, type, guider, department, section) 
-            VALUES ('$paperTitle', '$researcherName', '$publicationDate', '$paperAbstract', '$pdfName', '$type', '$guider', '$department', '$section')";
-    if (mysqli_query($conn, $sql)) {
-        $message = getLocalizedText('success_message', $lang);
-    } else {
-        $message = getLocalizedText('error_message', $lang) . $sql . "<br>" . mysqli_error($conn);
-    }
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    session_unset();
+    session_destroy();
+    header("Location: ?action=login");
+    exit;
 }
-
-// Close connection
-mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>" dir="<?php echo ($lang == 'ps' || $lang == 'fa') ? 'rtl' : 'ltr'; ?>">
+<html lang="en" dir="<?php echo $dir; ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo getLocalizedText('add_paper', $lang); ?></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title><?php echo $lang['title']; ?></title>
+    <link rel="stylesheet" href="login.css">
     <style>
         body {
-            margin: 20px;
-            text-align: <?php echo ($lang == 'ps' || $lang == 'fa') ? 'right' : 'left'; ?>;
+            font-family: Arial, sans-serif;
+            direction: <?php echo $dir; ?>;
         }
-        .form-control, .form-control-file, .btn {
-            text-align: <?php echo ($lang == 'ps' || $lang == 'fa') ? 'right' : 'left'; ?>;
+        .navbar {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px;
+        }
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .navbar li {
+            margin-left: 20px;
+        }
+        .navbar a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .form-group button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .form-footer {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .form-footer p {
+            margin: 5px 0;
+        }
+        .form-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .form-footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Language Selection Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#"><?php echo getLocalizedText('language', $lang); ?></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboar.php"><?php echo getLocalizedText('home', $lang); ?></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="?lang=en">English</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="?lang=ps">پښتو</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="?lang=fa"> دری</a>
-                    </li>
-                </ul>
-            </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="?lang=en">English</a></li>
+                <li><a href="?lang=ps">Pashto</a></li>
+                <li><a href="?lang=fa">Dari</a></li>
+            </ul>
         </nav>
 
-        <h2 class="mt-4"><?php echo getLocalizedText('add_paper', $lang); ?></h2>
-        <p><?php echo $message; ?></p> <!-- Display message here -->
-        <div id="addPaper">  
-    <form id="addPaperForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">  
-        <div class="form-group">  
-            <label for="type"><?php echo getLocalizedText('type', $lang); ?></label>  
-            <select class="form-control" id="type" name="type" required>
-                <option value="Research Paper">Research Paper</option>
-                <option value="Thesis">Thesis</option>
-                <option value="Dissertation">Dissertation</option>
-                <option value="Article">Article</option>
-            </select>
-        </div>  
-        <div class="form-group">  
-            <label for="paperTitle"><?php echo getLocalizedText('paper_title', $lang); ?></label>  
-            <input type="text" class="form-control" id="paperTitle" name="paperTitle" required>  
-        </div>  
-        <div class="form-group">  
-            <label for="researcherName"><?php echo getLocalizedText('researcher_name', $lang); ?></label>  
-            <input type="text" class="form-control" id="researcherName" name="researcherName" required>  
-        </div>  
-        <div class="form-group">  
-            <label for="guider"><?php echo getLocalizedText('guider', $lang); ?></label>  
-            <input type="text" class="form-control" id="guider" name="guider" required>  
-        </div>  
-        <div class="form-group">  
-            <label for="department"><?php echo getLocalizedText('department', $lang); ?></label>  
-            <select class="form-control" id="department" name="department" required>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="Physics">Physics</option>
-                <option value="Chemistry">Chemistry</option>
-            </select>
-        </div>  
-        <div class="form-group">  
-            <label for="section"><?php echo getLocalizedText('section', $lang); ?></label>  
-            <select class="form-control" id="section" name="section" required>
-                <option value="Software Engineering">Software Engineering</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Artificial Intelligence">Artificial Intelligence</option>
-                <option value="Networking">Networking</option>
-            </select>
-        </div>  
-        <div class="form-group">  
-            <label for="paperPublicationDate"><?php echo getLocalizedText('publication_date', $lang); ?></label>  
-            <input type="date" class="form-control" id="paperPublicationDate" name="paperPublicationDate" required>  
-        </div>  
-        <div class="form-group">  
-            <label for="paperAbstract"><?php echo getLocalizedText('paper_abstract', $lang); ?></label>  
-            <textarea class="form-control" id="paperAbstract" name="paperAbstract" rows="3"></textarea>  
-        </div>  
-        <div class="form-group">  
-            <label for="pdf"><?php echo getLocalizedText('pdf_file', $lang); ?></label>  
-            <input type="file" class="form-control-file" id="pdf" name="pdf" required>  
-        </div>  
-        <button type="submit" class="btn btn-primary"><?php echo getLocalizedText('add_paper', $lang); ?></button>  
-    </form>  
-</div>
-        </div>
-    </div>
+        <h2><?php echo isset($_GET['action']) && $_GET['action'] == 'register' ? $lang['register'] : $lang['login']; ?></h2>
 
-    <!-- Bootstrap and custom scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <?php if (isset($login_error)): ?>
+            <p class="error"><?php echo $login_error; ?></p>
+        <?php endif; ?>
+        <?php if (isset($register_error)): ?>
+            <p class="error"><?php echo $register_error; ?></p>
+        <?php endif; ?>
+        <?php if (isset($register_success)): ?>
+            <p class="success"><?php echo $register_success; ?></p>
+        <?php endif; ?>
+
+        <form action="?" method="post">
+            <?php if (isset($_GET['action']) && $_GET['action'] == 'register'): ?>
+                <input type="hidden" name="action" value="register">
+                <div class="form-group">
+                    <label for="username"><?php echo $lang['username']; ?>:</label>
+                    <input type="text" name="username" id="username" placeholder="<?php echo $lang['username']; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><?php echo $lang['password']; ?>:</label>
+                    <input type="password" name="password" id="password" placeholder="<?php echo $lang['password']; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="email"><?php echo $lang['email']; ?>:</label>
+                    <input type="email" name="email" id="email" placeholder="<?php echo $lang['email']; ?>" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit"><?php echo $lang['register_button']; ?></button>
+                </div>
+                <div class="form-footer">
+                    <p><?php echo $lang['already_have_account']; ?> <a href="?action=login"><?php echo $lang['login_here']; ?></a></p>
+                </div>
+            <?php else: ?>
+                <input type="hidden" name="action" value="login">
+                <div class="form-group">
+                    <label for="username"><?php echo $lang['username']; ?>:</label>
+                    <input type="text" name="username" id="username" placeholder="<?php echo $lang['username']; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><?php echo $lang['password']; ?>:</label>
+                    <input type="password" name="password" id="password" placeholder="<?php echo $lang['password']; ?>" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit"><?php echo $lang['login_button']; ?></button>
+                </div>
+                <div class="form-footer">
+                    <p><?php echo $lang['dont_have_account']; ?> <a href="?action=register"><?php echo $lang['register_here']; ?></a></p>
+                </div>
+            <?php endif; ?>
+        </form>
+    </div>
 </body>
 </html>

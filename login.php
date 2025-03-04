@@ -2,17 +2,7 @@
 session_start();
 
 // Define constants
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_DATABASE', 'library');
-
-// Connect to the database
-$conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'connection.php';
 
 // Set language
 if (isset($_GET['lang'])) {
@@ -151,19 +141,20 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
                 header("Location: dashboar.php");
                 break;
 
-                case 'public_manager':
+            case 'public_manager':
                     header("Location: add_book.php");
-                    break;
-
-
+                break;
 
             case 'labor':
                 header("Location: book.php");
                 break;
 
-                case 'manager':
+            case 'manager':
                     header("Location: add_book.php");
-                    break;
+                break;
+                case 'entry':
+                    header("Location: entry_dashboard.php");
+                break;
 
             case 'user':
                 header("Location: downbook.php");
