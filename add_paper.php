@@ -172,7 +172,12 @@ mysqli_close($conn);
     <form id="addPaperForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">  
         <div class="form-group">  
             <label for="type"><?php echo getLocalizedText('type', $lang); ?></label>  
-            <input type="text" class="form-control" id="type" name="type" required>  
+            <select class="form-control" id="type" name="type" required>
+                <option value="Research Paper">Research Paper</option>
+                <option value="Thesis">Thesis</option>
+                <option value="Dissertation">Dissertation</option>
+                <option value="Article">Article</option>
+            </select>
         </div>  
         <div class="form-group">  
             <label for="paperTitle"><?php echo getLocalizedText('paper_title', $lang); ?></label>  
@@ -188,11 +193,21 @@ mysqli_close($conn);
         </div>  
         <div class="form-group">  
             <label for="department"><?php echo getLocalizedText('department', $lang); ?></label>  
-            <input type="text" class="form-control" id="department" name="department" required>  
+            <select class="form-control" id="department" name="department" required>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+            </select>
         </div>  
         <div class="form-group">  
             <label for="section"><?php echo getLocalizedText('section', $lang); ?></label>  
-            <input type="text" class="form-control" id="section" name="section" required>  
+            <select class="form-control" id="section" name="section" required>
+                <option value="Software Engineering">Software Engineering</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Artificial Intelligence">Artificial Intelligence</option>
+                <option value="Networking">Networking</option>
+            </select>
         </div>  
         <div class="form-group">  
             <label for="paperPublicationDate"><?php echo getLocalizedText('publication_date', $lang); ?></label>  
