@@ -153,7 +153,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
                     header("Location: add_book.php");
                 break;
                 case 'entry':
-                    header("Location: entry_dashboard.php");
+                    header("Location: add_paper_entry.php");
                 break;
 
             case 'user':
