@@ -1,17 +1,13 @@
 <?php
 session_start();
-
-// Define constants
 include 'connection.php';
 
-// Set language
 if (isset($_GET['lang'])) {
     $_SESSION['lang'] = $_GET['lang'];
 }
 
-$lang_code = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
+$lang_code = $_SESSION['lang'] ?? 'en';
 
-// Load language file
 $lang_files = [
     'en' => [
         'title' => 'Login and Registration',
@@ -85,18 +81,15 @@ $lang_files = [
 ];
 
 $lang = $lang_files[$lang_code];
-
-// Determine text direction
 $dir = ($lang_code == 'ps' || $lang_code == 'fa') ? 'rtl' : 'ltr';
 
 // Registration logic
-if (isset($_POST['action']) && $_POST['action'] == 'register') {
+if ($_POST['action'] ?? '' === 'register') {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $email = $_POST['email'];
-    $user_type = 'user'; // Default user type
+    $user_type = 'user';
 
-    // Check if the username or email already exists
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = ? OR email = ?");
     $stmt->bind_param("ss", $username, $email);
     $stmt->execute();
@@ -105,109 +98,50 @@ if (isset($_POST['action']) && $_POST['action'] == 'register') {
     if ($stmt->num_rows > 0) {
         $register_error = $lang['username_or_email_exists'];
     } else {
-        // Insert the new user into the database
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Hash the password
+
         $stmt = $conn->prepare("INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $username, $password, $email, $user_type);
+        $stmt->bind_param("ssss", $username, $hashed_password, $email, $user_type);
         $stmt->execute();
-
-        if ($stmt->affected_rows > 0) {
-            $register_success = $lang['registration_successful'];
-        } else {
-            $register_error = $lang['registration_failed'];
-        }
+        $register_success = ($stmt->affected_rows > 0) ? $lang['registration_successful'] : $lang['registration_failed'];
     }
-
     $stmt->close();
 }
 
 // Login logic
-if (isset($_POST['action']) && $_POST['action'] == 'login') {
+if ($_POST['action'] ?? '' === 'login') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT user_id, user_type FROM users WHERE username = ? AND password = ?");
-    $stmt->bind_param("ss", $username, $password);
+    $stmt = $conn->prepare("SELECT user_id, user_type, password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
     $stmt->execute();
-    $stmt->bind_result($user_id, $user_type);
+    $stmt->bind_result($user_id, $user_type, $hashed_password);
     $stmt->fetch();
 
-    if ($user_id) {
+    if ($user_id && password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $user_id;
         $_SESSION['user_type'] = $user_type;
         $_SESSION['username'] = $username;
 
-        switch ($user_type) {
-            case 'admin':
-                header("Location: dashboar.php");
-                break;
-
-            case 'public_manager':
-                    header("Location: add_book.php");
-                break;
-
-            case 'labor':
-                header("Location: book.php");
-                break;
-
-            case 'manager':
-                    header("Location: add_book.php");
-                break;
-                case 'entry':
-                    header("Location: add_paper_entry.php");
-                break;
-
-            case 'user':
-                header("Location: downbook.php");
-                break;
-            default:
-                header("Location: ?action=login");
-                break;
-        }
+        $redirects = [
+            'admin' => 'dashboard.php',
+            'public_manager' => 'add_book.php',
+            'manager' => 'add_book.php',
+            'entry' => 'add_paper_entry.php',
+            'labor' => 'book.php',
+            'user' => 'downbook.php'
+        ];
+        header("Location: " . ($redirects[$user_type] ?? "?action=login"));
         exit;
     } else {
         $login_error = $lang['invalid_credentials'];
     }
-
     $stmt->close();
 }
 
-if (isset($_GET['dashboard'])) {
-    switch ($_GET['dashboard']) {
-        case 'admin':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-                header("Location: ?action=login");
-                exit;
-            }
-            echo "<h1>{$lang['welcome']}, " . $_SESSION['username'] . "!</h1>";
-            echo "<p>{$lang['admin_dashboard']}</p>";
-            echo '<a href="?action=logout">' . $lang['logout'] . '</a>';
-            break;
-        case 'labor':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'labor') {
-                header("Location: ?action=login");
-                exit;
-            }
-            echo "<h1>{$lang['welcome']}, " . $_SESSION['username'] . "!</h1>";
-            echo "<p>{$lang['labor_dashboard']}</p>";
-            echo '<a href="?action=logout">' . $lang['logout'] . '</a>';
-            break;
-        case 'user':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
-                header("Location: ?action=login");
-                exit;
-            }
-            echo "<h1>{$lang['welcome']}, " . $_SESSION['username'] . "!</h1>";
-            echo "<p>{$lang['user_dashboard']}</p>";
-            echo '<a href="?action=logout">' . $lang['logout'] . '</a>';
-            break;
-        default:
-            header("Location: ?action=login");
-            exit;
-    }
-    exit;
-}
-
-if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+// Logout
+if ($_GET['action'] ?? '' === 'logout') {
     session_unset();
     session_destroy();
     header("Location: ?action=login");
@@ -216,153 +150,69 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en" dir="<?php echo $dir; ?>">
+<html lang="en" dir="<?= $dir ?>">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $lang['title']; ?></title>
-    <link rel="stylesheet" href="login.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            direction: <?php echo $dir; ?>;
-        }
-        .navbar {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 10px;
-        }
-        .navbar ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .navbar li {
-            margin-left: 20px;
-        }
-        .navbar a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-        .error {
-            color: red;
-        }
-        .success {
-            color: green;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="password"],
-        .form-group input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .form-group button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-        .form-footer {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .form-footer p {
-            margin: 5px 0;
-        }
-        .form-footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title><?= $lang['title'] ?></title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <nav class="navbar">
-            <ul>
-                <li><a href="?lang=en">English</a></li>
-                <li><a href="?lang=ps">Pashto</a></li>
-                <li><a href="?lang=fa">Dari</a></li>
-            </ul>
-        </nav>
+<body class="bg-gray-100 font-sans" style="direction: <?= $dir ?>;">
+    <nav class="bg-white shadow p-4 flex justify-end space-x-4 rtl:space-x-reverse">
+    <a href="register.php" class="text-blue-600 hover:underline">Register</a>
+        <a href="?lang=en" class="text-blue-600 hover:underline">English</a>
+        <a href="?lang=ps" class="text-blue-600 hover:underline">Pashto</a>
+        <a href="?lang=fa" class="text-blue-600 hover:underline">Dari</a>
+    </nav>
 
-        <h2><?php echo isset($_GET['action']) && $_GET['action'] == 'register' ? $lang['register'] : $lang['login']; ?></h2>
+    <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-bold mb-4 text-center">
+            <?= ($_GET['action'] ?? '') === 'register' ? $lang['register'] : $lang['login'] ?>
+        </h2>
 
-        <?php if (isset($login_error)): ?>
-            <p class="error"><?php echo $login_error; ?></p>
+        <?php if (!empty($login_error)): ?>
+            <p class="text-red-500 mb-2 text-sm"><?= $login_error ?></p>
         <?php endif; ?>
-        <?php if (isset($register_error)): ?>
-            <p class="error"><?php echo $register_error; ?></p>
+        <?php if (!empty($register_error)): ?>
+            <p class="text-red-500 mb-2 text-sm"><?= $register_error ?></p>
         <?php endif; ?>
-        <?php if (isset($register_success)): ?>
-            <p class="success"><?php echo $register_success; ?></p>
+        <?php if (!empty($register_success)): ?>
+            <p class="text-green-500 mb-2 text-sm"><?= $register_success ?></p>
         <?php endif; ?>
 
-        <form action="?" method="post">
-            <?php if (isset($_GET['action']) && $_GET['action'] == 'register'): ?>
-                <input type="hidden" name="action" value="register">
-                <div class="form-group">
-                    <label for="username"><?php echo $lang['username']; ?>:</label>
-                    <input type="text" name="username" id="username" placeholder="<?php echo $lang['username']; ?>" required>
-                </div>
-                <div class="form-group">
-                    <label for="password"><?php echo $lang['password']; ?>:</label>
-                    <input type="password" name="password" id="password" placeholder="<?php echo $lang['password']; ?>" required>
-                </div>
-                <div class="form-group">
-                    <label for="email"><?php echo $lang['email']; ?>:</label>
-                    <input type="email" name="email" id="email" placeholder="<?php echo $lang['email']; ?>" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit"><?php echo $lang['register_button']; ?></button>
-                </div>
-                <div class="form-footer">
-                    <p><?php echo $lang['already_have_account']; ?> <a href="?action=login"><?php echo $lang['login_here']; ?></a></p>
-                </div>
-            <?php else: ?>
-                <input type="hidden" name="action" value="login">
-                <div class="form-group">
-                    <label for="username"><?php echo $lang['username']; ?>:</label>
-                    <input type="text" name="username" id="username" placeholder="<?php echo $lang['username']; ?>" required>
-                </div>
-                <div class="form-group">
-                    <label for="password"><?php echo $lang['password']; ?>:</label>
-                    <input type="password" name="password" id="password" placeholder="<?php echo $lang['password']; ?>" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit"><?php echo $lang['login_button']; ?></button>
-                </div>
-                <div class="form-footer">
-                    <p><?php echo $lang['dont_have_account']; ?> <a href="?action=register"><?php echo $lang['register_here']; ?></a></p>
+        <form method="POST" class="space-y-4">
+            <input type="hidden" name="action" value="<?= $_GET['action'] ?? 'login' ?>">
+
+            <div>
+                <label class="block font-semibold mb-1"><?= $lang['username'] ?>:</label>
+                <input type="text" name="username" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring">
+            </div>
+
+            <?php if (($_GET['action'] ?? '') === 'register'): ?>
+                <div>
+                    <label class="block font-semibold mb-1"><?= $lang['email'] ?>:</label>
+                    <input type="email" name="email" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring">
                 </div>
             <?php endif; ?>
+
+            <div>
+                <label class="block font-semibold mb-1"><?= $lang['password'] ?>:</label>
+                <input type="password" name="password" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring">
+            </div>
+
+            <div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                    <?= ($_GET['action'] ?? '') === 'register' ? $lang['register_button'] : $lang['login_button'] ?>
+                </button>
+            </div>
         </form>
+
+        <div class="text-center mt-4 text-sm">
+            <?php if (($_GET['action'] ?? '') === 'register'): ?>
+                <p><?= $lang['already_have_account'] ?> <a href="?action=login" class="text-blue-600 hover:underline"><?= $lang['login_here'] ?></a></p>
+            <?php else: ?>
+                <p><?= $lang['dont_have_account'] ?> <a href="?action=register" class="text-blue-600 hover:underline"><?= $lang['register_here'] ?></a></p>
+            <?php endif; ?>
+        </div>
     </div>
 </body>
 </html>
