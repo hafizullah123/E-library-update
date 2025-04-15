@@ -37,7 +37,8 @@ function getLocalizedText($key, $lang) {
             'nonfiction' => 'Non-fiction',
             'history' => 'History',
             'science' => 'Science',
-            'biography' => 'Biography'
+            'biography' => 'Biography',
+             'islamic' => 'islamic'
         ],
         'ps' => [
             'register_book' => 'نوی کتاب ثبت کړئ',
@@ -61,7 +62,8 @@ function getLocalizedText($key, $lang) {
             'nonfiction' => 'غیرافسانوي',
             'history' => 'تاریخ',
             'science' => 'ساینس',
-            'biography' => 'ژوندلیک'
+            'biography' => 'ژوندلیک',
+             'islamic' => 'علوم اسلامی'
         ],
         'fa' => [
             'register_book' => 'ثبت کتاب جدید',
@@ -85,7 +87,8 @@ function getLocalizedText($key, $lang) {
             'nonfiction' => 'غیرداستانی',
             'history' => 'تاریخ',
             'science' => 'علمی',
-            'biography' => 'زندگینامه'
+            'biography' => 'زندگینامه',
+            'islamic' => 'علوم اسلامی'
         ]
     ];
     return $translations[$lang][$key] ?? $key;
@@ -178,6 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="Non-fiction"><?php echo getLocalizedText('nonfiction', $lang); ?></option>
                 <option value="History"><?php echo getLocalizedText('history', $lang); ?></option>
                 <option value="Science"><?php echo getLocalizedText('science', $lang); ?></option>
+                <option value="islamic"><?php echo getLocalizedText('islamic', $lang); ?></option>
                 <option value="Biography"><?php echo getLocalizedText('biography', $lang); ?></option>
             </select>
         </div>
