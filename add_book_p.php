@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 include 'connection.php';
@@ -31,14 +30,7 @@ function getLocalizedText($key, $lang) {
             'english' => 'English',
             'pashto' => 'Pashto',
             'dari' => 'Dari',
-            'home' => 'Home',
-            'select_genre' => 'Select Genre',
-            'fiction' => 'Fiction',
-            'nonfiction' => 'Non-fiction',
-            'history' => 'History',
-            'science' => 'Science',
-            'biography' => 'Biography',
-             'islamic' => 'islamic'
+            'home' => 'Home'
         ],
         'ps' => [
             'register_book' => 'نوی کتاب ثبت کړئ',
@@ -56,14 +48,7 @@ function getLocalizedText($key, $lang) {
             'english' => 'انګلیسي',
             'pashto' => 'پښتو',
             'dari' => 'دري',
-            'home' => 'کور',
-            'select_genre' => 'ډول وټاکئ',
-            'fiction' => 'افسانوي',
-            'nonfiction' => 'غیرافسانوي',
-            'history' => 'تاریخ',
-            'science' => 'ساینس',
-            'biography' => 'ژوندلیک',
-             'islamic' => 'علوم اسلامی'
+            'home' => 'کور'
         ],
         'fa' => [
             'register_book' => 'ثبت کتاب جدید',
@@ -81,14 +66,7 @@ function getLocalizedText($key, $lang) {
             'english' => 'انگلیسی',
             'pashto' => 'پشتو',
             'dari' => 'دری',
-            'home' => 'خانه',
-            'select_genre' => 'نوعیت را انتخاب کنید',
-            'fiction' => 'داستانی',
-            'nonfiction' => 'غیرداستانی',
-            'history' => 'تاریخ',
-            'science' => 'علمی',
-            'biography' => 'زندگینامه',
-            'islamic' => 'علوم اسلامی'
+            'home' => 'خانه'
         ]
     ];
     return $translations[$lang][$key] ?? $key;
@@ -153,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <li class="nav-item"><a class="nav-link" href="?lang=en"><?php echo getLocalizedText('english', $lang); ?></a></li>
             <li class="nav-item"><a class="nav-link" href="?lang=ps"><?php echo getLocalizedText('pashto', $lang); ?></a></li>
             <li class="nav-item"><a class="nav-link" href="?lang=fa"><?php echo getLocalizedText('dari', $lang); ?></a></li>
-            <li class="nav-item"><a class="nav-link" href="dashboar.php"><?php echo getLocalizedText('home', $lang); ?></a></li>
+            <!-- <li class="nav-item"><a class="nav-link" href="dashboar.php"><?php echo getLocalizedText('home', $lang); ?></a></li> -->
         </ul>
     </div>
 </nav>
@@ -176,13 +154,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-group">
             <label for="genre"><?php echo getLocalizedText('genre', $lang); ?></label>
             <select class="form-control" id="genre" name="genre" required>
-                <option value=""><?php echo getLocalizedText('select_genre', $lang); ?></option>
-                <option value="Fiction"><?php echo getLocalizedText('fiction', $lang); ?></option>
-                <option value="Non-fiction"><?php echo getLocalizedText('nonfiction', $lang); ?></option>
-                <option value="History"><?php echo getLocalizedText('history', $lang); ?></option>
-                <option value="Science"><?php echo getLocalizedText('science', $lang); ?></option>
-                <option value="islamic"><?php echo getLocalizedText('islamic', $lang); ?></option>
-                <option value="Biography"><?php echo getLocalizedText('biography', $lang); ?></option>
+                <option value="Computer">Computer</option>
+                <option value="English">English</option>
+                <option value="ارواپوهنه">ارواپوهنه</option>
+                <option value="علوم اسلامی">علوم اسلامی</option>
+                <option value="ریاضی">ریاضی</option>
+                <option value="فزیک">فزیک</option>
+                <option value="کیمیا">کیمیا</option>
+                <option value="بیولوژی">بیولوژی</option>
+                <option value="علوم تاریخ">علوم تاریخ</option>
+                <option value="علوم جغرافیه">علوم جغرافیه</option>
+                <option value="علوم جامعه شناسی">علوم جامعه شناسی</option>
+                <option value="علوم اختصاصی">علوم اختصاصی</option>
+                <option value="محیط زیست">محیط زیست</option>
+                <option value="علوم ورزشی">علوم ورزشی</option>
+                <option value="کتاب های انگیزه شی">کتاب های انگیزه شی</option>
+                <option value="پښتوژبه او ادبیات">پښتوژبه او ادبیات</option>
+                <option value="زبان وادبیات دری">زبان وادبیات دری</option>
+                <option value="عربی ژبه او ادبیات">عربی ژبه او ادبیات</option>
+                <option value="ترکی ژبه او ادبیات">ترکی ژبه او ادبیات</option>
+                <option value="هنر ها">هنر ها</option>
             </select>
         </div>
         <div class="form-group">
@@ -211,4 +202,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </body>
 </html>
-

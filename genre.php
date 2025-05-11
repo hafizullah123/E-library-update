@@ -1,18 +1,9 @@
 <?php
 // Database connection
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'library';
-
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include("connection.php");
 
 // Fetch genre data
-$sql = "SELECT genre, COUNT(*) AS genre_count FROM books GROUP BY genre";
+$sql = "SELECT TRIM(genre) AS genre, COUNT(*) AS genre_count FROM books GROUP BY TRIM(genre)";
 $result = $conn->query($sql);
 $genres = [];
 
@@ -31,6 +22,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Genres</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .genre-box {
             border: 1px solid #ddd;
@@ -88,12 +80,17 @@ $conn->close();
                 <div class="genre-box">
                     <i class="bi bi-book genre-icon"></i>
                     <div class="genre-count"><?= $genre['genre_count'] ?></div>
-                    <div class="genre-name"><?= $genre['genre'] ?></div>
+                    <div class="genre-name"><?= ucwords(strtolower($genre['genre'])) ?></div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
 </div>
+
+<!-- Optional Debugging Output -->
+<!--
+<pre><?php print_r($genres); ?></pre>
+-->
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>

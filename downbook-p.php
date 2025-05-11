@@ -1,180 +1,78 @@
-<?php
-// Set language from the query parameter or default to 'en' (English)
-$lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-
-// Make sure to validate the language
-if (!in_array($lang, ['en', 'ps', 'fa'])) {
-    $lang = 'en'; // Default to English if the language is not valid
-}
-
-// Function to get localized text based on the current language
-function getLocalizedText($key, $lang) {
-    $translations = [
-        'en' => [
-            'books' => 'Books',
-            'papers' => 'Papers',
-            'logout' => 'Logout',
-            'language' => 'Language',
-            'english' => 'English',
-            'pashto' => 'Pashto',
-            'dari' => 'Dari',
-            'search_placeholder' => 'Search for books...',
-            'search_button' => 'Search',
-            'download_pdf' => 'Download PDF',
-            'view_details' => 'View Details',
-            'author_name' => 'Author',
-            'isbn_number' => 'ISBN',
-            'genre' => 'Genre',
-            'publication_date' => 'Publication Date',
-            'publisher' => 'Publisher',
-            'description' => 'Description',
-            'close' => 'Close',
-            'no_books_found' => 'No books found',
-        ],
-        'ps' => [
-            'books' => 'کتابونه',
-            'papers' => 'مقالې',
-            'logout' => 'وتل',
-            'language' => 'ژبه',
-            'english' => 'انګلیسي',
-            'pashto' => 'پښتو',
-            'dari' => 'دری',
-            'search_placeholder' => 'د کتابونو لټون...',
-            'search_button' => 'لټون',
-            'download_pdf' => 'PDF ډاونلوډ کړئ',
-            'view_details' => 'تفصیلات وګورئ',
-            'author_name' => 'لیکوال',
-            'isbn_number' => 'ISBN',
-            'genre' => 'ژانر',
-            'publication_date' => 'د خپرېدو نېټه',
-            'publisher' => 'چاپونکی',
-            'description' => 'تفصیل',
-            'close' => 'بندول',
-            'no_books_found' => 'هیڅ کتاب ونه موندل شو',
-        ],
-        'fa' => [
-            'books' => 'کتاب‌ها',
-            'papers' => 'مقالات',
-            'logout' => 'خروج',
-            'language' => 'زبان',
-            'english' => 'انگلیسی',
-            'pashto' => 'پشتو',
-            'dari' => 'دری',
-            'search_placeholder' => 'جستجو برای کتاب‌ها...',
-            'search_button' => 'جستجو',
-            'download_pdf' => 'دانلود PDF',
-            'view_details' => 'مشاهده جزئیات',
-            'author_name' => 'نویسنده',
-            'isbn_number' => 'ISBN',
-            'genre' => 'ژانر',
-            'publication_date' => 'تاریخ انتشار',
-            'publisher' => 'ناشر',
-            'description' => 'توضیحات',
-            'close' => 'بستن',
-            'no_books_found' => 'کتابی پیدا نشد',
-        ]
-    ];
-
-    // Return the translation based on the current language
-    return isset($translations[$lang][$key]) ? $translations[$lang][$key] : $translations['en'][$key];
-}
-?>
-
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>" <?php echo ($lang == 'ps' || $lang == 'fa') ? 'dir="rtl"' : ''; ?>>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Books</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        /* Custom styling for RTL */
-        <?php if ($lang == 'ps' || $lang == 'fa') : ?>
-        body {
-            direction: rtl;
-            text-align: right;
-        }
-        <?php endif; ?>
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eLibrary</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><?php echo getLocalizedText('books', $lang); ?></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="#"><?php echo getLocalizedText('books', $lang); ?></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><?php echo getLocalizedText('papers', $lang); ?></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><?php echo getLocalizedText('logout', $lang); ?></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><?php echo getLocalizedText('language', $lang); ?></a>
-                <ul>
-                    <li><a href="?lang=en"><?php echo getLocalizedText('english', $lang); ?></a></li>
-                    <li><a href="?lang=ps"><?php echo getLocalizedText('pashto', $lang); ?></a></li>
-                    <li><a href="?lang=fa"><?php echo getLocalizedText('dari', $lang); ?></a></li>
-                </ul>
-            </li>
-        </ul>
+  <!-- Header -->
+  <header class="bg-blue-800 text-white py-6 shadow-md">
+    <h1 class="text-3xl font-bold text-center">📚 eLibrary Catalog</h1>
+  </header>
+
+  <!-- Search & Filter -->
+  <section class="max-w-7xl mx-auto p-4">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+      <input type="text" placeholder="Search books..." class="w-full md:w-1/2 p-2 border border-gray-300 rounded-md shadow-sm" />
+      <select class="w-full md:w-1/4 p-2 border border-gray-300 rounded-md shadow-sm">
+        <option>All Genres</option>
+        <option>Fiction</option>
+        <option>Non-fiction</option>
+        <option>Science</option>
+        <option>History</option>
+      </select>
     </div>
-</nav>
 
-<!-- Search Form -->
-<div class="container my-4">
-    <input type="text" class="form-control" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" aria-label="Search">
-    <button class="btn btn-primary mt-2"><?php echo getLocalizedText('search_button', $lang); ?></button>
-</div>
+    <!-- Book Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      
+      <!-- Book Card Start -->
+      <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
+        <img src="https://via.placeholder.com/300x200" alt="Cover" class="w-full h-48 object-cover rounded-t-lg">
+        <div class="p-4">
+          <h2 class="text-lg font-bold mb-1">Book Title</h2>
+          <p class="text-gray-700 text-sm mb-1">Author: <span class="font-medium">Author Name</span></p>
+          <p class="text-gray-600 text-sm mb-1">Genre: <span class="font-medium">Genre</span></p>
+          <p class="text-gray-600 text-sm mb-1">ISBN: <span class="font-medium">123-4567890123</span></p>
+          <p class="text-gray-500 text-xs mb-2">Published: <span class="font-medium">2024-01-01</span></p>
+          <p class="text-gray-500 text-xs mb-2">Publisher: <span class="font-medium">Sample Publisher</span></p>
+          <div class="mt-4 flex justify-between items-center">
+            <a href="book.pdf" target="_blank" class="text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Read PDF</a>
+            <button onclick="openModal()" class="text-sm text-blue-600 hover:underline">Details</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card End -->
 
-<!-- Book Details Section -->
-<div class="container">
-    <h2><?php echo getLocalizedText('books', $lang); ?></h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th><?php echo getLocalizedText('author_name', $lang); ?></th>
-                <th><?php echo getLocalizedText('isbn_number', $lang); ?></th>
-                <th><?php echo getLocalizedText('genre', $lang); ?></th>
-                <th><?php echo getLocalizedText('publication_date', $lang); ?></th>
-                <th><?php echo getLocalizedText('publisher', $lang); ?></th>
-                <th><?php echo getLocalizedText('description', $lang); ?></th>
-                <th><?php echo getLocalizedText('download_pdf', $lang); ?></th>
-                <th><?php echo getLocalizedText('view_details', $lang); ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Author Name</td>
-                <td>12345</td>
-                <td>Fiction</td>
-                <td>2023-01-01</td>
-                <td>Publisher Name</td>
-                <td>Description of the book</td>
-                <td><a href="#">Download</a></td>
-                <td><button class="btn btn-info"><?php echo getLocalizedText('view_details', $lang); ?></button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+      <!-- Repeat for other books -->
 
-<!-- Footer -->
-<footer class="bg-light py-4">
-    <div class="container text-center">
-        <p><?php echo getLocalizedText('no_books_found', $lang); ?></p>
     </div>
-</footer>
+  </section>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Modal -->
+  <div id="bookModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg max-w-md w-full shadow-lg">
+      <h3 class="text-xl font-bold mb-2">Book Title</h3>
+      <p class="text-gray-700 mb-2">Detailed description about the book and its contents. This could be a brief summary or key highlights of the book.</p>
+      <p class="text-sm text-gray-500 mb-1">Publisher: Sample Publisher</p>
+      <p class="text-sm text-gray-500 mb-1">ISBN: 123-4567890123</p>
+      <p class="text-sm text-gray-500 mb-3">Published on: 2024-01-01</p>
+      <button onclick="closeModal()" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Close</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function openModal() {
+      document.getElementById("bookModal").classList.remove("hidden");
+    }
+    function closeModal() {
+      document.getElementById("bookModal").classList.add("hidden");
+    }
+  </script>
+
 </body>
 </html>

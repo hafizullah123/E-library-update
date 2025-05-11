@@ -139,7 +139,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
                 break;
             case 'public_manager':
             case 'manager':
-                header("Location: add_book_entry.php");
+                header("Location: add_book.php");
                 break;
             case 'labor':
                 header("Location: book.php");
