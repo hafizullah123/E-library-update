@@ -47,9 +47,21 @@ $result = $conn->query($sql);
 <body class="bg-gray-100">
 
   <!-- Header -->
-  <header class="bg-blue-800 text-white py-6 shadow-md">
-    <h1 class="text-3xl font-bold text-center"><?php echo $translations['header']; ?></h1>
-  </header>
+ <header class="bg-blue-800 text-white py-4 shadow-md">
+  <div class="container mx-auto flex items-center justify-between px-4">
+    
+    <!-- Left: Translated Header Title -->
+    <h1 class="text-2xl font-bold"><?php echo $translations['header']; ?></h1>
+    
+    <!-- Right: Papers and Logout -->
+    <div class="flex items-center space-x-6">
+      <a href="papers.php" class="text-white hover:underline">Papers</a>
+      <a href="logout.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded">Logout</a>
+    </div>
+    
+  </div>
+</header>
+
 
   <!-- Language Selector -->
   <div class="text-center mt-4">

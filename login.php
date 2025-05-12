@@ -1,16 +1,7 @@
 <?php
 session_start();
 
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_DATABASE', 'library');
-
-$conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include('connection.php');
 if (isset($_GET['lang'])) {
     $_SESSION['lang'] = $_GET['lang'];
 }
