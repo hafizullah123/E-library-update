@@ -21,7 +21,7 @@ $translations = [
         'programs_events' => 'Programs and events for the community.',  
         'support_guidance' => 'Support and guidance for research.',  
         'our_history' => 'Our History',  
-        'history_text' => 'Established in 2020, we have served the community.',  
+        'history_text' => 'Established in 2024, we have served the community.',  
         'get_involved' => 'Get Involved',  
         'membership' => 'Become a member.',  
        
@@ -36,7 +36,7 @@ $translations = [
     ],  
     'ps' => [  
         'page_title' => 'کتابخانه',  
-        'library_name' => 'سمنګان عالی موسسی کتابتون ته ښه راغلاست',  
+        'library_name' => 'سمنګان لوړو زدکړو موسسه کتابتون ته ښه راغلاست',  
         'nav_home' => 'کور',  
         'about_us' => 'زموږ په اړه',  
         'welcome_message' => ' کتابتون ته ښه راغلاست ',  
@@ -57,13 +57,13 @@ $translations = [
         'visit_us' => 'زموږ لیدنه وکړئ',  
         'location' => 'د سمنگانو لوٰړو زدکړو موسسه',  
         'hours' => 'د شنبې څخه تر پنجشنبې: سهارڅخه تر ماښام ',  
-        'contact' => 'د نورو معلوماتو لپاره تماس ونیسئ.',  
+         
         'meet_team' => 'زموږ ټیم سره ملاقات وکړئ',  
         'footer_text' => 'ټول حقوق محفوظ دي.'  
     ],  
     'fa' => [  
         'page_title' => 'صفحه کتابخانه',  
-        'library_name' => 'به کتابخانه موسسه عالی سمنگان خوش آمدید',  
+        'library_name' => 'به کتابخانه موسسه تحصیلات عالی سمنگان خوش آمدید',  
         'nav_home' => 'خانه',  
         'about_us' => 'درباره ما',  
         'welcome_message' => 'به کتابخانه ما خوش آمدید!',  
@@ -84,7 +84,7 @@ $translations = [
         'visit_us' => 'به ما مراجعه کنید',  
         'location' => 'موسسه تحصیلات عالی سمنگان',  
         'hours' => 'شنبه تا پنج‌شنبه: صبح تا شام ',  
-        'contact' => 'با ما در info@mylibrary.com تماس بگیرید',  
+       
         'meet_team' => 'با تیم ما آشنا شوید',  
         'footer_text' => 'کلیه حقوق محفوظ است.'  
     ]  
@@ -247,7 +247,7 @@ $translations = [
     <h2 id="visit_us"><?php echo $translations[$lang]['visit_us']; ?></h2>  
     <p id="location"><?php echo $translations[$lang]['location']; ?></p>  
     <p id="hours"><?php echo $translations[$lang]['hours']; ?></p>  
-    <p id="contact"><?php echo $translations[$lang]['contact']; ?></p>  
+     
 
     <div class="team-section">  
         <div class="team-member" id="team_member_1">  
