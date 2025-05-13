@@ -1,8 +1,96 @@
 <?php
 session_start();
 
+<<<<<<< HEAD
 // Default language is English
 $lang = 'en';
+=======
+// Load language files  
+$translations = [  
+    'en' => [  
+        'page_title' => 'Library Page',  
+        'library_name' => 'Wellcome to Samangan university library',  
+        'nav_home' => 'Home',  
+        'about_us' => 'About Us',  
+        'welcome_message' => 'Welcome to our library!',  
+        'mission_heading' => 'Our Mission',  
+        'mission_text' => 'To provide access to knowledge and resources.',  
+        'what_we_offer' => 'What We Offer',  
+        'extensive_collection' => 'An extensive collection of books and',  
+        'digital_resources' => 'digital resources.',  
+        'programs_events' => 'Programs and events for the community.',  
+        'support_guidance' => 'Support and guidance for research.',  
+        'our_history' => 'Our History',  
+        'history_text' => 'Established in 2024, we have served the community.',  
+        'get_involved' => 'Get Involved',  
+        'membership' => 'Become a member.',  
+       
+       
+        'friends_of_library' => 'Join the Friends of the Library.',  
+        'visit_us' => 'Visit Us',  
+        'location' => 'smangan university',  
+        'hours' => 'Mon-Fri: 9 AM - 5 PM',  
+        'contact' => 'Contact us at info@mylibrary.com',  
+        'meet_team' => 'Meet Our Team',  
+        'footer_text' => 'All rights reserved.'  
+    ],  
+    'ps' => [  
+        'page_title' => 'کتابخانه',  
+        'library_name' => 'سمنګان لوړو زدکړو موسسه کتابتون ته ښه راغلاست',  
+        'nav_home' => 'کور',  
+        'about_us' => 'زموږ په اړه',  
+        'welcome_message' => ' کتابتون ته ښه راغلاست ',  
+        'mission_heading' => 'زموږ ماموریت',  
+        'mission_text' => 'د علم او منابعو ته لاسرسی چمتو کول.',  
+        'what_we_offer' => 'موږ څه وړاندې کوو',  
+        'extensive_collection' => 'د کتابونو پراخ مجموعه او',  
+        'digital_resources' => 'ډیجیټل منابع.',  
+        'programs_events' => 'د ټولنې لپاره پروګرامونه او پیښې.',  
+        'support_guidance' => 'د څیړنې لپاره مرستې او لارښوونه.',  
+        'our_history' => 'زموږ تاریخ',  
+        'history_text' => 'په ۲۰۲۴ کې تاسیس شو، موږ ټولنې ته خدمت کړی دی.',  
+        'get_involved' => 'ګډون وکړئ',  
+        'membership' => 'غړیتوب واخلئ.',  
+         
+        
+        'friends_of_library' => 'د کتابخانې دوستانو سره یوځای شئ.',  
+        'visit_us' => 'زموږ لیدنه وکړئ',  
+        'location' => 'د سمنگانو لوٰړو زدکړو موسسه',  
+        'hours' => 'د شنبې څخه تر پنجشنبې: سهارڅخه تر ماښام ',  
+         
+        'meet_team' => 'زموږ ټیم سره ملاقات وکړئ',  
+        'footer_text' => 'ټول حقوق محفوظ دي.'  
+    ],  
+    'fa' => [  
+        'page_title' => 'صفحه کتابخانه',  
+        'library_name' => 'به کتابخانه موسسه تحصیلات عالی سمنگان خوش آمدید',  
+        'nav_home' => 'خانه',  
+        'about_us' => 'درباره ما',  
+        'welcome_message' => 'به کتابخانه ما خوش آمدید!',  
+        'mission_heading' => 'مأموریت ما',  
+        'mission_text' => 'تأمین دسترسی به دانش و منابع.',  
+        'what_we_offer' => 'ما چه خدماتی ارائه می‌دهیم',  
+        'extensive_collection' => 'مجموعه‌ای گسترده از کتاب‌ها و',  
+        'digital_resources' => 'منابع دیجیتال.',  
+        'programs_events' => 'برنامه‌ها و رویدادها برای جامعه.',  
+        'support_guidance' => 'کمک و راهنمایی برای تحقیق.',  
+        'our_history' => 'تاریخچه ما',  
+        'history_text' => 'از سال ۲۰۲۴ تأسیس شده، ما به جامعه خدمت کرده‌ایم.',  
+        'get_involved' => 'درگیر شوید',  
+        'membership' => 'عضو شوید.',  
+        
+         
+        'friends_of_library' => 'به دوستان کتابخانه ملحق شوید.',  
+        'visit_us' => 'به ما مراجعه کنید',  
+        'location' => 'موسسه تحصیلات عالی سمنگان',  
+        'hours' => 'شنبه تا پنج‌شنبه: صبح تا شام ',  
+       
+        'meet_team' => 'با تیم ما آشنا شوید',  
+        'footer_text' => 'کلیه حقوق محفوظ است.'  
+    ]  
+];  
+?>  
+>>>>>>> b84bf78460e01f7be5de5c46a9de4d82feb20d76
 
 // Check if a language is specified in the URL
 if (isset($_GET['lang'])) {
@@ -319,6 +407,7 @@ function translate($key) {
         popup.style.display = 'block';
       }
 
+<<<<<<< HEAD
       // Function to close popup
       function closePopup(id) {
         var popup = document.getElementById(id + '-popup');
@@ -326,4 +415,66 @@ function translate($key) {
       }
     </script>
 </body>
+=======
+<nav>  
+<li id="nav_home"><a href="index.php" style="color: white;"><?php echo $translations[$lang]['nav_home']; ?></a></li>  
+<li id="about_us"><a href="#about" style="color: white;"><?php echo $translations[$lang]['about_us']; ?></a></li>
+ 
+</nav>  
+
+<div class="container">  
+    <h2 id="welcome_message"><?php echo $translations[$lang]['welcome_message']; ?></h2>  
+
+    <p id="mission_heading"><?php echo $translations[$lang]['mission_heading']; ?></p>  
+    <p id="mission_text"><?php echo $translations[$lang]['mission_text']; ?></p>  
+
+    <h2 id="what_we_offer"><?php echo $translations[$lang]['what_we_offer']; ?></h2>  
+    <p id="extensive_collection"><?php echo $translations[$lang]['extensive_collection']; ?></p>  
+    <p id="digital_resources"><?php echo $translations[$lang]['digital_resources']; ?></p>  
+    <p id="programs_events"><?php echo $translations[$lang]['programs_events']; ?></p>  
+    <p id="support_guidance"><?php echo $translations[$lang]['support_guidance']; ?></p>  
+
+    <h2 id="our_history"><?php echo $translations[$lang]['our_history']; ?></h2>  
+    <p id="history_text"><?php echo $translations[$lang]['history_text']; ?></p>  
+
+    <h2 id="get_involved"><?php echo $translations[$lang]['get_involved']; ?></h2>  
+    <ul>  
+        <li id="membership"><?php echo $translations[$lang]['membership']; ?></li>  
+          
+         
+        <li id="friends_of_library"><?php echo $translations[$lang]['friends_of_library']; ?></li>  
+    </ul>  
+
+    <h2 id="visit_us"><?php echo $translations[$lang]['visit_us']; ?></h2>  
+    <p id="location"><?php echo $translations[$lang]['location']; ?></p>  
+    <p id="hours"><?php echo $translations[$lang]['hours']; ?></p>  
+     
+
+    <div class="team-section">  
+        <div class="team-member" id="team_member_1">  
+            <img src="image/ع.jpg" alt="Team Member 1">  
+            <p>محمد نسیم صفا</p>  
+            <p>مدیر عمومی کتابخانه</p>  
+        </div>  
+        <div class="team-member" id="team_member_2">  
+            <img src="image/مدیر.png" alt="Team Member 2">  
+            <p>عصمت الله صدیقیار</p>  
+            <p>مدیر تنظیم کتب و کارت کتلاک</p>  
+        </div>  
+        <div class="team-member" id="team_member_3">  
+            <img src="image/ha.jpg" alt="Team Member 3">  
+            <p>حفیظ الله جهادوال </p>  
+            <p>ایجاد کننده کتابخانه دیجیتلی</p>  
+        </div>  
+    </div>  
+</div>  
+
+<footer>  
+    <div class="container">  
+        <p id="footer_text"><?php echo $translations[$lang]['footer_text']; ?></p>  
+    </div>  
+</footer>  
+
+</body>  
+>>>>>>> b84bf78460e01f7be5de5c46a9de4d82feb20d76
 </html>
