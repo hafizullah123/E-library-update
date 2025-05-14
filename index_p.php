@@ -29,18 +29,33 @@
       <a href="#books" class="mt-6 inline-block bg-blue-700 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded">Explore Books</a>
     </div>
   </section>
-
-  <!-- Slideshow Section -->
+<<!-- Slideshow Section -->
 <section id="slideshow" class="py-16 bg-white">
   <div class="container mx-auto text-center">
     <h3 class="text-3xl font-bold mb-8">Slideshow</h3>
-    <div class="relative w-full max-w-2xl mx-auto">
-      <div class="overflow-hidden rounded shadow-lg">
-        <img id="slideImage" src="https://via.placeholder.com/800x400" class="w-full h-auto transition duration-700" alt="Slideshow">
+
+    <div class="relative w-full max-w-2xl mx-auto overflow-hidden rounded shadow-lg">
+      <div id="carousel" class="flex transition-transform duration-700 ease-in-out">
+        <img src="image/b.jpg" class="w-full flex-shrink-0" />
+        <img src="image/b1.jpg" class="w-full flex-shrink-0" />
+        <img src="image/b2.jpg" class="w-full flex-shrink-0" />
+        <img src="image/ba3.jpg" class="w-full flex-shrink-0" />
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  const carousel = document.getElementById("carousel");
+  const totalSlides = carousel.children.length;
+  let currentSlide = 0;
+
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+  }, 3000); // Change slide every 3 seconds
+</script>
+
 
   <!-- Services Section -->
   <section id="services" class="py-16 bg-gray-50">
@@ -68,14 +83,16 @@
   <div class="container mx-auto text-center">
     <h3 class="text-3xl font-bold mb-8">Gallery</h3>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <img src="https://via.placeholder.com/200" alt="Gallery 1" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 2" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 3" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 4" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 5" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 6" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 7" class="rounded shadow">
-      <img src="https://via.placeholder.com/200" alt="Gallery 8" class="rounded shadow">
+      <img src="image/b.jpg" alt="Gallery 1" class="rounded shadow">
+      <img src="image/b1.jpg" alt="Gallery 2" class="rounded shadow">
+      <img src="image/b2.jpg" alt="Gallery 3" class="rounded shadow">
+      <img src="image/g3.jpeg" alt="Gallery 4" class="rounded shadow">
+      <img src="image/g4.jpeg" alt="Gallery 5" class="rounded shadow">
+      <img src="image/g5.jpeg" alt="Gallery 6" class="rounded shadow">
+      <img src="image/g6.jpeg" alt="Gallery 7" class="rounded shadow">
+      <img src="image/g7.jpg" alt="Gallery 8" class="rounded shadow">
+            <!-- <img src="" alt="Gallery 8" class="rounded shadow"> -->
+
     </div>
   </div>
 </section>
@@ -98,29 +115,58 @@
 </script>
 
 
-  <!-- Featured Books Section -->
-  <section id="books" class="py-16">
-    <div class="container mx-auto text-center">
-      <h3 class="text-3xl font-bold mb-12">Featured Books</h3>
-      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-        <div class="bg-white rounded shadow p-4">
-          <img src="https://via.placeholder.com/150" alt="Book 1" class="mx-auto mb-4">
-          <h5 class="font-bold">Book Title 1</h5>
-          <p class="text-sm text-gray-600">Author Name</p>
-        </div>
-        <div class="bg-white rounded shadow p-4">
-          <img src="https://via.placeholder.com/150" alt="Book 2" class="mx-auto mb-4">
-          <h5 class="font-bold">Book Title 2</h5>
-          <p class="text-sm text-gray-600">Author Name</p>
-        </div>
-        <div class="bg-white rounded shadow p-4">
-          <img src="https://via.placeholder.com/150" alt="Book 3" class="mx-auto mb-4">
-          <h5 class="font-bold">Book Title 3</h5>
-          <p class="text-sm text-gray-600">Author Name</p>
-        </div>
+  <!-- Explore Subjects Section -->
+<section id="subjects" class="py-20 bg-gray-100">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-12">Explore Our Collection</h2>
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+
+      <!-- History Section -->
+      <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition duration-300">
+        <h3 class="text-2xl font-semibold mb-2">History</h3>
+        <p class="text-gray-600 mb-4">Dive into the past with over <strong>1,200 books</strong> covering world history, civilizations, and historical figures.</p>
+        <a href="#" class="text-blue-600 hover:underline">Browse History Books →</a>
       </div>
+
+      <!-- Science Section -->
+      <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition duration-300">
+        <h3 class="text-2xl font-semibold mb-2">Science</h3>
+        <p class="text-gray-600 mb-4">Explore <strong>900+ books</strong> in Physics, Chemistry, Biology, and Environmental Science curated for students and researchers.</p>
+        <a href="#" class="text-blue-600 hover:underline">Browse Science Books →</a>
+      </div>
+
+      <!-- Computer Science Section -->
+      <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition duration-300">
+        <h3 class="text-2xl font-semibold mb-2">Computer Science</h3>
+        <p class="text-gray-600 mb-4">Access <strong>1,500+ titles</strong> on programming, networking, cybersecurity, and AI technologies.</p>
+        <a href="#" class="text-blue-600 hover:underline">Browse Computer Books →</a>
+      </div>
+
+      <!-- Literature Section -->
+      <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition duration-300">
+        <h3 class="text-2xl font-semibold mb-2">Literature</h3>
+        <p class="text-gray-600 mb-4">Enjoy <strong>850+ books</strong> from world-famous authors, including novels, poems, and literary criticism.</p>
+        <a href="#" class="text-blue-600 hover:underline">Browse Literature →</a>
+      </div>
+
+      <!-- Islamic Studies Section -->
+      <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition duration-300">
+        <h3 class="text-2xl font-semibold mb-2">Islamic Studies</h3>
+        <p class="text-gray-600 mb-4">Explore <strong>1,000+ books</strong> on Quran, Hadith, Fiqh, and Islamic history in Arabic, English, Pashto, and Dari.</p>
+        <a href="#" class="text-blue-600 hover:underline">Browse Islamic Studies →</a>
+      </div>
+
+      <!-- Economics & Management -->
+      <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition duration-300">
+        <h3 class="text-2xl font-semibold mb-2">Economics & Management</h3>
+        <p class="text-gray-600 mb-4">Find <strong>700+ books</strong> on micro/macro economics, business strategies, and management techniques.</p>
+        <a href="#" class="text-blue-600 hover:underline">Browse Economics Books →</a>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Contact Section -->
   <section id="contact" class="py-16 bg-blue-50">
