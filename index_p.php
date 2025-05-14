@@ -3,181 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>International University Library</title>
+  <title>International University E-Library</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
 
   <!-- Navbar -->
-  <nav class="bg-white shadow fixed top-0 w-full z-50">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="text-2xl font-bold text-blue-700">University Library</div>
-      <ul class="hidden md:flex space-x-6 font-medium">
-        <li><a href="#" class="hover:text-blue-600">Home</a></li>
-        <li><a href="#faculties" class="hover:text-blue-600">Faculties</a></li>
-        <li><a href="#gallery" class="hover:text-blue-600">Gallery</a></li>
-        <li><a href="#events" class="hover:text-blue-600">Events</a></li>
-        <li><a href="#" onclick="toggleModal()" class="hover:text-blue-600">Login</a></li>
-      </ul>
-      <select class="ml-4 border px-2 py-1 rounded text-sm">
-        <option>English</option>
-        <option>French</option>
-        <option>Arabic</option>
-        <option>Pashto</option>
-        <option>Dari</option>
-      </select>
+  <header class="bg-blue-800 text-white shadow">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold">International University E-Library</h1>
+      <nav class="space-x-4">
+        <a href="#" class="hover:text-yellow-300">Home</a>
+        <a href="#services" class="hover:text-yellow-300">Services</a>
+        <a href="#books" class="hover:text-yellow-300">Books</a>
+        <a href="#contact" class="hover:text-yellow-300">Contact</a>
+      </nav>
     </div>
-  </nav>
+  </header>
 
-  <!-- Slideshow / Hero -->
-  <div class="mt-20">
-    <div class="relative h-[400px] overflow-hidden">
-      <img id="heroImage" src="https://source.unsplash.com/1600x400/?library,books" class="w-full h-full object-cover transition-all duration-500" />
-      <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <h1 class="text-white text-4xl font-bold">Welcome to Our International Library</h1>
+  <!-- Hero Section -->
+  <section class="bg-white py-16 shadow">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl font-bold mb-4">Welcome to the Digital Library</h2>
+      <p class="text-lg text-gray-700">Access thousands of academic resources, journals, and e-books anytime, anywhere.</p>
+      <a href="#books" class="mt-6 inline-block bg-blue-700 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded">Explore Books</a>
+    </div>
+  </section>
+
+  <!-- Slideshow Section -->
+<section id="slideshow" class="py-16 bg-white">
+  <div class="container mx-auto text-center">
+    <h3 class="text-3xl font-bold mb-8">Slideshow</h3>
+    <div class="relative w-full max-w-2xl mx-auto">
+      <div class="overflow-hidden rounded shadow-lg">
+        <img id="slideImage" src="https://via.placeholder.com/800x400" class="w-full h-auto transition duration-700" alt="Slideshow">
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Faculties Section -->
-  <section id="faculties" class="container mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold text-center mb-10">Our Faculties</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      <!-- 9 Faculties -->
-      ${[...Array(9)].map((_, i) => `
-      <div class="bg-white shadow rounded-xl p-4 text-center">
-        <img src="https://source.unsplash.com/150x150/?faculty,education,${i}" class="w-full h-40 object-cover rounded-lg mb-4" />
-        <h3 class="text-xl font-semibold">Faculty ${i+1}</h3>
-        <p class="text-sm text-gray-600 mt-2">Details about Faculty ${i+1}.</p>
-      </div>`).join('')}
-    </div>
-  </section>
-
-  <!-- Book Search -->
-  <section class="container mx-auto px-4 py-10">
-    <h2 class="text-2xl font-bold mb-4">Live Book Search</h2>
-    <input type="text" id="bookSearch" placeholder="Search books..." class="w-full p-2 border rounded" />
-    <ul id="bookResults" class="mt-4 space-y-2 text-gray-700"></ul>
-  </section>
-
-  <!-- Featured Books Carousel -->
-  <section class="bg-blue-50 py-10">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl font-bold mb-6 text-center">Featured Books</h2>
-      <div class="flex overflow-x-auto gap-4 scrollbar-hide">
-        ${[1,2,3,4,5].map(i => `
-        <div class="min-w-[200px] bg-white p-4 rounded shadow">
-          <img src="https://source.unsplash.com/200x250/?book,${i}" class="mb-2 rounded" />
-          <h3 class="text-lg font-semibold">Book Title ${i}</h3>
-        </div>`).join('')}
+  <!-- Services Section -->
+  <section id="services" class="py-16 bg-gray-50">
+    <div class="container mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-12">Our Services</h3>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded shadow hover:shadow-lg">
+          <h4 class="text-xl font-bold mb-2">E-Books</h4>
+          <p>Access a wide collection of electronic books covering multiple disciplines.</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow hover:shadow-lg">
+          <h4 class="text-xl font-bold mb-2">Research Journals</h4>
+          <p>Stay updated with the latest academic research from top journals.</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow hover:shadow-lg">
+          <h4 class="text-xl font-bold mb-2">Online Support</h4>
+          <p>Get help from our librarians through chat and email support.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Gallery -->
-  <section id="gallery" class="container mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold text-center mb-8">Library Gallery</h2>
-    <div class="flex justify-center">
-      <img id="galleryImage" src="https://source.unsplash.com/800x400/?library,1" class="w-full max-w-4xl h-64 rounded-xl object-cover shadow" />
+  <!-- Gallery Section -->
+<section id="gallery" class="py-16 bg-gray-50">
+  <div class="container mx-auto text-center">
+    <h3 class="text-3xl font-bold mb-8">Gallery</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <img src="https://via.placeholder.com/200" alt="Gallery 1" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 2" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 3" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 4" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 5" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 6" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 7" class="rounded shadow">
+      <img src="https://via.placeholder.com/200" alt="Gallery 8" class="rounded shadow">
+    </div>
+  </div>
+</section>
+
+
+<script>
+  const images = [
+    "https://via.placeholder.com/800x400?text=Slide+1",
+    "https://via.placeholder.com/800x400?text=Slide+2",
+    "https://via.placeholder.com/800x400?text=Slide+3",
+    "https://via.placeholder.com/800x400?text=Slide+4"
+  ];
+  let index = 0;
+  const slideImage = document.getElementById("slideImage");
+
+  setInterval(() => {
+    index = (index + 1) % images.length;
+    slideImage.src = images[index];
+  }, 5000); // Change image every 5 seconds
+</script>
+
+
+  <!-- Featured Books Section -->
+  <section id="books" class="py-16">
+    <div class="container mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-12">Featured Books</h3>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded shadow p-4">
+          <img src="https://via.placeholder.com/150" alt="Book 1" class="mx-auto mb-4">
+          <h5 class="font-bold">Book Title 1</h5>
+          <p class="text-sm text-gray-600">Author Name</p>
+        </div>
+        <div class="bg-white rounded shadow p-4">
+          <img src="https://via.placeholder.com/150" alt="Book 2" class="mx-auto mb-4">
+          <h5 class="font-bold">Book Title 2</h5>
+          <p class="text-sm text-gray-600">Author Name</p>
+        </div>
+        <div class="bg-white rounded shadow p-4">
+          <img src="https://via.placeholder.com/150" alt="Book 3" class="mx-auto mb-4">
+          <h5 class="font-bold">Book Title 3</h5>
+          <p class="text-sm text-gray-600">Author Name</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Events Section -->
-  <section id="events" class="container mx-auto px-4 py-10">
-    <h2 class="text-2xl font-bold mb-4">Upcoming Events</h2>
-    <ul class="space-y-3">
-      <li class="bg-white p-4 rounded shadow">
-        <strong>📅 Book Fair:</strong> August 22, 2025 – Explore rare books.
-      </li>
-      <li class="bg-white p-4 rounded shadow">
-        <strong>📖 Reading Workshop:</strong> September 5, 2025 – Improve reading skills.
-      </li>
-    </ul>
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 bg-blue-50">
+    <div class="container mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-6">Contact Us</h3>
+      <p>Email: library@internationaluniv.edu</p>
+      <p>Phone: +123 456 7890</p>
+      <p>Address: University Rd, City, Country</p>
+    </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-10 mt-10">
-    <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
-      <div>
-        <h3 class="font-semibold text-lg mb-2">About Us</h3>
-        <p>We are an international university library offering digital and physical resources worldwide.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-lg mb-2">Quick Links</h3>
-        <ul class="space-y-1">
-          <li><a href="#" class="hover:underline">Home</a></li>
-          <li><a href="#" class="hover:underline">Gallery</a></li>
-          <li><a href="#" class="hover:underline">Faculties</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-semibold text-lg mb-2">Contact</h3>
-        <p>Email: info@library.edu</p>
-        <p>Phone: +93 700 123 456</p>
-        <p>Address: Kabul, Afghanistan</p>
-      </div>
-    </div>
+  <footer class="bg-blue-800 text-white text-center py-4">
+    <p>&copy; 2025 International University E-Library. All rights reserved.</p>
   </footer>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-lg w-full max-w-sm relative">
-      <button onclick="toggleModal()" class="absolute top-2 right-2 text-gray-500 hover:text-red-500">✕</button>
-      <h2 class="text-xl font-bold mb-4">Login</h2>
-      <input type="text" placeholder="Username" class="w-full p-2 border mb-3 rounded" />
-      <input type="password" placeholder="Password" class="w-full p-2 border mb-3 rounded" />
-      <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Submit</button>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script>
-    // Slideshow images
-    const heroImages = [
-      'https://source.unsplash.com/1600x400/?library,students',
-      'https://source.unsplash.com/1600x400/?bookshelf',
-      'https://source.unsplash.com/1600x400/?reading'
-    ];
-    const galleryImages = [
-      'https://source.unsplash.com/800x400/?library,1',
-      'https://source.unsplash.com/800x400/?library,2',
-      'https://source.unsplash.com/800x400/?library,3'
-    ];
-    let heroIndex = 0;
-    let galleryIndex = 0;
-
-    setInterval(() => {
-      heroIndex = (heroIndex + 1) % heroImages.length;
-      document.getElementById('heroImage').src = heroImages[heroIndex];
-    }, 5000);
-
-    setInterval(() => {
-      galleryIndex = (galleryIndex + 1) % galleryImages.length;
-      document.getElementById('galleryImage').src = galleryImages[galleryIndex];
-    }, 4000);
-
-    // Book Search
-    const books = ['Digital Marketing', 'Python Programming', 'Machine Learning', 'History of Libraries', 'AI in Education'];
-    const bookSearch = document.getElementById('bookSearch');
-    const bookResults = document.getElementById('bookResults');
-    bookSearch.addEventListener('input', () => {
-      const query = bookSearch.value.toLowerCase();
-      bookResults.innerHTML = '';
-      books.filter(b => b.toLowerCase().includes(query)).forEach(book => {
-        const li = document.createElement('li');
-        li.textContent = book;
-        bookResults.appendChild(li);
-      });
-    });
-
-    function toggleModal() {
-      document.getElementById('loginModal').classList.toggle('hidden');
-      document.getElementById('loginModal').classList.toggle('flex');
-    }
-  </script>
 </body>
 </html>
