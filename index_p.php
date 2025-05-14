@@ -65,6 +65,74 @@
       <a href="#books" class="mt-6 inline-block bg-blue-700 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded">Explore Books</a>
     </div>
   </section>
+
+<!-- Usage Section -->
+<!-- Usage Section -->
+<section id="usage" class="py-16 bg-gray-100">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-8">How to Use the eLibrary</h2>
+    <p class="text-lg text-gray-600 mb-12">Our eLibrary offers an easy-to-use platform to access a variety of academic resources. Whether you are a student, teacher, or researcher, here's how you can make the most of our digital library.</p>
+
+    <!-- Steps for Using the eLibrary -->
+    <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+
+      <!-- Register and Login Section -->
+      <div class="bg-white rounded shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">1. Register and Login</h3>
+        <p class="text-gray-700 mb-4">To access exclusive content and personalized features, you need to register for an account. After registration, simply log in to start browsing, saving your favorite books, and receiving recommendations based on your interests.</p>
+        <img src="https://via.placeholder.com/200" alt="Register and Login" class="w-full rounded-md">
+      </div>
+
+      <!-- Search for Books Section -->
+      <div class="bg-white rounded shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">2. Search for Books</h3>
+        <p class="text-gray-700 mb-4">Use the search bar to find books, articles, or other academic resources. You can search by title, author, or keywords related to your research topic.</p>
+        <img src="https://via.placeholder.com/200" alt="Search for Books" class="w-full rounded-md">
+      </div>
+
+      <!-- Browse by Category Section -->
+      <div class="bg-white rounded shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">3. Browse by Category</h3>
+        <p class="text-gray-700 mb-4">Browse through our extensive collection categorized by subject areas such as Computer Science, History, Literature, and more. Find the resources most relevant to your field of interest.</p>
+        <img src="https://via.placeholder.com/200" alt="Browse by Category" class="w-full rounded-md">
+      </div>
+
+      <!-- Download or Read Online Section -->
+      <div class="bg-white rounded shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">4. Download or Read Online</h3>
+        <p class="text-gray-700 mb-4">Once you find a book, you can either download it to read offline or use the online reader to access it directly from your browser without the need for downloading.</p>
+        <img src="https://via.placeholder.com/200" alt="Download or Read Online" class="w-full rounded-md">
+      </div>
+
+      <!-- Access from Anywhere Section -->
+      <div class="bg-white rounded shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">5. Access from Anywhere</h3>
+        <p class="text-gray-700 mb-4">Our eLibrary is accessible 24/7, so you can study or research from anywhere, whether you're on campus, at home, or on the go.</p>
+        <img src="https://via.placeholder.com/200" alt="Access from Anywhere" class="w-full rounded-md">
+      </div>
+
+      <!-- Stay Updated Section -->
+      <div class="bg-white rounded shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">6. Stay Updated with New Additions</h3>
+        <p class="text-gray-700 mb-4">Stay informed about new books, journals, and resources added to the library by subscribing to our newsletter or visiting the "New Arrivals" section regularly.</p>
+        <img src="https://via.placeholder.com/200" alt="Stay Updated" class="w-full rounded-md">
+      </div>
+
+    </div>
+
+    <!-- Call to Action Button -->
+    <div class="mt-12">
+      <a href="#books" class="px-8 py-3 bg-blue-800 text-white rounded-lg text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+        Start Exploring the eLibrary Now
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+
 <<!-- Slideshow Section -->
 <section id="slideshow" class="py-16 bg-white">
   <div class="container mx-auto text-center">
