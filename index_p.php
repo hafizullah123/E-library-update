@@ -9,17 +9,53 @@
 <body class="bg-gray-100 text-gray-800">
 
   <!-- Navbar -->
-  <header class="bg-blue-800 text-white shadow">
-    <div class="container mx-auto flex justify-between items-center p-4">
+<header class="bg-blue-800 text-white shadow">
+  <div class="container mx-auto p-4">
+    <div class="flex justify-between items-center">
+      <!-- Website Title -->
       <h1 class="text-2xl font-bold">International University E-Library</h1>
-      <nav class="space-x-4">
+
+      <!-- Mobile Menu Toggle Button -->
+      <div class="md:hidden">
+        <button id="menu-toggle" class="text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Desktop Menu Links -->
+      <nav class="hidden md:flex space-x-4">
         <a href="#" class="hover:text-yellow-300">Home</a>
         <a href="#services" class="hover:text-yellow-300">Services</a>
         <a href="#books" class="hover:text-yellow-300">Books</a>
         <a href="#contact" class="hover:text-yellow-300">Contact</a>
       </nav>
     </div>
-  </header>
+
+    <!-- Mobile Menu Links (Hidden by default, shown when toggled) -->
+    <nav id="mobile-menu" class="hidden md:hidden flex-col mt-4 space-y-2">
+      <a href="#" class="hover:text-yellow-300">Home</a>
+      <a href="#services" class="hover:text-yellow-300">Services</a>
+      <a href="#books" class="hover:text-yellow-300">Books</a>
+      <a href="#contact" class="hover:text-yellow-300">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- JavaScript for Menu Toggle -->
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuToggle.addEventListener('click', () => {
+    // Toggle visibility of the mobile menu
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
+
+
 
   <!-- Hero Section -->
   <section class="bg-white py-16 shadow">
