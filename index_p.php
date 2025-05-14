@@ -128,11 +128,6 @@
     </div>
   </div>
 </section>
-
-
-
-
-
 <<!-- Slideshow Section -->
 <section id="slideshow" class="py-16 bg-white">
   <div class="container mx-auto text-center">
@@ -159,8 +154,6 @@
     carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
   }, 3000); // Change slide every 3 seconds
 </script>
-
-
   <!-- Services Section -->
   <section id="services" class="py-16 bg-gray-50">
     <div class="container mx-auto text-center">
