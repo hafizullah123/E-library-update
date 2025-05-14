@@ -13,7 +13,7 @@
   <div class="container mx-auto p-4">
     <div class="flex justify-between items-center">
       <!-- Website Title -->
-      <h1 class="text-2xl font-bold">International University E-Library</h1>
+      <h1 class="text-2xl font-bold">Kabul Eduction University E-Library</h1>
 
       <!-- Mobile Menu Toggle Button -->
       <div class="md:hidden">
