@@ -230,7 +230,7 @@ $t = $texts[$lang];
         <a href="#books" class="hover:text-yellow-300"><?= $t['books'] ?></a>
         <a href="#contact" class="hover:text-yellow-300"><?= $t['contact'] ?></a>
         <a href="login.php" class="bg-white text-blue-800 px-3 py-1 rounded hover:bg-blue-100 transition"><?= ($lang === 'ps' ? 'ننوتل' : ($lang === 'fa' ? 'ورود' : 'Login')) ?></a>
-        <a href="register.php" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded hover:bg-yellow-300 transition"><?= ($lang === 'ps' ? 'ثبت نام' : ($lang === 'fa' ? 'ثبت‌نام' : 'Register')) ?></a>
+        <a href="" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded hover:bg-yellow-300 transition"><?= ($lang === 'ps' ? 'ثبت نام' : ($lang === 'fa' ? 'ثبت‌نام' : 'Register')) ?></a>
       </nav>
     </div>
     <!-- Mobile Menu -->
