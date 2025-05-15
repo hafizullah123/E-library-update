@@ -300,30 +300,39 @@ $t = $texts[$lang];
   </div>
 </section>
 
+
+
 <!-- Slideshow Section -->
-<section id="slideshow" class="py-16 bg-white">
+<!-- <section id="slideshow" class="py-16 bg-white">
   <div class="container mx-auto text-center">
     <h3 class="text-3xl font-bold mb-8"><?= $t['slideshow'] ?></h3>
-    <div class="relative w-full max-w-2xl mx-auto overflow-hidden rounded shadow-lg">
-      <div id="carousel" class="flex transition-transform duration-700 ease-in-out">
-        <img src="image/b.jpg" class="w-full flex-shrink-0" />
-        <img src="image/b1.jpg" class="w-full flex-shrink-0" />
-        <img src="image/b2.jpg" class="w-full flex-shrink-0" />
-        <img src="image/ba3.jpg" class="w-full flex-shrink-0" />
+    <div class="relative w-full max-w-2xl mx-auto overflow-hidden rounded shadow-lg" style="height:320px;">
+      <div id="carousel" class="flex transition-transform duration-700 ease-in-out" style="height:320px;">
+        <img src="image/b.jpg" class="w-full h-full object-cover flex-shrink-0" />
+        <img src="image/b1.jpg" class="w-full h-full object-cover flex-shrink-0" />
+        <img src="image/b2.jpg" class="w-full h-full object-cover flex-shrink-0" />
+        <img src="image/ba3.jpg" class="w-full h-full object-cover flex-shrink-0" />
       </div>
     </div>
   </div>
 </section>
 <script>
-  const carousel = document.getElementById("carousel");
-  const totalSlides = carousel.children.length;
-  let currentSlide = 0;
-  setInterval(() => {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-  }, 3000);
-</script>
-
+  document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById("carousel");
+    const slides = carousel.children;
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+    // Set the width of the carousel to fit all slides
+    carousel.style.width = (100 * totalSlides) + "%";
+    for (let i = 0; i < totalSlides; i++) {
+      slides[i].style.width = (100 / totalSlides) + "%";
+    }
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      carousel.style.transform = `translateX(-${currentSlide * (100 / totalSlides)}%)`;
+    }, 3000);
+  });
+</script> -->
 <!-- Services Section -->
 <section id="services" class="py-16 bg-gray-50">
   <div class="container mx-auto text-center">
