@@ -210,31 +210,37 @@ $t = $texts[$lang];
   <a href="?lang=en" class="px-2 py-1 bg-blue-700 text-white rounded"><?= $t['lang_en'] ?></a>
 </div>
 
+
 <!-- Navbar -->
 <header class="bg-blue-800 text-white shadow">
   <div class="container mx-auto p-4">
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold"><?= $t['site_title'] ?></h1>
       <div class="md:hidden">
-        <button id="menu-toggle" class="text-white">
+        <button id="menu-toggle" class="text-white focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
                viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
-      <nav class="hidden md:flex space-x-4">
+      <nav class="hidden md:flex space-x-4 items-center">
         <a href="#" class="hover:text-yellow-300"><?= $t['home'] ?></a>
         <a href="#services" class="hover:text-yellow-300"><?= $t['services'] ?></a>
         <a href="#books" class="hover:text-yellow-300"><?= $t['books'] ?></a>
         <a href="#contact" class="hover:text-yellow-300"><?= $t['contact'] ?></a>
+        <a href="login.php" class="bg-white text-blue-800 px-3 py-1 rounded hover:bg-blue-100 transition"><?= ($lang === 'ps' ? 'ننوتل' : ($lang === 'fa' ? 'ورود' : 'Login')) ?></a>
+        <a href="register.php" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded hover:bg-yellow-300 transition"><?= ($lang === 'ps' ? 'ثبت نام' : ($lang === 'fa' ? 'ثبت‌نام' : 'Register')) ?></a>
       </nav>
     </div>
-    <nav id="mobile-menu" class="hidden md:hidden flex-col mt-4 space-y-2">
-      <a href="#" class="hover:text-yellow-300"><?= $t['home'] ?></a>
-      <a href="#services" class="hover:text-yellow-300"><?= $t['services'] ?></a>
-      <a href="#books" class="hover:text-yellow-300"><?= $t['books'] ?></a>
-      <a href="#contact" class="hover:text-yellow-300"><?= $t['contact'] ?></a>
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="hidden flex-col mt-4 space-y-2 md:hidden bg-blue-700 rounded p-4">
+      <a href="#" class="block py-1 px-2 rounded hover:bg-blue-600"><?= $t['home'] ?></a>
+      <a href="#services" class="block py-1 px-2 rounded hover:bg-blue-600"><?= $t['services'] ?></a>
+      <a href="#books" class="block py-1 px-2 rounded hover:bg-blue-600"><?= $t['books'] ?></a>
+      <a href="#contact" class="block py-1 px-2 rounded hover:bg-blue-600"><?= $t['contact'] ?></a>
+      <a href="login.php" class="block py-1 px-2 rounded bg-white text-blue-800 hover:bg-blue-100"><?= ($lang === 'ps' ? 'ننوتل' : ($lang === 'fa' ? 'ورود' : 'Login')) ?></a>
+      <a href="register.php" class="block py-1 px-2 rounded bg-yellow-400 text-blue-900 hover:bg-yellow-300"><?= ($lang === 'ps' ? 'ثبت نام' : ($lang === 'fa' ? 'ثبت‌نام' : 'Register')) ?></a>
     </nav>
   </div>
 </header>
