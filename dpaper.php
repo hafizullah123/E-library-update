@@ -132,7 +132,7 @@ $result = $conn->query($sql);
         </form>
 
         <div class="flex gap-4">
-            <a href="books.php" class="text-white"><?= $translations[$language]['book'] ?></a>
+            <a href="dbook.php" class="text-white"><?= $translations[$language]['book'] ?></a>
             <a href="logout.php" class="text-white"><?= $translations[$language]['logout'] ?></a>
         </div>
     </div>
