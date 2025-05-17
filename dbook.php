@@ -146,6 +146,7 @@ $result = $conn->query($sql);
           <div class="mt-4 flex justify-between items-center">
             <!-- Download Button -->
             <a href="<?php echo htmlspecialchars($pdf); ?>" download class="text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"><?php echo $translations['download_button']; ?></a>
+            <!-- Read Button (uncomment if needed) -->
             <!-- <a href="<?php echo htmlspecialchars($pdf); ?>" target="_blank" class="text-sm text-white bg-green-600 px-3 py-1 rounded hover:bg-green-700"><?php echo $translations['read_button']; ?></a> -->
           </div>
         </div>
