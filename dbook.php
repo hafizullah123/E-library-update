@@ -55,7 +55,7 @@ $result = $conn->query($sql);
     
     <!-- Right: Papers and Logout -->
     <div class="flex items-center space-x-6">
-      <a href="papers.php" class="text-white hover:underline">Papers</a>
+      <a href="dpaper.php" class="text-white hover:underline">Papers</a>
       <a href="logout.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded">Logout</a>
     </div>
     

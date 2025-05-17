@@ -133,101 +133,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="<?= $lang ?>" dir="<?= $dir ?>">
 <head>
     <meta charset="UTF-8">
     <title><?= getLocalizedText('add_new_paper', $lang); ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gradient-to-br from-blue-50 to-blue-200 min-h-screen">
+
     <!-- Navbar -->
-    <nav class="bg-blue-700 text-white p-4 flex justify-between items-center <?= $dir === 'rtl' ? 'flex-row-reverse' : '' ?>">
-        <h1 class="text-lg font-bold"><?= getLocalizedText('add_new_paper', $lang); ?></h1>
-        <div>
-            <span class="mr-2"><?= getLocalizedText('language', $lang); ?>:</span>
-            <a href="?lang=en" class="mr-2 hover:underline">EN</a>
-            <a href="?lang=ps" class="mr-2 hover:underline">PS</a>
-            <a href="?lang=fa" class="hover:underline">DR</a>
+    <nav class="bg-blue-700 text-white px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow <?= $dir === 'rtl' ? 'flex-row-reverse' : '' ?>">
+        <h1 class="text-2xl font-bold tracking-tight"><?= getLocalizedText('add_new_paper', $lang); ?></h1>
+        <div class="flex gap-2 mt-2 md:mt-0">
+            <span><?= getLocalizedText('language', $lang); ?>:</span>
+            <a href="?lang=en" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'en' ? 'bg-blue-900' : '' ?>">EN</a>
+            <a href="?lang=ps" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'ps' ? 'bg-blue-900' : '' ?>">PS</a>
+            <a href="?lang=fa" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'fa' ? 'bg-blue-900' : '' ?>">DR</a>
         </div>
     </nav>
 
     <!-- Form Container -->
-    <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-6 <?= $dir === 'rtl' ? 'text-right' : 'text-left' ?>">
+    <div class="flex justify-center items-center py-10 px-2">
+      <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
         <?php if (!empty($message)): ?>
-            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded"><?= $message; ?></div>
+            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded text-center"><?= $message; ?></div>
         <?php endif; ?>
 
-        <form method="POST" enctype="multipart/form-data" class="space-y-4">
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('university', $lang); ?></label>
-                <input type="text" name="university" class="w-full border rounded p-2" required>
+        <form method="POST" enctype="multipart/form-data" class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('university', $lang); ?></label>
+                    <input type="text" name="university" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('author_name', $lang); ?></label>
+                    <input type="text" name="author" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('title', $lang); ?></label>
+                    <input type="text" name="paperTitle" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('title_pashto', $lang); ?></label>
+                    <input type="text" name="paperTitle_ps" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('title_dari', $lang); ?></label>
+                    <input type="text" name="paperTitle_fa" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('publication_date', $lang); ?></label>
+                    <input type="date" name="date" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('guider', $lang); ?></label>
+                    <input type="text" name="guider" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('department', $lang); ?></label>
+                    <select name="department" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Literature">Literature</option>
+                        <option value="Physics">Physics</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('section', $lang); ?></label>
+                    <select name="section" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('type', $lang); ?></label>
+                    <select name="type" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                        <option value=""><?= getLocalizedText('select_type', $lang); ?></option>
+                        <option value="Thesis"><?= getLocalizedText('thesis', $lang); ?></option>
+                        <option value="Research"><?= getLocalizedText('research', $lang); ?></option>
+                        <option value="Article"><?= getLocalizedText('article', $lang); ?></option>
+                    </select>
+                </div>
             </div>
             <div>
-                <label class="block mb-1"><?= getLocalizedText('title', $lang); ?></label>
-                <input type="text" name="paperTitle" class="w-full border rounded p-2" required>
+                <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('description', $lang); ?></label>
+                <textarea name="description" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
             </div>
             <div>
-                <label class="block mb-1"><?= getLocalizedText('title_pashto', $lang); ?></label>
-                <input type="text" name="paperTitle_ps" class="w-full border rounded p-2">
+                <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('upload_pdf', $lang); ?></label>
+                <input type="file" name="pdf" class="w-full border border-gray-300 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400">
             </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('title_dari', $lang); ?></label>
-                <input type="text" name="paperTitle_fa" class="w-full border rounded p-2">
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('author_name', $lang); ?></label>
-                <input type="text" name="author" class="w-full border rounded p-2" required>
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('publication_date', $lang); ?></label>
-                <input type="date" name="date" class="w-full border rounded p-2">
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('description', $lang); ?></label>
-                <textarea name="description" class="w-full border rounded p-2"></textarea>
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('upload_pdf', $lang); ?></label>
-                <input type="file" name="pdf" class="w-full border rounded p-2">
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('type', $lang); ?></label>
-                <select name="type" class="w-full border rounded p-2">
-                    <option value=""><?= getLocalizedText('select_type', $lang); ?></option>
-                    <option value="Thesis"><?= getLocalizedText('thesis', $lang); ?></option>
-                    <option value="Research"><?= getLocalizedText('research', $lang); ?></option>
-                    <option value="Article"><?= getLocalizedText('article', $lang); ?></option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('guider', $lang); ?></label>
-                <input type="text" name="guider" class="w-full border rounded p-2">
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('department', $lang); ?></label>
-                <select name="department" class="w-full border rounded p-2">
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Literature">Literature</option>
-                    <option value="Physics">Physics</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-1"><?= getLocalizedText('section', $lang); ?></label>
-                <select name="section" class="w-full border rounded p-2">
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                </select>
-            </div>
-            <div>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+            <div class="pt-2">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg shadow transition">
                     <?= getLocalizedText('submit', $lang); ?>
                 </button>
             </div>
         </form>
+      </div>
     </div>
 </body>
 </html>
