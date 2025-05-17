@@ -95,12 +95,12 @@ $type = isset($_GET['type']) ? $_GET['type'] : '';
 // Prepare the base query
 $sql = "SELECT * FROM research_papers WHERE 1";
 
-// Apply search filter if there's a search term
+// Apply search filter
 if (!empty($search)) {
     $sql .= " AND (title LIKE '%$search%' OR author_name LIKE '%$search%' OR university LIKE '%$search%')";
 }
 
-// Apply type filter if a type is selected
+// Apply type filter
 if (!empty($type)) {
     $sql .= " AND type = '$type'";
 }
@@ -114,14 +114,6 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title><?= $translations[$language]['title'] ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {},
-            },
-            plugins: [require('@tailwindcss/line-clamp')],
-        }
-    </script>
 </head>
 <body class="bg-gray-100">
 
@@ -139,7 +131,6 @@ $result = $conn->query($sql);
             </select>
         </form>
 
-        <!-- Navbar Links -->
         <div class="flex gap-4">
             <a href="books.php" class="text-white"><?= $translations[$language]['book'] ?></a>
             <a href="logout.php" class="text-white"><?= $translations[$language]['logout'] ?></a>
@@ -169,9 +160,19 @@ $result = $conn->query($sql);
     <!-- Paper Cards -->
     <?php if ($result->num_rows > 0): ?>
         <?php while ($row = $result->fetch_assoc()): ?>
+            <?php
+                // Show title based on language
+                if ($language == 'ps' && !empty($row['title_pashto'])) {
+                    $titleToShow = $row['title_pashto'];
+                } elseif ($language == 'fa' && !empty($row['title_dari'])) {
+                    $titleToShow = $row['title_dari'];
+                } else {
+                    $titleToShow = $row['title'];
+                }
+            ?>
             <div class="bg-white p-4 mb-6 rounded shadow border">
                 <div class="font-bold text-lg mb-2">
-                    <?= htmlspecialchars($row['title']) ?>
+                    <?= htmlspecialchars($titleToShow) ?>
                     <span class="ml-2 bg-gray-300 text-gray-700 px-2 py-1 rounded text-sm"><?= htmlspecialchars($row['type']) ?></span>
                 </div>
                 <div class="text-sm text-gray-600 mb-2">
@@ -186,7 +187,6 @@ $result = $conn->query($sql);
                     <?= nl2br(htmlspecialchars($row['description'])) ?>
                 </div>
                 <div class="mt-3 space-x-2">
-                    <!-- Read and Download buttons -->
                     <a href="paper/<?= htmlspecialchars($row['pdf']) ?>" target="_blank"
                        class="bg-blue-600 text-white px-4 py-1 rounded text-sm"><?= $translations[$language]['read'] ?></a>
                     <a href="paper/<?= htmlspecialchars($row['pdf']) ?>" download
@@ -195,7 +195,7 @@ $result = $conn->query($sql);
             </div>
         <?php endwhile; ?>
     <?php else: ?>
-        <p class="text-red-500"><?= $translations[$language]['no_results'] ?></p>
+        <p class="text-gray-600 text-center"><?= $translations[$language]['no_results'] ?></p>
     <?php endif; ?>
 </div>
 
