@@ -13,15 +13,19 @@ return [
         'science' => 'علوم',
         'history' => 'تاریخ',
     ],
+    'types' => [
+        'thesis' => 'تېزس',
+        'article' => 'مقاله',
+        'research' => 'څېړنه',
+        // Add more types as needed
+    ],
+    'type' => 'ډول',
     'author_name' => 'لیکوال',
     'genre' => 'ژانر',
     'isbn' => 'ISBN',
     'published' => 'چاپ شوی',
     'publisher' => 'ناشر',
     'download_button' => 'ډاونلوډ',
-    'read_button'
- => 
-'Read Online'
-, 
+    'read_button' => 'آنلاین لوستل',
     'no_books' => 'هیڅ کتاب ونه موندل شو',
 ];

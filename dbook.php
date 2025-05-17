@@ -107,6 +107,8 @@ $result = $conn->query($sql);
           $pdf = $row['pdf']; // PDF download link
           $publication_date = $row['publication_date'];
           $publisher = $row['publisher'];
+          $type = isset($row['type']) ? $row['type'] : '';
+          $type_key = strtolower($type);
           ?>
 
           <!-- Book Card Start -->
@@ -120,6 +122,14 @@ $result = $conn->query($sql);
     <p class="text-gray-600 text-sm mb-1"><?php echo $translations['isbn']; ?>: <span class="font-medium"><?php echo $isbn_number; ?></span></p>
     <p class="text-gray-500 text-xs mb-2"><?php echo $translations['published']; ?>: <span class="font-medium"><?php echo $publication_date; ?></span></p>
     <p class="text-gray-500 text-xs mb-2"><?php echo $translations['publisher']; ?>: <span class="font-medium"><?php echo $publisher; ?></span></p>
+    <p class="text-gray-600 text-sm mb-1">
+      <?php echo $translations['type']; ?>:
+      <span class="font-medium">
+        <?php
+          echo isset($translations['types'][$type_key]) ? $translations['types'][$type_key] : $type;
+        ?>
+      </span>
+    </p>
     <div class="mt-4 flex justify-between items-center">
       <!-- Download Button -->
       <a href="<?php echo $pdf; ?>" download class="text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"><?php echo $translations['download_button']; ?></a>

@@ -13,15 +13,19 @@ return [
         'science' => 'Science',
         'history' => 'History',
     ],
+    'types' => [
+        'thesis' => 'Thesis',
+        'article' => 'Article',
+        'research' => 'Research',
+        // Add more types as needed
+    ],
+    'type' => 'Type',
     'author_name' => 'Author',
     'genre' => 'Genre',
     'isbn' => 'ISBN',
     'published' => 'Published',
     'publisher' => 'Publisher',
     'download_button' => 'Download',
-    'read_button'
- => 
-'Read Online'
-, 
+    'read_button' => 'Read Online',
     'no_books' => 'No books found',
 ];

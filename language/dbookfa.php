@@ -13,15 +13,19 @@ return [
         'science' => 'علمی',
         'history' => 'تاریخی',
     ],
+    'types' => [
+        'thesis' => 'پایان‌نامه',
+        'article' => 'مقاله',
+        'research' => 'تحقیق',
+        // Add more types as needed
+    ],
+    'type' => 'نوع',
     'author_name' => 'نویسنده',
     'genre' => 'ژانر',
     'isbn' => 'ISBN',
     'published' => 'منتشر شده',
     'publisher' => 'ناشر',
-    'download_button' => 'دانلود', 
-    'read_button'
- => 
-'Read Online'
-, 
+    'download_button' => 'دانلود',
+    'read_button' => 'مطالعه آنلاین',
     'no_books' => 'کتابی پیدا نشد',
 ];
