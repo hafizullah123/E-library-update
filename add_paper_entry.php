@@ -146,11 +146,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Navbar -->
     <nav class="bg-blue-700 text-white px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow <?= $dir === 'rtl' ? 'flex-row-reverse' : '' ?>">
         <h1 class="text-2xl font-bold tracking-tight"><?= getLocalizedText('add_new_paper', $lang); ?></h1>
-        <div class="flex gap-2 mt-2 md:mt-0">
+        <div class="flex gap-2 mt-2 md:mt-0 items-center">
             <span><?= getLocalizedText('language', $lang); ?>:</span>
             <a href="?lang=en" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'en' ? 'bg-blue-900' : '' ?>">EN</a>
             <a href="?lang=ps" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'ps' ? 'bg-blue-900' : '' ?>">PS</a>
             <a href="?lang=fa" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'fa' ? 'bg-blue-900' : '' ?>">DR</a>
+            <a href="logout.php" class="ml-4 bg-red-600 hover:bg-red-700 px-3 py-1 rounded transition text-white font-semibold"><?= $lang == 'ps' ? 'وتل' : ($lang == 'fa' ? 'خروج' : 'Logout') ?></a>
         </div>
     </nav>
 
