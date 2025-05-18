@@ -69,98 +69,118 @@ $result = $conn->query($sql);
 
   <!-- Search & Filter -->
   <section class="max-w-7xl mx-auto p-4">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-      <!-- Search Bar -->
-      <form method="get" class="w-full md:w-1/2 flex gap-2">
-        <input type="text" name="search" placeholder="<?php echo $translations['search_placeholder']; ?>" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" value="<?php echo htmlspecialchars($searchQuery); ?>" />
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"><?php echo $translations['search_button']; ?></button>
-      </form>
+    <form method="get" class="flex flex-col md:flex-row gap-2 mb-6">
+      <!-- Search Input -->
+      <input
+        type="text"
+        name="search"
+        placeholder="<?php echo $translations['search_placeholder']; ?>"
+        class="flex-1 p-2 border border-gray-300 rounded-md shadow-sm"
+        value="<?php echo htmlspecialchars($searchQuery); ?>"
+      />
       <!-- Genre Filter -->
-      <form method="get" class="w-full md:w-1/4 flex gap-2">
-        <select name="genre" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" onchange="this.form.submit()">
-          <option value=""><?php echo $translations['all_genres']; ?></option>
-          <option value="Fiction" <?php if ($filterGenre == "Fiction") echo "selected"; ?>><?php echo $translations['genres']['fiction']; ?></option>
-          <option value="Non-fiction" <?php if ($filterGenre == "Non-fiction") echo "selected"; ?>><?php echo $translations['genres']['non_fiction']; ?></option>
-          <option value="Science" <?php if ($filterGenre == "Science") echo "selected"; ?>><?php echo $translations['genres']['science']; ?></option>
-          <option value="History" <?php if ($filterGenre == "History") echo "selected"; ?>><?php echo $translations['genres']['history']; ?></option>
-        </select>
-      </form>
-    </div>
-
-    <!-- Book Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <?php
-      if ($result->num_rows > 0) {
-        // Output data of each book
-        while ($row = $result->fetch_assoc()) {
-          $book_id = $row['book_id'];
-          $book_name = $row['book_name'];
-          $author_name = $row['author_name'];
-          $isbn_number = $row['isbn_number'];
-          $genre = $row['genre'];
-          $cover_image = $row['cover_image'];
-          $pdf = $row['pdf']; // PDF download link
-          $publication_date = $row['publication_date'];
-          $publisher = $row['publisher'];
-          $type = isset($row['type']) ? $row['type'] : '';
-          $type_key = strtolower($type);
-      ?>
-      <!-- Book Card Start -->
-      <div class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col">
-        <img src="<?php echo htmlspecialchars($cover_image); ?>" alt="Cover" class="w-full h-64 object-cover rounded-t-lg">
-        <div class="p-4 flex-1 flex flex-col">
-          <h2 class="text-lg font-bold mb-1">
-            <?php echo htmlspecialchars($book_name); ?>
-            <span class="text-sm font-normal text-gray-500 ml-2">
-              (<?php
-                $type_key = strtolower($type);
-                $type_value = isset($translations['types'][$type_key]) ? $translations['types'][$type_key] : htmlspecialchars($type);
-                // Uppercase the first letter (supports UTF-8)
-                echo mb_strtoupper(mb_substr($type_value, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($type_value, 1, null, 'UTF-8');
-              ?>)
-            </span>
-          </h2>
-          <p class="text-gray-700 text-sm mb-1"><?php echo $translations['author_name']; ?>: <span class="font-medium"><?php echo htmlspecialchars($author_name); ?></span></p>
-          <p class="text-gray-600 text-sm mb-1">
-            <?php echo $translations['genre']; ?>:
-            <span class="font-medium">
-              <?php
-                // Convert genre to key (e.g. "Non-fiction" => "non_fiction")
-                $genre_key = strtolower(str_replace('-', '_', $genre));
-                echo isset($translations['genres'][$genre_key]) ? $translations['genres'][$genre_key] : htmlspecialchars($genre);
-              ?>
-            </span>
-          </p>
-          <p class="text-gray-600 text-sm mb-1"><?php echo $translations['isbn']; ?>: <span class="font-medium"><?php echo htmlspecialchars($isbn_number); ?></span></p>
-          <p class="text-gray-500 text-xs mb-2"><?php echo $translations['published']; ?>: <span class="font-medium"><?php echo htmlspecialchars($publication_date); ?></span></p>
-          <p class="text-gray-500 text-xs mb-2"><?php echo $translations['publisher']; ?>: <span class="font-medium"><?php echo htmlspecialchars($publisher); ?></span></p>
-          <p class="text-gray-600 text-sm mb-1">
-            <?php echo $translations['type']; ?>:
-            <span class="font-medium">
-              <?php
-                $type_key = strtolower($type); // e.g. "Thesis" => "thesis"
-                echo isset($translations['types'][$type_key]) ? $translations['types'][$type_key] : htmlspecialchars($type);
-              ?>
-            </span>
-          </p>
-          <div class="mt-4 flex justify-between items-center">
-            <!-- Download Button -->
-            <a href="<?php echo htmlspecialchars($pdf); ?>" download class="text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"><?php echo $translations['download_button']; ?></a>
-            <!-- Read Button (uncomment if needed) -->
-            <!-- <a href="<?php echo htmlspecialchars($pdf); ?>" target="_blank" class="text-sm text-white bg-green-600 px-3 py-1 rounded hover:bg-green-700"><?php echo $translations['read_button']; ?></a> -->
-          </div>
-        </div>
-      </div>
-      <!-- Book Card End -->
-      <?php
-        }
-      } else {
-        echo "<p class='text-center col-span-4'>" . $translations['no_books'] . "</p>";
-      }
-      ?>
-    </div>
+      <select
+        name="genre"
+        class="w-full md:w-48 p-2 border border-gray-300 rounded-md shadow-sm"
+        onchange="this.form.submit()"
+      >
+        <option value=""><?php echo $translations['all_genres']; ?></option>
+        <option value="Fiction" <?php if ($filterGenre == "Fiction") echo "selected"; ?>><?php echo $translations['genres']['fiction']; ?></option>
+        <option value="Non-fiction" <?php if ($filterGenre == "Non-fiction") echo "selected"; ?>><?php echo $translations['genres']['non_fiction']; ?></option>
+        <option value="Science" <?php if ($filterGenre == "Science") echo "selected"; ?>><?php echo $translations['genres']['science']; ?></option>
+        <option value="History" <?php if ($filterGenre == "History") echo "selected"; ?>><?php echo $translations['genres']['history']; ?></option>
+      </select>
+      <!-- Search Button -->
+      <button
+        type="submit"
+        class="w-full md:w-auto bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+      >
+        <?php echo $translations['search_button']; ?>
+      </button>
+    </form>
   </section>
 
+  <!-- Book Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <?php
+    if ($result->num_rows > 0) {
+      // Output data of each book
+      while ($row = $result->fetch_assoc()) {
+        $book_id = $row['book_id'];
+        $book_name = $row['book_name'];
+        $author_name = $row['author_name'];
+        $isbn_number = $row['isbn_number'];
+        $genre = $row['genre'];
+        $cover_image = $row['cover_image'];
+        $pdf = $row['pdf']; // PDF download link
+        $publication_date = $row['publication_date'];
+        $publisher = $row['publisher'];
+        $type = isset($row['type']) ? $row['type'] : '';
+        $type_key = strtolower($type);
+    ?>
+    <!-- Book Card Start -->
+    <div class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col">
+      <img src="<?php echo htmlspecialchars($cover_image); ?>" alt="Cover"
+           class="w-11/12 mx-auto h-48 sm:h-64 object-contain bg-white rounded-t-lg" />
+      <div class="p-4 flex-1 flex flex-col">
+        <h2 class="text-lg font-bold mb-1">
+          <?php echo htmlspecialchars($book_name); ?>
+        </h2>
+        <p class="text-gray-700 text-sm mb-1"><?php echo $translations['author_name']; ?>: <span class="font-medium"><?php echo htmlspecialchars($author_name); ?></span></p>
+        <p class="text-gray-600 text-sm mb-1">
+          <?php echo $translations['genre']; ?>:
+          <span class="font-medium">
+            <?php
+              // Convert genre to key (e.g. "Non-fiction" => "non_fiction")
+              $genre_key = strtolower(str_replace('-', '_', $genre));
+              echo isset($translations['genres'][$genre_key]) ? $translations['genres'][$genre_key] : htmlspecialchars($genre);
+            ?>
+          </span>
+        </p>
+        <p class="text-gray-600 text-sm mb-1"><?php echo $translations['isbn']; ?>: <span class="font-medium"><?php echo htmlspecialchars($isbn_number); ?></span></p>
+        <p class="text-gray-500 text-xs mb-2"><?php echo $translations['published']; ?>: <span class="font-medium"><?php echo htmlspecialchars($publication_date); ?></span></p>
+        <p class="text-gray-500 text-xs mb-2"><?php echo $translations['publisher']; ?>: <span class="font-medium"><?php echo htmlspecialchars($publisher); ?></span></p>
+        <div class="mt-4 flex justify-between items-center">
+          <!-- Download Button -->
+          <a href="<?php echo htmlspecialchars($pdf); ?>" download class="text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"><?php echo $translations['download_button']; ?></a>
+          <!-- Read Button (uncomment if needed) -->
+          <!-- <a href="<?php echo htmlspecialchars($pdf); ?>" target="_blank" class="text-sm text-white bg-green-600 px-3 py-1 rounded hover:bg-green-700"><?php echo $translations['read_button']; ?></a> -->
+        </div>
+      </div>
+    </div>
+    <!-- Book Card End -->
+    <?php
+      }
+    } else {
+      echo "<p class='text-center col-span-4'>" . $translations['no_books'] . "</p>";
+    }
+    ?>
+  </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" title="Go to top"
+    class="hidden fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition">
+    <!-- Up arrow icon (Heroicons) -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+    </svg>
+</button>
+<script>
+    // Show button when scrolled down
+    const btn = document.getElementById('scrollToTopBtn');
+    window.onscroll = function() {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            btn.classList.remove('hidden');
+        } else {
+            btn.classList.add('hidden');
+        }
+    };
+    // Scroll to top on click
+    btn.onclick = function() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+</script>
 </body>
 </html>
 <?php
