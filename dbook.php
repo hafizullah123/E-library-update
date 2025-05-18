@@ -119,32 +119,49 @@ $result = $conn->query($sql);
         $type_key = strtolower($type);
     ?>
     <!-- Book Card Start -->
-    <div class="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col">
+    <div class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden border border-gray-100">
       <img src="<?php echo htmlspecialchars($cover_image); ?>" alt="Cover"
-           class="w-11/12 mx-auto h-48 sm:h-64 object-contain bg-white rounded-t-lg" />
+           class="w-11/12 mx-auto h-64 sm:h-72 object-contain bg-white rounded-t-xl mt-4 mb-2 transition-all duration-300" />
       <div class="p-4 flex-1 flex flex-col">
-        <h2 class="text-lg font-bold mb-1">
+        <h2 class="text-lg font-bold mb-2 text-blue-800 break-words leading-snug">
           <?php echo htmlspecialchars($book_name); ?>
         </h2>
-        <p class="text-gray-700 text-sm mb-1"><?php echo $translations['author_name']; ?>: <span class="font-medium"><?php echo htmlspecialchars($author_name); ?></span></p>
+        <p class="text-gray-700 text-sm mb-1">
+          <span class="font-semibold"><?php echo $translations['author_name']; ?>:</span>
+          <span class="font-medium"><?php echo htmlspecialchars($author_name); ?></span>
+        </p>
         <p class="text-gray-600 text-sm mb-1">
-          <?php echo $translations['genre']; ?>:
+          <span class="font-semibold"><?php echo $translations['genre']; ?>:</span>
           <span class="font-medium">
             <?php
-              // Convert genre to key (e.g. "Non-fiction" => "non_fiction")
               $genre_key = strtolower(str_replace('-', '_', $genre));
               echo isset($translations['genres'][$genre_key]) ? $translations['genres'][$genre_key] : htmlspecialchars($genre);
             ?>
           </span>
         </p>
-        <p class="text-gray-600 text-sm mb-1"><?php echo $translations['isbn']; ?>: <span class="font-medium"><?php echo htmlspecialchars($isbn_number); ?></span></p>
-        <p class="text-gray-500 text-xs mb-2"><?php echo $translations['published']; ?>: <span class="font-medium"><?php echo htmlspecialchars($publication_date); ?></span></p>
-        <p class="text-gray-500 text-xs mb-2"><?php echo $translations['publisher']; ?>: <span class="font-medium"><?php echo htmlspecialchars($publisher); ?></span></p>
-        <div class="mt-4 flex justify-between items-center">
-          <!-- Download Button -->
-          <a href="<?php echo htmlspecialchars($pdf); ?>" download class="text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"><?php echo $translations['download_button']; ?></a>
-          <!-- Read Button (uncomment if needed) -->
-          <!-- <a href="<?php echo htmlspecialchars($pdf); ?>" target="_blank" class="text-sm text-white bg-green-600 px-3 py-1 rounded hover:bg-green-700"><?php echo $translations['read_button']; ?></a> -->
+        <p class="text-gray-600 text-sm mb-1">
+          <span class="font-semibold"><?php echo $translations['isbn']; ?>:</span>
+          <span class="font-medium"><?php echo htmlspecialchars($isbn_number); ?></span>
+        </p>
+        <p class="text-gray-500 text-xs mb-1">
+          <span class="font-semibold"><?php echo $translations['published']; ?>:</span>
+          <span class="font-medium"><?php echo htmlspecialchars($publication_date); ?></span>
+        </p>
+        <p class="text-gray-500 text-xs mb-2">
+          <span class="font-semibold"><?php echo $translations['publisher']; ?>:</span>
+          <span class="font-medium"><?php echo htmlspecialchars($publisher); ?></span>
+        </p>
+        <div class="mt-auto flex flex-col gap-2 sm:flex-row sm:justify-between items-stretch">
+          <a href="<?php echo htmlspecialchars($pdf); ?>" download
+             class="text-sm text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 text-center transition">
+             <?php echo $translations['download_button']; ?>
+          </a>
+          <!-- Uncomment for read button
+          <a href="<?php echo htmlspecialchars($pdf); ?>" target="_blank"
+             class="text-sm text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 text-center transition">
+             <?php echo $translations['read_button']; ?>
+          </a>
+          -->
         </div>
       </div>
     </div>
