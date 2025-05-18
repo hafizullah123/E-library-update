@@ -118,13 +118,14 @@ $result = $conn->query($sql);
 <body class="bg-gray-100">
 
 <!-- Navbar -->
-<nav class="bg-blue-600 text-white p-4 mb-6 sticky top-0 z-50">
+<nav class="bg-blue-800 text-white py-4 shadow-md sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center">
         <a href="#" class="text-xl font-semibold"><?= $translations[$language]['title'] ?></a>
 
         <!-- Language Selection -->
         <form method="get" class="flex items-center gap-4">
-            <select name="lang" onchange="this.form.submit()" class="p-2 border rounded bg-blue-600 text-white">
+            <select name="lang" onchange="this.form.submit()"
+                class="p-2 border border-blue-700 rounded bg-blue-800 text-white focus:ring-2 focus:ring-blue-400 transition">
                 <option value="en" <?= $language == 'en' ? 'selected' : '' ?>>English</option>
                 <option value="ps" <?= $language == 'ps' ? 'selected' : '' ?>>Pashto</option>
                 <option value="fa" <?= $language == 'fa' ? 'selected' : '' ?>>Dari</option>
@@ -132,21 +133,31 @@ $result = $conn->query($sql);
         </form>
 
         <div class="flex gap-4">
-            <a href="dbook.php" class="text-white"><?= $translations[$language]['book'] ?></a>
-            <a href="logout.php" class="text-white"><?= $translations[$language]['logout'] ?></a>
+            <a href="dbook.php" class="text-white font-semibold"><?= $translations[$language]['book'] ?></a>
+            <a href="logout.php"
+               class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-md transition font-semibold">
+               <?= $translations[$language]['logout'] ?>
+            </a>
         </div>
     </div>
 </nav>
 
 <!-- Content Section -->
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 mt-6">
     <!-- Search & Filter -->
-    <form class="flex flex-wrap gap-4 mb-6" method="get">
-        <input type="text" name="search" placeholder="<?= $translations[$language]['search_placeholder'] ?>"
-               value="<?= htmlspecialchars($search) ?>"
-               class="flex-1 min-w-[200px] p-2 border rounded">
+    <form class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4 mb-6" method="get">
+        <input
+            type="text"
+            name="search"
+            placeholder="<?= $translations[$language]['search_placeholder'] ?>"
+            value="<?= htmlspecialchars($search) ?>"
+            class="w-full md:flex-1 p-2 border rounded"
+        />
 
-        <select name="type" class="p-2 border rounded min-w-[150px]">
+        <select
+            name="type"
+            class="w-full md:w-48 p-2 border rounded"
+        >
             <option value=""><?= $translations[$language]['all_types'] ?></option>
             <option value="Thesis" <?= $type == 'Thesis' ? 'selected' : '' ?>><?= $translations[$language]['thesis'] ?></option>
             <option value="Dissertation" <?= $type == 'Dissertation' ? 'selected' : '' ?>><?= $translations[$language]['dissertation'] ?></option>
@@ -154,7 +165,12 @@ $result = $conn->query($sql);
             <option value="Other" <?= $type == 'Other' ? 'selected' : '' ?>><?= $translations[$language]['other'] ?></option>
         </select>
 
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded"><?= $translations[$language]['search'] ?></button>
+        <button
+            type="submit"
+            class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow transition"
+        >
+            <?= $translations[$language]['search'] ?>
+        </button>
     </form>
 
     <!-- Paper Cards -->
@@ -188,9 +204,9 @@ $result = $conn->query($sql);
                 </div>
                 <div class="mt-3 space-x-2">
                     <a href="paper/<?= htmlspecialchars($row['pdf']) ?>" target="_blank"
-                       class="bg-blue-600 text-white px-4 py-1 rounded text-sm"><?= $translations[$language]['read'] ?></a>
+                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm transition"><?= $translations[$language]['read'] ?></a>
                     <a href="paper/<?= htmlspecialchars($row['pdf']) ?>" download
-                       class="bg-gray-700 text-white px-4 py-1 rounded text-sm"><?= $translations[$language]['download'] ?></a>
+                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm transition"><?= $translations[$language]['download'] ?></a>
                 </div>
             </div>
         <?php endwhile; ?>
