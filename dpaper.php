@@ -118,7 +118,7 @@ $result = $conn->query($sql);
 <body class="bg-gray-100">
 
 <!-- Navbar -->
-<nav class="bg-blue-600 text-white p-4 mb-6">
+<nav class="bg-blue-600 text-white p-4 mb-6 sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center">
         <a href="#" class="text-xl font-semibold"><?= $translations[$language]['title'] ?></a>
 
@@ -198,6 +198,30 @@ $result = $conn->query($sql);
         <p class="text-gray-600 text-center"><?= $translations[$language]['no_results'] ?></p>
     <?php endif; ?>
 </div>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" title="Go to top"
+    class="hidden fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition">
+    <!-- Up arrow icon (Heroicons) -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+    </svg>
+</button>
+<script>
+    // Show button when scrolled down
+    const btn = document.getElementById('scrollToTopBtn');
+    window.onscroll = function() {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            btn.classList.remove('hidden');
+        } else {
+            btn.classList.add('hidden');
+        }
+    };
+    // Scroll to top on click
+    btn.onclick = function() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+</script>
 
 </body>
 </html>
