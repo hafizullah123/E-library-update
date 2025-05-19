@@ -8,6 +8,7 @@ return [
     'search_button' => 'جستجو',
     'all_genres' => 'تمام ژانرها',
     'genres' => [
+        'physical_education' =>'ورزش و تربیت بدنی',
         'fiction' => 'داستانی',
         'non_fiction' => 'غیرداستانی',
         'science' => 'علمی',

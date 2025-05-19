@@ -8,6 +8,8 @@ return [
     'search_button' => 'لټون',
     'all_genres' => 'ټولې ژانرونه',
     'genres' => [
+                'physical_education' =>'ورزش و تربیت بدنی',
+
         'fiction' => 'خیالي',
         'non_fiction' => 'غیر خیالي',
         'science' => 'علوم',
