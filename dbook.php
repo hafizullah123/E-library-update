@@ -40,8 +40,6 @@ $result = $conn->query($sql);
   <title><?php echo $translations['header']; ?></title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Remove or update this block! */
-    /* header { background: #2563eb; } */
     body { min-height: 2000px; }
   </style>
 </head>
@@ -70,6 +68,7 @@ $result = $conn->query($sql);
   <!-- Search & Filter -->
   <section class="max-w-7xl mx-auto p-4">
     <form method="get" class="flex flex-col md:flex-row gap-2 mb-6">
+      <input type="hidden" name="lang" value="<?php echo htmlspecialchars($lang); ?>">
       <!-- Search Input -->
       <input
         type="text"
@@ -85,30 +84,37 @@ $result = $conn->query($sql);
         onchange="this.form.submit()"
       >
         <option value=""><?php echo $translations['all_genres']; ?></option>
-        <option value="Physical
-Education" <?php if ($filterGenre == "Physical
-Education") echo "selected"; ?>>Physical
-Education</option>
-        <option value="Computer" <?php if ($filterGenre == "Computer") echo "selected"; ?>>Computer</option>
-        <option value="English" <?php if ($filterGenre == "English") echo "selected"; ?>>English</option>
-        <option value="Psychology" <?php if ($filterGenre == "Psychology") echo "selected"; ?>>Psychology</option>
-        <option value="Biology" <?php if ($filterGenre == "Biology") echo "selected"; ?>>Biology</option>
-        <option value="Mathematics" <?php if ($filterGenre == "Mathematics") echo "selected"; ?>>Mathematics</option>
-        <option value="Pashto Language and Literature" <?php if ($filterGenre == "Pashto Language and Literature") echo "selected"; ?>>Pashto Language and Literature</option>
-        <option value="Dari Language and Literature" <?php if ($filterGenre == "Dari Language and Literature") echo "selected"; ?>>Dari Language and Literature</option>
-        <option value="Arabic Language and Literature" <?php if ($filterGenre == "Arabic Language and Literature") echo "selected"; ?>>Arabic Language and Literature</option>
-        <option value="Turkish language" <?php if ($filterGenre == "Turkish language") echo "selected"; ?>>Turkish language</option>
-                <option value="Russian language" <?php if ($filterGenre == "Russian language") echo "selected"; ?>>Russian language</option>
-
-        <option value="Islamic Sciences" <?php if ($filterGenre == "Islamic Sciences") echo "selected"; ?>>Islamic Sciences</option>
-        <option value="History Sciences" <?php if ($filterGenre == "History Sciences") echo "selected"; ?>>History Sciences</option>
-        <option value="Sociology Sciences" <?php if ($filterGenre == "Sociology Sciences") echo "selected"; ?>>Sociology Sciences</option>
-        <option value="Geography Sciences" <?php if ($filterGenre == "Geography Sciences") echo "selected"; ?>>Geography Sciences</option>
-        <option value="Physics" <?php if ($filterGenre == "Physics") echo "selected"; ?>>Physics</option>
-        <option value="Environmental Science" <?php if ($filterGenre == "Environmental Science") echo "selected"; ?>>Environmental Science</option>
-        <option value="Educational Management" <?php if ($filterGenre == "Educational Management") echo "selected"; ?>>Educational Management</option>
-        <option value="Motivational Books" <?php if ($filterGenre == "Motivational Books") echo "selected"; ?>>Motivational Books</option>
-        <option value="Chemistry" <?php if ($filterGenre == "Chemistry") echo "selected"; ?>>Chemistry</option>
+        <?php
+          // List of all genre keys you support in your DB and language files
+          $genre_keys = [
+            'physical_education',
+            'computer',
+            'english',
+            'psychology',
+            'biology',
+            'mathematics',
+            'pashto_language_and_literature',
+            'dari_language_and_literature',
+            'arabic_language_and_literature',
+            'turkish_language',
+            'russian_language',
+            'islamic_sciences',
+            'history_sciences',
+            'sociology_sciences',
+            'geography_sciences',
+            'physics',
+            'environmental_science',
+            'educational_management',
+            'motivational_books',
+            'chemistry'
+            // Add more keys as needed
+          ];
+          foreach ($genre_keys as $key) {
+            $selected = ($filterGenre == $key) ? 'selected' : '';
+            $label = isset($translations['genres'][$key]) ? $translations['genres'][$key] : ucfirst(str_replace('_', ' ', $key));
+            echo "<option value=\"$key\" $selected>$label</option>";
+          }
+        ?>
       </select>
       <!-- Search Button -->
       <button
