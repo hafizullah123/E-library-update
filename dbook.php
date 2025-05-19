@@ -78,17 +78,37 @@ $result = $conn->query($sql);
         class="flex-1 p-2 border border-gray-300 rounded-md shadow-sm"
         value="<?php echo htmlspecialchars($searchQuery); ?>"
       />
-      <!-- Genre Filter -->
+      <!-- Department/Genre Filter -->
       <select
         name="genre"
         class="w-full md:w-48 p-2 border border-gray-300 rounded-md shadow-sm"
         onchange="this.form.submit()"
       >
         <option value=""><?php echo $translations['all_genres']; ?></option>
-        <option value="Fiction" <?php if ($filterGenre == "Fiction") echo "selected"; ?>><?php echo $translations['genres']['fiction']; ?></option>
-        <option value="Non-fiction" <?php if ($filterGenre == "Non-fiction") echo "selected"; ?>><?php echo $translations['genres']['non_fiction']; ?></option>
-        <option value="Science" <?php if ($filterGenre == "Science") echo "selected"; ?>><?php echo $translations['genres']['science']; ?></option>
-        <option value="History" <?php if ($filterGenre == "History") echo "selected"; ?>><?php echo $translations['genres']['history']; ?></option>
+        <option value="Physical
+Education" <?php if ($filterGenre == "Physical
+Education") echo "selected"; ?>>Physical
+Education</option>
+        <option value="Computer" <?php if ($filterGenre == "Computer") echo "selected"; ?>>Computer</option>
+        <option value="English" <?php if ($filterGenre == "English") echo "selected"; ?>>English</option>
+        <option value="Psychology" <?php if ($filterGenre == "Psychology") echo "selected"; ?>>Psychology</option>
+        <option value="Biology" <?php if ($filterGenre == "Biology") echo "selected"; ?>>Biology</option>
+        <option value="Mathematics" <?php if ($filterGenre == "Mathematics") echo "selected"; ?>>Mathematics</option>
+        <option value="Pashto Language and Literature" <?php if ($filterGenre == "Pashto Language and Literature") echo "selected"; ?>>Pashto Language and Literature</option>
+        <option value="Dari Language and Literature" <?php if ($filterGenre == "Dari Language and Literature") echo "selected"; ?>>Dari Language and Literature</option>
+        <option value="Arabic Language and Literature" <?php if ($filterGenre == "Arabic Language and Literature") echo "selected"; ?>>Arabic Language and Literature</option>
+        <option value="Turkish language" <?php if ($filterGenre == "Turkish language") echo "selected"; ?>>Turkish language</option>
+                <option value="Russian language" <?php if ($filterGenre == "Russian language") echo "selected"; ?>>Russian language</option>
+
+        <option value="Islamic Sciences" <?php if ($filterGenre == "Islamic Sciences") echo "selected"; ?>>Islamic Sciences</option>
+        <option value="History Sciences" <?php if ($filterGenre == "History Sciences") echo "selected"; ?>>History Sciences</option>
+        <option value="Sociology Sciences" <?php if ($filterGenre == "Sociology Sciences") echo "selected"; ?>>Sociology Sciences</option>
+        <option value="Geography Sciences" <?php if ($filterGenre == "Geography Sciences") echo "selected"; ?>>Geography Sciences</option>
+        <option value="Physics" <?php if ($filterGenre == "Physics") echo "selected"; ?>>Physics</option>
+        <option value="Environmental Science" <?php if ($filterGenre == "Environmental Science") echo "selected"; ?>>Environmental Science</option>
+        <option value="Educational Management" <?php if ($filterGenre == "Educational Management") echo "selected"; ?>>Educational Management</option>
+        <option value="Motivational Books" <?php if ($filterGenre == "Motivational Books") echo "selected"; ?>>Motivational Books</option>
+        <option value="Chemistry" <?php if ($filterGenre == "Chemistry") echo "selected"; ?>>Chemistry</option>
       </select>
       <!-- Search Button -->
       <button
