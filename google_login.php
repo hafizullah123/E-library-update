@@ -4,8 +4,8 @@ session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
 // Replace with your credentials from Google Cloud Console
-$clientID = 'YOUR_GOOGLE_CLIENT_ID';
-$clientSecret = 'YOUR_GOOGLE_CLIENT_SECRET';
+$clientID = '1234567890-abc123def456.apps.googleusercontent.com';
+$clientSecret = 'ABCDefGhIjKlMnOpQrStUvWx';
 $redirectUri = 'http://localhost/host-library/google_login.php';
 
 $client = new Google_Client();
