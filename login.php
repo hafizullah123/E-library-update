@@ -30,6 +30,8 @@ $lang_files = [
         'admin_dashboard' => 'This is the admin dashboard.',
         'labor_dashboard' => 'This is the labor dashboard.',
         'user_dashboard' => 'This is the user dashboard.',
+        'login_google' => 'Login with Google',
+        'login_facebook' => 'Login with Facebook',
     ],
     'ps' => [
         'title' => 'ننوتل او ثبتول',
@@ -53,6 +55,8 @@ $lang_files = [
         'admin_dashboard' => 'دا د مدیر ډشبورډ دی.',
         'labor_dashboard' => 'دا د کارګر ډشبورډ دی.',
         'user_dashboard' => 'دا د کارونکي ډشبورډ دی.',
+        'login_google' => 'د ګوګل سره ننوتل',
+        'login_facebook' => 'د فیسبوک سره ننوتل',
     ],
     'fa' => [
         'title' => 'ورود و ثبت نام',
@@ -76,6 +80,8 @@ $lang_files = [
         'admin_dashboard' => 'این داشبورد مدیریت است.',
         'labor_dashboard' => 'این داشبورد کارگر است.',
         'user_dashboard' => 'این داشبورد کاربر است.',
+        'login_google' => 'ورود با گوگل',
+        'login_facebook' => 'ورود با فیسبوک',
     ],
 ];
 $lang = $lang_files[$lang_code];
@@ -261,6 +267,18 @@ $show_register = isset($_GET['action']) && $_GET['action'] === 'register';
             </button>
         </form>
     <?php endif; ?>
+
+    <!-- Social Login Buttons -->
+    <div class="flex flex-col gap-2 mb-4">
+        <a href="google_login.php" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" viewBox="0 0 48 48"><g><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.1 32.9 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8.1 2.9l6.1-6.1C34.5 6.2 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-8.9 20-20 0-1.3-.1-2.7-.3-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.5 16.1 19.4 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.1-6.1C34.5 6.2 29.5 4 24 4c-7.4 0-13.7 4.1-17.1 10.1l-.6.6z"/><path fill="#FBBC05" d="M24 44c5.5 0 10.5-2.1 14.3-5.7l-6.6-5.4C29.6 34.9 26.9 36 24 36c-5.7 0-10.1-3.1-11.7-7.5l-7 5.4C10.3 41.9 16.6 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-1.2 3.2-4.1 5.5-7.7 5.5-5.7 0-10.1-3.1-11.7-7.5l-7 5.4C10.3 41.9 16.6 44 24 44c11 0 20-8.9 20-20 0-1.3-.1-2.7-.3-4z"/></g></svg>
+            <?= isset($lang['login_google']) ? $lang['login_google'] : 'Login with Google' ?>
+        </a>
+        <a href="facebook_login.php" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24"><path fill="#fff" d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24H12.82v-9.294H9.692v-3.622h3.127V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg>
+            <?= isset($lang['login_facebook']) ? $lang['login_facebook'] : 'Login with Facebook' ?>
+        </a>
+    </div>
 </div>
 
 </body>
