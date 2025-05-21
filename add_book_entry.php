@@ -170,42 +170,42 @@ function getLocalizedText($key, $lang) {
 
 <!-- Register Book Form -->
 <div class="flex justify-center items-center min-h-[70vh] px-2">
-    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-6 sm:p-10 border border-blue-100">
-        <h2 class="text-3xl font-extrabold text-center text-blue-700 mb-8 tracking-tight drop-shadow">
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl p-10 sm:p-16 border border-blue-100 transition-all duration-300">
+        <h2 class="text-5xl font-extrabold text-center text-blue-700 mb-12 tracking-tight drop-shadow-lg">
             <?php echo getLocalizedText('register_book', $lang); ?>
         </h2>
-        <form action="" method="post" enctype="multipart/form-data" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <form action="" method="post" enctype="multipart/form-data" class="space-y-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div>
-                    <label for="bookName" class="block text-gray-700 font-semibold mb-1">
+                    <label for="bookName" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('book_name', $lang); ?>
                     </label>
                     <input type="text" id="bookName" name="bookName"
-                        class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50"
-                        required>
+                        class="w-full border border-blue-300 p-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50 shadow"
+                        placeholder="<?php echo getLocalizedText('book_name', $lang); ?>" required>
                 </div>
                 <div>
-                    <label for="authorName" class="block text-gray-700 font-semibold mb-1">
+                    <label for="authorName" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('author_name', $lang); ?>
                     </label>
                     <input type="text" id="authorName" name="authorName"
-                        class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50"
-                        required>
+                        class="w-full border border-blue-300 p-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50 shadow"
+                        placeholder="<?php echo getLocalizedText('author_name', $lang); ?>" required>
                 </div>
                 <div>
-                    <label for="isbnNumber" class="block text-gray-700 font-semibold mb-1">
+                    <label for="isbnNumber" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('isbn_number', $lang); ?>
                     </label>
                     <input type="text" id="isbnNumber" name="isbnNumber"
-                        class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50"
-                        required>
+                        class="w-full border border-blue-300 p-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50 shadow"
+                        placeholder="<?php echo getLocalizedText('isbn_number', $lang); ?>" required>
                 </div>
                 <div>
-                    <label for="genre" class="block text-gray-700 font-semibold mb-1">
+                    <label for="genre" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('genre', $lang); ?>
                     </label>
                     <select id="genre" name="genre"
-                        class="w-full border border-gray-300 p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        class="w-full border border-blue-300 p-4 rounded-2xl bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
                         required>
                         <option value="book"><?php echo getLocalizedText('book', $lang); ?></option>
                         <option value="magazine"><?php echo getLocalizedText('magazine', $lang); ?></option>
@@ -214,40 +214,40 @@ function getLocalizedText($key, $lang) {
                     </select>
                 </div>
                 <div>
-                    <label for="coverImage" class="block text-gray-700 font-semibold mb-1">
+                    <label for="coverImage" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('cover_image', $lang); ?>
                     </label>
                     <input type="file" id="coverImage" name="coverImage"
-                        class="w-full border border-gray-300 p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        class="w-full border border-blue-300 p-4 rounded-2xl bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
                         required>
                 </div>
                 <div>
-                    <label for="pdf" class="block text-gray-700 font-semibold mb-1">
+                    <label for="pdf" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('pdf', $lang); ?>
                     </label>
                     <input type="file" id="pdf" name="pdf"
-                        class="w-full border border-gray-300 p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        class="w-full border border-blue-300 p-4 rounded-2xl bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
                         required>
                 </div>
                 <div>
-                    <label for="publicationDate" class="block text-gray-700 font-semibold mb-1">
+                    <label for="publicationDate" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('publication_date', $lang); ?>
                     </label>
                     <input type="date" id="publicationDate" name="publicationDate"
-                        class="w-full border border-gray-300 p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        class="w-full border border-blue-300 p-4 rounded-2xl bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
                         required>
                 </div>
                 <div>
-                    <label for="publisher" class="block text-gray-700 font-semibold mb-1">
+                    <label for="publisher" class="block text-gray-700 font-semibold mb-2">
                         <?php echo getLocalizedText('publisher', $lang); ?>
                     </label>
                     <input type="text" id="publisher" name="publisher"
-                        class="w-full border border-gray-300 p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        required>
+                        class="w-full border border-blue-300 p-4 rounded-2xl bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
+                        placeholder="<?php echo getLocalizedText('publisher', $lang); ?>" required>
                 </div>
             </div>
             <button type="submit"
-                class="w-full bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all duration-200 text-lg mt-4">
+                class="w-full bg-gradient-to-r from-blue-700 to-blue-400 hover:from-blue-800 hover:to-blue-500 text-white font-bold py-5 px-10 rounded-3xl shadow-2xl transition-all duration-200 text-2xl mt-8 tracking-wider">
                 <?php echo getLocalizedText('register', $lang); ?>
             </button>
         </form>
