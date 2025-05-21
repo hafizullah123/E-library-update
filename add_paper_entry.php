@@ -2,6 +2,14 @@
 include("connection.php");
 session_start();
 
+// AJAX check for duplicate title
+if (isset($_POST['ajax_check_title'])) {
+    $title = $_POST['ajax_check_title'];
+    $result = mysqli_query($conn, "SELECT 1 FROM research_papers WHERE title = '" . mysqli_real_escape_string($conn, $title) . "'");
+    echo mysqli_num_rows($result) > 0 ? "exists" : "ok";
+    exit;
+}
+
 // Handle language switch
 if (isset($_GET['lang'])) {
     $_SESSION['lang'] = $_GET['lang'];
@@ -21,8 +29,8 @@ function getLocalizedText($key, $lang)
     $translations = [
         'en' => [
             'add_new_paper' => 'Add New Paper',
-            'university' => 'University',
-            'title' => 'Title',
+            'university' => 'University name ',
+            'title' => 'Title in English',
             'title_pashto' => 'Title in Pashto',
             'title_dari' => 'Title in Dari',
             'author_name' => 'Author Name',
@@ -46,7 +54,7 @@ function getLocalizedText($key, $lang)
         'ps' => [
             'add_new_paper' => 'نوې څېړنه ور اضافه کړئ',
             'university' => 'پوهنتون',
-            'title' => 'سرلیک',
+            'title' => 'انګلیسی سرلک',
             'title_pashto' => 'پښتو سرلیک',
             'title_dari' => 'دري سرلیک',
             'author_name' => 'د لیکوال نوم',
@@ -70,7 +78,7 @@ function getLocalizedText($key, $lang)
         'fa' => [
             'add_new_paper' => 'اضافه‌کردن تحقیق جدید',
             'university' => 'پوهنتون',
-            'title' => 'عنوان',
+            'title' => ' عنوان به انگلیسی',
             'title_pashto' => 'عنوان به پشتو',
             'title_dari' => 'عنوان به دری',
             'author_name' => 'نام نویسنده',
@@ -144,57 +152,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="bg-gradient-to-br from-blue-50 to-blue-200 min-h-screen">
 
     <!-- Navbar -->
-    <nav class="bg-blue-700 text-white px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow <?= $dir === 'rtl' ? 'flex-row-reverse' : '' ?>">
+    <nav class="bg-white text-blue-700 px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow <?= $dir === 'rtl' ? 'flex-row-reverse' : '' ?>">
         <h1 class="text-2xl font-bold tracking-tight"><?= getLocalizedText('add_new_paper', $lang); ?></h1>
         <div class="flex gap-2 mt-2 md:mt-0 items-center">
             <span><?= getLocalizedText('language', $lang); ?>:</span>
-            <a href="?lang=en" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'en' ? 'bg-blue-900' : '' ?>">EN</a>
-            <a href="?lang=ps" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'ps' ? 'bg-blue-900' : '' ?>">PS</a>
-            <a href="?lang=fa" class="px-2 py-1 rounded hover:bg-blue-800 transition <?= $lang == 'fa' ? 'bg-blue-900' : '' ?>">DR</a>
-            <a href="logout.php" class="ml-4 bg-red-600 hover:bg-red-700 px-3 py-1 rounded transition text-white font-semibold"><?= $lang == 'ps' ? 'وتل' : ($lang == 'fa' ? 'خروج' : 'Logout') ?></a>
+            <a href="?lang=en" class="px-2 py-1 rounded hover:bg-blue-100 transition <?= $lang == 'en' ? 'bg-blue-200 font-bold' : '' ?>">EN</a>
+            <a href="?lang=ps" class="px-2 py-1 rounded hover:bg-blue-100 transition <?= $lang == 'ps' ? 'bg-blue-200 font-bold' : '' ?>">PS</a>
+            <a href="?lang=fa" class="px-2 py-1 rounded hover:bg-blue-100 transition <?= $lang == 'fa' ? 'bg-blue-200 font-bold' : '' ?>">DR</a>
+            <a href="add_book_entry.php" class="ml-4 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded transition text-blue-700 font-semibold border border-blue-300">Books</a>
+            <a href="logout.php" class="ml-2 bg-red-600 hover:bg-red-700 px-3 py-1 rounded transition text-white font-semibold"><?= $lang == 'ps' ? 'وتل' : ($lang == 'fa' ? 'خروج' : 'Logout') ?></a>
         </div>
     </nav>
 
     <!-- Form Container -->
-    <div class="flex justify-center items-center py-10 px-2">
-      <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
+    <div class="flex justify-center items-center py-12 px-2 bg-gradient-to-br from-blue-50 to-blue-200 min-h-[80vh]">
+      <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl p-12 sm:p-16 border border-blue-100 transition-all duration-300">
         <?php if (!empty($message)): ?>
-            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded text-center"><?= $message; ?></div>
+            <div class="mb-6 p-4 bg-green-100 text-green-800 rounded-lg text-center text-lg font-semibold shadow">
+                <?= $message; ?>
+            </div>
         <?php endif; ?>
 
-        <form method="POST" enctype="multipart/form-data" class="space-y-5">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form method="POST" enctype="multipart/form-data" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('university', $lang); ?></label>
-                    <input type="text" name="university" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400" required>
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('university', $lang); ?></label>
+                    <input type="text" name="university" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm" required>
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('author_name', $lang); ?></label>
-                    <input type="text" name="author" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400" required>
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('author_name', $lang); ?></label>
+                    <input type="text" name="author" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm" required>
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('title', $lang); ?></label>
-                    <input type="text" name="paperTitle" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400" required>
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('title', $lang); ?></label>
+                    <input type="text" name="paperTitle" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm" required>
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('title_pashto', $lang); ?></label>
-                    <input type="text" name="paperTitle_ps" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('title_pashto', $lang); ?></label>
+                    <input type="text" name="paperTitle_ps" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('title_dari', $lang); ?></label>
-                    <input type="text" name="paperTitle_fa" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('title_dari', $lang); ?></label>
+                    <input type="text" name="paperTitle_fa" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('publication_date', $lang); ?></label>
-                    <input type="date" name="date" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('publication_date', $lang); ?></label>
+                    <input type="date" name="date" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('guider', $lang); ?></label>
-                    <input type="text" name="guider" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('guider', $lang); ?></label>
+                    <input type="text" name="guider" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('department', $lang); ?></label>
-                    <select name="department" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('department', $lang); ?></label>
+                    <select name="department" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                         <option value="Computer Science">Computer Science</option>
                         <option value="Mathematics">Mathematics</option>
                         <option value="Literature">Literature</option>
@@ -202,16 +213,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </select>
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('section', $lang); ?></label>
-                    <select name="section" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('section', $lang); ?></label>
+                    <select name="section" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('type', $lang); ?></label>
-                    <select name="type" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                    <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('type', $lang); ?></label>
+                    <select name="type" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                         <option value=""><?= getLocalizedText('select_type', $lang); ?></option>
                         <option value="Thesis"><?= getLocalizedText('thesis', $lang); ?></option>
                         <option value="Research"><?= getLocalizedText('research', $lang); ?></option>
@@ -220,20 +231,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
             <div>
-                <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('description', $lang); ?></label>
-                <textarea name="description" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('description', $lang); ?></label>
+                <textarea name="description" rows="3" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"></textarea>
             </div>
             <div>
-                <label class="block mb-1 font-semibold text-gray-700"><?= getLocalizedText('upload_pdf', $lang); ?></label>
-                <input type="file" name="pdf" class="w-full border border-gray-300 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400">
+                <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('upload_pdf', $lang); ?></label>
+                <input type="file" name="pdf" class="w-full border border-blue-200 rounded-xl p-3 bg-white focus:ring-2 focus:ring-blue-400 shadow-sm">
             </div>
-            <div class="pt-2">
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg shadow transition">
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-700 to-blue-400 hover:from-blue-800 hover:to-blue-500 text-white font-bold py-4 rounded-2xl shadow-xl transition-all duration-200 text-xl tracking-wide">
                     <?= getLocalizedText('submit', $lang); ?>
                 </button>
             </div>
         </form>
       </div>
     </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const titleInput = document.querySelector('input[name="paperTitle"]');
+    let lastChecked = "";
+
+    titleInput.addEventListener('blur', function() {
+        const title = titleInput.value.trim();
+        if (!title || title === lastChecked) return;
+        lastChecked = title;
+        fetch(window.location.pathname, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'ajax_check_title=' + encodeURIComponent(title)
+        })
+        .then(res => res.text())
+        .then(data => {
+            if (data === 'exists') {
+                alert("<?= getLocalizedText('title_exists', $lang); ?>");
+                titleInput.focus();
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
