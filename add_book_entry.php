@@ -299,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if (!empty($success) && !empty($cover_image)): ?>
             <div class="mb-6 flex flex-col items-center">
                 <span class="mb-2 text-blue-700 font-semibold"><?php echo getLocalizedText('cover_image', $lang); ?>:</span>
-                <img src="uploads/<?php echo htmlspecialchars($cover_image); ?>" alt="Cover Image" class="w-40 h-56 object-cover rounded shadow border border-blue-200">
+                <img src="uploads/<?php echo htmlspecialchars($row['cover_image']); ?>" alt="Cover Image" class="w-40 h-56 object-cover rounded shadow border border-blue-200">
             </div>
         <?php endif; ?>
     </div>
