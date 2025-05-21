@@ -96,6 +96,44 @@ function getLocalizedText($key, $lang) {
     ];
     return $translations[$lang][$key] ?? $key;
 }
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get form values
+    $book_name = $_POST['bookName'] ?? '';
+    $author_name = $_POST['authorName'] ?? '';
+    $isbn_number = $_POST['isbnNumber'] ?? '';
+    $genre = $_POST['genre'] ?? '';
+    $publication_date = $_POST['publicationDate'] ?? '';
+    $publisher = $_POST['publisher'] ?? '';
+    // $description = $_POST['description'] ?? ''; // Uncomment if you add description field
+    $description = ''; // No description field in form currently
+
+    // Handle file uploads
+    $cover_image = '';
+    if (isset($_FILES['coverImage']) && $_FILES['coverImage']['error'] === UPLOAD_ERR_OK) {
+        $cover_image = time() . '_' . basename($_FILES['coverImage']['name']);
+        move_uploaded_file($_FILES['coverImage']['tmp_name'], 'uploads/' . $cover_image);
+    }
+
+    $pdf = '';
+    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
+        $pdf = time() . '_' . basename($_FILES['pdf']['name']);
+        move_uploaded_file($_FILES['pdf']['tmp_name'], 'uploads/' . $pdf);
+    }
+
+    // Insert into database
+    $stmt = $conn->prepare("INSERT INTO books (book_name, author_name, isbn_number, genre, cover_image, pdf, publication_date, publisher, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssss", $book_name, $author_name, $isbn_number, $genre, $cover_image, $pdf, $publication_date, $publisher, $description);
+
+    if ($stmt->execute()) {
+        // Success message (you can show this in your HTML)
+        $success = true;
+    } else {
+        $error = "Error: " . $stmt->error;
+    }
+    $stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -174,6 +212,11 @@ function getLocalizedText($key, $lang) {
         <h2 class="text-5xl font-extrabold text-center text-blue-700 mb-12 tracking-tight drop-shadow-lg">
             <?php echo getLocalizedText('register_book', $lang); ?>
         </h2>
+        <?php if (!empty($success)): ?>
+            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded text-center">Book registered successfully!</div>
+        <?php elseif (!empty($error)): ?>
+            <div class="mb-4 p-3 bg-red-100 text-red-800 rounded text-center"><?= $error ?></div>
+        <?php endif; ?>
         <form action="" method="post" enctype="multipart/form-data" class="space-y-10">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div>
@@ -251,6 +294,14 @@ function getLocalizedText($key, $lang) {
                 <?php echo getLocalizedText('register', $lang); ?>
             </button>
         </form>
+
+        <!-- Display uploaded cover image after successful registration -->
+        <?php if (!empty($success) && !empty($cover_image)): ?>
+            <div class="mb-6 flex flex-col items-center">
+                <span class="mb-2 text-blue-700 font-semibold"><?php echo getLocalizedText('cover_image', $lang); ?>:</span>
+                <img src="uploads/<?php echo htmlspecialchars($cover_image); ?>" alt="Cover Image" class="w-40 h-56 object-cover rounded shadow border border-blue-200">
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

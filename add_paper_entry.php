@@ -177,31 +177,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('university', $lang); ?></label>
-                    <input type="text" name="university" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm" required>
+                    <input type="text" name="university"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        required
+                        placeholder="<?= getLocalizedText('university', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('author_name', $lang); ?></label>
-                    <input type="text" name="author" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm" required>
+                    <input type="text" name="author"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        required
+                        placeholder="<?= getLocalizedText('author_name', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('title', $lang); ?></label>
-                    <input type="text" name="paperTitle" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm" required>
+                    <input type="text" name="paperTitle"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        required
+                        placeholder="<?= getLocalizedText('title', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('title_pashto', $lang); ?></label>
-                    <input type="text" name="paperTitle_ps" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
+                    <input type="text" name="paperTitle_ps"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        placeholder="<?= getLocalizedText('title_pashto', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('title_dari', $lang); ?></label>
-                    <input type="text" name="paperTitle_fa" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
+                    <input type="text" name="paperTitle_fa"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        placeholder="<?= getLocalizedText('title_dari', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('publication_date', $lang); ?></label>
-                    <input type="date" name="date" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
+                    <input type="date" name="date"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        placeholder="<?= getLocalizedText('publication_date', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('guider', $lang); ?></label>
-                    <input type="text" name="guider" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
+                    <input type="text" name="guider"
+                        class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm"
+                        placeholder="<?= getLocalizedText('guider', $lang); ?>">
                 </div>
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('department', $lang); ?></label>
