@@ -170,7 +170,7 @@ function getLocalizedText($key, $lang) {
 
 <!-- Register Book Form -->
 <div class="flex justify-center items-center min-h-[70vh] px-2">
-    <div class="w-full max-w-xl bg-white rounded-2xl shadow-2xl p-6 sm:p-10 border border-blue-100">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-6 sm:p-10 border border-blue-100">
         <h2 class="text-3xl font-extrabold text-center text-blue-700 mb-8 tracking-tight drop-shadow">
             <?php echo getLocalizedText('register_book', $lang); ?>
         </h2>
