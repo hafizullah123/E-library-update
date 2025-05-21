@@ -36,7 +36,12 @@ function getLocalizedText($key, $lang) {
             'dari' => 'Dari',
             'home' => 'Home',
             'logout' => 'Logout',
-            'paper' => 'Add Paper'
+            'paper' => 'Add Paper',
+            'type' => 'Type:',
+            'book' => 'Book',
+            'magazine' => 'Magazine',
+            'journal' => 'Journal',
+            'thesis' => 'Thesis'
         ],
         'ps' => [
             'register_book' => 'نوی کتاب ثبت کړئ',
@@ -56,7 +61,12 @@ function getLocalizedText($key, $lang) {
             'dari' => 'دري',
             'home' => 'کور',
             'logout' => 'وتل',
-            'paper' => 'مقاله ثبت کړئ'
+            'paper' => 'مقاله ثبت کړئ',
+            'type' => 'ډول:',
+            'book' => 'کتاب',
+            'magazine' => 'مجله',
+            'journal' => 'ژورنال',
+            'thesis' => 'تیزس'
         ],
         'fa' => [
             'register_book' => 'ثبت کتاب جدید',
@@ -76,7 +86,12 @@ function getLocalizedText($key, $lang) {
             'dari' => 'دری',
             'home' => 'خانه',
             'logout' => 'خروج',
-            'paper' => 'ثبت مقاله'
+            'paper' => 'ثبت مقاله',
+            'type' => 'نوعیت:',
+            'book' => 'کتاب',
+            'magazine' => 'مجله',
+            'journal' => 'ژورنال',
+            'thesis' => 'پایان‌نامه'
         ]
     ];
     return $translations[$lang][$key] ?? $key;
@@ -134,7 +149,12 @@ function getLocalizedText($key, $lang) {
         </div>
         <div class="mb-4">
             <label for="genre" class="block text-gray-700"><?php echo getLocalizedText('genre', $lang); ?></label>
-            <input type="text" id="genre" name="genre" class="w-full p-2 border border-gray-300 rounded" required>
+            <select id="genre" name="genre" class="w-full p-2 border border-gray-300 rounded bg-white" required>
+                <option value="book"><?php echo getLocalizedText('book', $lang); ?></option>
+                <option value="magazine"><?php echo getLocalizedText('magazine', $lang); ?></option>
+                <option value="journal"><?php echo getLocalizedText('journal', $lang); ?></option>
+                <option value="thesis"><?php echo getLocalizedText('thesis', $lang); ?></option>
+            </select>
         </div>
         <div class="mb-4">
             <label for="coverImage" class="block text-gray-700"><?php echo getLocalizedText('cover_image', $lang); ?></label>
@@ -151,10 +171,6 @@ function getLocalizedText($key, $lang) {
         <div class="mb-4">
             <label for="publisher" class="block text-gray-700"><?php echo getLocalizedText('publisher', $lang); ?></label>
             <input type="text" id="publisher" name="publisher" class="w-full p-2 border border-gray-300 rounded" required>
-        </div>
-        <div class="mb-4">
-            <label for="description" class="block text-gray-700"><?php echo getLocalizedText('description', $lang); ?></label>
-            <textarea id="description" name="description" rows="3" class="w-full p-2 border border-gray-300 rounded" required></textarea>
         </div>
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"><?php echo getLocalizedText('register', $lang); ?></button>
     </form>
