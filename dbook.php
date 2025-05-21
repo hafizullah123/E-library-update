@@ -1,5 +1,5 @@
 <?php
-session_start(); // Add this at the very top
+session_start();
 
 // Language selection (defaults to English if not set)
 $lang = 'dbooken'; // Default language
@@ -145,11 +145,18 @@ $result = $conn->query($sql);
         $publisher = $row['publisher'];
         $type = isset($row['type']) ? $row['type'] : '';
         $type_key = strtolower($type);
+
+        // Build image path (handle spaces and special chars)
+        $img_src = !empty($cover_image) ? 'uploads/' . rawurlencode($cover_image) : 'uploads/default-cover.jpg';
     ?>
     <!-- Book Card Start -->
     <div class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden border border-gray-100">
-      <img src="<?php echo htmlspecialchars($cover_image); ?>" alt="Cover"
-           class="w-11/12 mx-auto h-64 sm:h-72 object-contain bg-white rounded-t-xl mt-4 mb-2 transition-all duration-300" />
+      <img 
+        src="<?php echo $img_src; ?>" 
+        alt="Cover"
+        class="w-11/12 mx-auto h-64 sm:h-72 object-contain bg-white rounded-t-xl mt-4 mb-2 transition-all duration-300"
+        onerror="this.onerror=null;this.src='uploads/default-cover.jpg';" 
+      />
       <div class="p-4 flex-1 flex flex-col">
         <h2 class="text-lg font-bold mb-2 text-blue-800 break-words leading-snug">
           <?php echo htmlspecialchars($book_name); ?>
