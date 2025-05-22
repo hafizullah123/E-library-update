@@ -152,7 +152,7 @@ $result = $conn->query($sql);
     <!-- Book Card Start -->
     <div class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden border border-gray-100">
       <img 
-        src="<?php echo $img_src; ?>" 
+        src="<?php echo !empty($cover_image) ? 'uploads/' . rawurlencode($cover_image) : 'uploads/default-cover.jpg'; ?>" 
         alt="Cover"
         class="w-11/12 mx-auto h-64 sm:h-72 object-contain bg-white rounded-t-xl mt-4 mb-2 transition-all duration-300"
         onerror="this.onerror=null;this.src='uploads/default-cover.jpg';" 
