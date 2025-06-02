@@ -394,6 +394,13 @@ $t = $texts[$lang];
     <p><?= $t['address'] ?></p>
   </div>
 </section>
+<?php
+ 
+include
+ 
+'back-to-top.html'
+; 
+?>
 
 <!-- Footer -->
 <footer class="bg-blue-800 text-white text-center py-4">
