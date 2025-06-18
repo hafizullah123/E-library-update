@@ -74,7 +74,7 @@ function getLocalizedText($key, $lang)
             'select_type' => 'ډول غوره کړئ',
             'thesis' => 'تیزس',
             'monograph' => 'مونوگراف',
-            'research' => 'څېړنه',
+            'research' => 'دیزرتیشن',
             'article' => 'مقاله',
             'language' => 'ژبه',
         ],
@@ -99,7 +99,7 @@ function getLocalizedText($key, $lang)
             'select_type' => 'نوع را انتخاب کنید',
             'thesis' => 'ستیز',
             'monograph' => 'مونوگراف',
-            'research' => 'تحقیق',
+            'research' => 'دیزرتیشن',
             'article' => 'مقاله',
             'language' => 'زبان',
         ]
@@ -143,6 +143,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ? getLocalizedText('success_message', $lang)
             : getLocalizedText('error_message', $lang) . mysqli_error($conn);
     }
+}
+
+// Get all unique genres from the books table
+$genres = [];
+$genre_query = $conn->query("SELECT DISTINCT genre FROM books WHERE genre IS NOT NULL AND genre != '' ORDER BY genre ASC");
+while ($row = $genre_query->fetch_assoc()) {
+    $genres[] = $row['genre'];
 }
 ?>
 <!DOCTYPE html>
@@ -243,7 +250,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div> -->
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('type', $lang); ?></label>
-                    <select name="type" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
+                    <select name="type" rows= "3" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                         <option value=""><?= getLocalizedText('select_type', $lang); ?></option>
                         <option value="Thesis"><?= getLocalizedText('thesis', $lang); ?></option>
                         <option value="Monograph"><?= getLocalizedText('monograph', $lang); ?></option>
