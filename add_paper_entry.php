@@ -47,6 +47,8 @@ function getLocalizedText($key, $lang)
             'title_exists' => 'This title is already in use. Please choose another.',
             'select_type' => 'Select Type',
             'thesis' => 'Thesis',
+             'monograph' => 'Monograph',
+
             'research' => 'Research',
             'article' => 'Article',
             'language' => 'Language',
@@ -70,7 +72,8 @@ function getLocalizedText($key, $lang)
             'error_message' => 'تېروتنه: ',
             'title_exists' => 'دا سرلیک له مخکې نه شته. مهرباني وکړئ بل انتخاب کړئ.',
             'select_type' => 'ډول غوره کړئ',
-            'thesis' => 'تز',
+            'thesis' => 'تیزس',
+            'monograph' => 'مونوگراف',
             'research' => 'څېړنه',
             'article' => 'مقاله',
             'language' => 'ژبه',
@@ -94,7 +97,8 @@ function getLocalizedText($key, $lang)
             'error_message' => 'خطا: ',
             'title_exists' => 'این عنوان قبلاً استفاده شده است. لطفاً عنوان دیگری را انتخاب کنید.',
             'select_type' => 'نوع را انتخاب کنید',
-            'thesis' => 'تز',
+            'thesis' => 'ستیز',
+            'monograph' => 'مونوگراف',
             'research' => 'تحقیق',
             'article' => 'مقاله',
             'language' => 'زبان',
@@ -229,19 +233,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="Physics">Physics</option>
                     </select>
                 </div>
-                <div>
+                <!-- <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('section', $lang); ?></label>
                     <select name="section" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
                     </select>
-                </div>
+                </div> -->
                 <div>
                     <label class="block mb-2 font-semibold text-gray-700"><?= getLocalizedText('type', $lang); ?></label>
                     <select name="type" class="w-full border border-blue-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow-sm">
                         <option value=""><?= getLocalizedText('select_type', $lang); ?></option>
                         <option value="Thesis"><?= getLocalizedText('thesis', $lang); ?></option>
+                        <option value="Monograph"><?= getLocalizedText('monograph', $lang); ?></option>
                         <option value="Research"><?= getLocalizedText('research', $lang); ?></option>
                         <option value="Article"><?= getLocalizedText('article', $lang); ?></option>
                     </select>
