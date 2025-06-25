@@ -1,203 +1,234 @@
 <?php
-// Start the session to store the selected language
 session_start();
-
-// Set default language to English if not set
-if (!isset($_SESSION['lang'])) {
-    $_SESSION['lang'] = 'en';
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php?action=login");
+    exit;
 }
 
-// Handle language change
-if (isset($_GET['lang'])) {
-    $_SESSION['lang'] = $_GET['lang'];
-}
+include 'connection.php';
 
-// Load language file based on selected language
-$language = $_SESSION['lang'];
-
-// Translation arrays
+// Translations
 $translations = [
     'en' => [
-        'title' => 'Digital Library',
-        'search_placeholder' => 'Search by title, author, or university',
-        'all_types' => 'All Types',
-        'thesis' => 'Thesis',
-        'dissertation' => 'Dissertation',
-        'journal' => 'Journal',
-        'other' => 'Other',
-        'search' => 'Search',
-        'read' => 'Read',
-        'download' => 'Download',
-        'no_results' => 'No research papers found.',
-        'university' => 'University',
-        'author' => 'Author',
-        'guider' => 'Guider',
-        'department' => 'Department',
-        'section' => 'Section',
-        'date' => 'Date',
-        'book' => 'Books',
+        'book_name' => 'Book Name',
+        'author_name' => 'Author Name',
+        'isbn_number' => 'ISBN Number',
+        'genre' => 'Genre',
+        'publication_date' => 'Publication Date',
+        'publisher' => 'Publisher',
+        'description' => 'Description',
+        'view_details' => 'View Details',
+        'download_pdf' => 'Download PDF',
+        'search_placeholder' => 'Search by Name or ISBN',
+        'search_button' => 'Search',
+        'no_books_found' => 'No books found.',
+        'cover_image' => 'Cover Image',
+        'actions' => 'Actions',
+        'books' => 'Books',
+        'papers' => 'Papers',
         'logout' => 'Logout',
+        'language' => 'Language',
+        'english' => 'English',
+        'pashto' => 'Pashto',
+        'dari' => 'Dari',
+        'close' => 'Close'
     ],
     'ps' => [
-        'title' => 'کتابخانه دیجیتال',
-        'search_placeholder' => 'د سرلیک، لیکوال یا پوهنتون له مخې لټون',
-        'all_types' => 'ټول ډولونه',
-        'thesis' => 'تېزس',
-        'dissertation' => 'دکتوراه',
-        'journal' => 'مجله',
-        'other' => 'نور',
-        'search' => 'لټون',
-        'read' => 'ولولئ',
-        'download' => 'ډاونلوډ',
-        'no_results' => 'هیڅ تحقیق نه دی موندل شوی.',
-        'university' => 'پوهنتون',
-        'author' => 'لیکوال',
-        'guider' => 'لارښود',
-        'department' => 'څانګه',
-        'section' => 'برخه',
-        'date' => 'نیټه',
-        'book' => 'کتابونه',
+        'book_name' => 'د کتاب نوم',
+        'author_name' => 'د لیکوال نوم',
+        'isbn_number' => 'آی ایس بی این نمبر',
+        'genre' => 'ژانر',
+        'publication_date' => 'د خپرېدو نېټه',
+        'publisher' => 'خپرونکی',
+        'description' => 'تشریح',
+        'view_details' => 'تفصیلات وګورئ',
+        'download_pdf' => 'PDF ډاونلوډ کړئ',
+        'search_placeholder' => 'د نوم یا ISBN په واسطه لټون وکړئ',
+        'search_button' => 'لټون',
+        'no_books_found' => 'هیڅ کتابونه ونه موندل شول.',
+        'cover_image' => 'پوښ عکس',
+        'actions' => 'عملونه',
+        'books' => 'کتابونه',
+        'papers' => 'لیکونه',
         'logout' => 'وتل',
+        'language' => 'ژبه',
+        'english' => 'انګلیسي',
+        'pashto' => 'پښتو',
+        'dari' => 'دری',
+        'close' => 'بند'
     ],
     'fa' => [
-        'title' => 'کتابخانه دیجیتال',
-        'search_placeholder' => 'جستجو بر اساس عنوان، نویسنده یا دانشگاه',
-        'all_types' => 'تمام نوع ها',
-        'thesis' => 'پایان نامه',
-        'dissertation' => 'رساله',
-        'journal' => 'مجله',
-        'other' => 'سایر',
-        'search' => 'جستجو',
-        'read' => 'مطالعه',
-        'download' => 'دانلود',
-        'no_results' => 'هیچ مقاله تحقیقاتی پیدا نشد.',
-        'university' => 'دانشگاه',
-        'author' => 'نویسنده',
-        'guider' => 'راهنما',
-        'department' => 'بخش',
-        'section' => 'قسمت',
-        'date' => 'تاریخ',
-        'book' => 'کتاب ها',
+        'book_name' => 'نام کتاب',
+        'author_name' => 'نام نویسنده',
+        'isbn_number' => 'شماره شابک',
+        'genre' => 'ژانر',
+        'publication_date' => 'تاریخ انتشار',
+        'publisher' => 'ناشر',
+        'description' => 'توضیحات',
+        'view_details' => 'مشاهده جزئیات',
+        'download_pdf' => 'دانلود PDF',
+        'search_placeholder' => 'جستجو بر اساس نام یا ISBN',
+        'search_button' => 'جستجو',
+        'no_books_found' => 'هیچ کتابی یافت نشد.',
+        'cover_image' => 'تصویر جلد',
+        'actions' => 'اقدامات',
+        'books' => 'کتاب‌ها',
+        'papers' => 'مقالات',
         'logout' => 'خروج',
-    ],
+        'language' => 'زبان',
+        'english' => 'انگلیسی',
+        'pashto' => 'پشتو',
+        'dari' => 'دری',
+        'close' => 'بستن'
+    ]
 ];
 
-// Set language direction
-$dir = ($language == 'ps' || $language == 'fa') ? 'rtl' : 'ltr';
-
-// Database connection
-include('connection.php');
-
-// Handle search and filter
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$type = isset($_GET['type']) ? $_GET['type'] : '';
-
-// Prepare the base query
-$sql = "SELECT * FROM research_papers WHERE 1";
-
-// Apply search filter if there's a search term
-if (!empty($search)) {
-    $sql .= " AND (title LIKE '%$search%' OR author_name LIKE '%$search%' OR university LIKE '%$search%')";
+$lang = $_SESSION['lang'] ?? 'en';
+if (isset($_GET['lang'])) {
+    $lang = $_GET['lang'];
+    $_SESSION['lang'] = $lang;
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
-// Apply type filter if a type is selected
-if (!empty($type)) {
-    $sql .= " AND type = '$type'";
+function getLocalizedText($key, $lang, $translations) {
+    return $translations[$lang][$key] ?? $key;
 }
 
+// Handle file download
+if (isset($_GET['download'])) {
+    $file = "uploads/" . basename($_GET['download']);
+    if (file_exists($file)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        readfile($file);
+        exit;
+    } else {
+        echo "File not found.";
+    }
+}
+
+// Insert new book
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_name'])) {
+    $book_name = $_POST['book_name'];
+    $author_name = $_POST['author_name'];
+    $isbn_number = $_POST['isbn_number'];
+    $genre = $_POST['genre'];
+    $publication_date = $_POST['publication_date'];
+    $publisher = $_POST['publisher'];
+    $description = $_POST['description'];
+
+    $cover_image = $_FILES['cover_image']['name'];
+    $pdf = $_FILES['pdf']['name'];
+
+    if ($cover_image) {
+        move_uploaded_file($_FILES['cover_image']['tmp_name'], "uploads/" . $cover_image);
+    }
+    if ($pdf) {
+        move_uploaded_file($_FILES['pdf']['tmp_name'], "uploads/" . $pdf);
+    }
+
+    $stmt = $conn->prepare("INSERT INTO books (book_name, author_name, isbn_number, genre, cover_image, pdf, publication_date, publisher, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssss", $book_name, $author_name, $isbn_number, $genre, $cover_image, $pdf, $publication_date, $publisher, $description);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Book added successfully.');</script>";
+    } else {
+        echo "Error: " . $conn->error;
+    }
+    $stmt->close();
+}
+
+$search_query = $_GET['search'] ?? '';
+$sql = "SELECT * FROM books";
+if ($search_query) {
+    $sql .= " WHERE book_name LIKE '%$search_query%' OR isbn_number LIKE '%$search_query%'";
+}
 $result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $language ?>" dir="<?= $dir ?>">
+<html lang="<?php echo $lang; ?>" <?php echo ($lang == 'ps' || $lang == 'fa') ? 'dir="rtl"' : ''; ?>>
 <head>
     <meta charset="UTF-8">
-    <title><?= $translations[$language]['title'] ?></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {},
-            },
-            plugins: [require('@tailwindcss/line-clamp')],
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo getLocalizedText('books', $lang, $translations); ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .book-card { box-shadow: 0 0 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; background: white; }
+        .book-card img { width: 100%; height: 250px; object-fit: contain; background: #fff; }
+        .book-details { padding: 15px; }
+        .book-actions a { margin-right: 5px; }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
-<!-- Navbar -->
-<nav class="bg-blue-600 text-white p-4 mb-6">
-    <div class="container mx-auto flex justify-between items-center">
-        <a href="#" class="text-xl font-semibold"><?= $translations[$language]['title'] ?></a>
-
-        <!-- Language Selection -->
-        <form method="get" class="flex items-center gap-4">
-            <select name="lang" onchange="this.form.submit()" class="p-2 border rounded bg-blue-600 text-white">
-                <option value="en" <?= $language == 'en' ? 'selected' : '' ?>>English</option>
-                <option value="ps" <?= $language == 'ps' ? 'selected' : '' ?>>Pashto</option>
-                <option value="fa" <?= $language == 'fa' ? 'selected' : '' ?>>Dari</option>
-            </select>
-        </form>
-
-        <!-- Navbar Links -->
-        <div class="flex gap-4">
-            <a href="books.php" class="text-white"><?= $translations[$language]['book'] ?></a>
-            <a href="logout.php" class="text-white"><?= $translations[$language]['logout'] ?></a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#"><?php echo getLocalizedText('books', $lang, $translations); ?></a>
+    <div class="ml-auto">
+        <a href="?lang=en" class="btn btn-outline-primary btn-sm">English</a>
+        <a href="?lang=ps" class="btn btn-outline-primary btn-sm">پښتو</a>
+        <a href="?lang=fa" class="btn btn-outline-primary btn-sm">دری</a>
+        <a href="downpaper.php" class="btn btn-info btn-sm"><?php echo getLocalizedText('papers', $lang, $translations); ?></a>
+        <a href="logout.php" class="btn btn-danger btn-sm"><?php echo getLocalizedText('logout', $lang, $translations); ?></a>
     </div>
 </nav>
 
-<!-- Content Section -->
-<div class="container mx-auto px-4">
-    <!-- Search & Filter -->
-    <form class="flex flex-wrap gap-4 mb-6" method="get">
-        <input type="text" name="search" placeholder="<?= $translations[$language]['search_placeholder'] ?>"
-               value="<?= htmlspecialchars($search) ?>"
-               class="flex-1 min-w-[200px] p-2 border rounded">
-
-        <select name="type" class="p-2 border rounded min-w-[150px]">
-            <option value=""><?= $translations[$language]['all_types'] ?></option>
-            <option value="Thesis" <?= $type == 'Thesis' ? 'selected' : '' ?>><?= $translations[$language]['thesis'] ?></option>
-            <option value="Dissertation" <?= $type == 'Dissertation' ? 'selected' : '' ?>><?= $translations[$language]['dissertation'] ?></option>
-            <option value="Journal" <?= $type == 'Journal' ? 'selected' : '' ?>><?= $translations[$language]['journal'] ?></option>
-            <option value="Other" <?= $type == 'Other' ? 'selected' : '' ?>><?= $translations[$language]['other'] ?></option>
-        </select>
-
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded"><?= $translations[$language]['search'] ?></button>
+<div class="container mt-4">
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>" class="form-control" placeholder="<?php echo getLocalizedText('search_placeholder', $lang, $translations); ?>">
+            <div class="input-group-append">
+                <button class="btn btn-primary"><?php echo getLocalizedText('search_button', $lang, $translations); ?></button>
+            </div>
+        </div>
     </form>
 
-    <!-- Paper Cards -->
-    <?php if ($result->num_rows > 0): ?>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <div class="bg-white p-4 mb-6 rounded shadow border">
-                <div class="font-bold text-lg mb-2">
-                    <?= htmlspecialchars($row['title']) ?>
-                    <span class="ml-2 bg-gray-300 text-gray-700 px-2 py-1 rounded text-sm"><?= htmlspecialchars($row['type']) ?></span>
-                </div>
-                <div class="text-sm text-gray-600 mb-2">
-                    <?= $translations[$language]['university'] ?>: <?= htmlspecialchars($row['university']) ?> |
-                    <?= $translations[$language]['author'] ?>: <?= htmlspecialchars($row['author_name']) ?> |
-                    <?= $translations[$language]['guider'] ?>: <?= htmlspecialchars($row['guider']) ?> |
-                    <?= $translations[$language]['department'] ?>: <?= htmlspecialchars($row['department']) ?> |
-                    <?= $translations[$language]['section'] ?>: <?= htmlspecialchars($row['section']) ?> |
-                    <?= $translations[$language]['date'] ?>: <?= htmlspecialchars($row['publication_date']) ?>
-                </div>
-                <div class="text-gray-700 line-clamp-3">
-                    <?= nl2br(htmlspecialchars($row['description'])) ?>
-                </div>
-                <div class="mt-3 space-x-2">
-                    <!-- Read and Download buttons -->
-                    <a href="paper/<?= htmlspecialchars($row['pdf']) ?>" target="_blank"
-                       class="bg-blue-600 text-white px-4 py-1 rounded text-sm"><?= $translations[$language]['read'] ?></a>
-                    <a href="paper/<?= htmlspecialchars($row['pdf']) ?>" download
-                       class="bg-gray-700 text-white px-4 py-1 rounded text-sm"><?= $translations[$language]['download'] ?></a>
+    <div class="row">
+    <?php if ($result->num_rows > 0): while ($row = $result->fetch_assoc()): ?>
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="book-card">
+                <img src="uploads/<?php echo $row['cover_image']; ?>" alt="Cover" onerror="this.src='uploads/default.jpg'">
+                <div class="book-details">
+                    <h5 class="text-primary"><?php echo $row['book_name']; ?></h5>
+                    <p><?php echo getLocalizedText('author_name', $lang, $translations); ?>: <?php echo $row['author_name']; ?></p>
+                    <p><?php echo getLocalizedText('genre', $lang, $translations); ?>: <?php echo $row['genre']; ?></p>
+                    <div class="book-actions">
+                        <a href="?download=<?php echo $row['pdf']; ?>" class="btn btn-success btn-sm"><?php echo getLocalizedText('download_pdf', $lang, $translations); ?></a>
+                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal<?php echo $row['book_id']; ?>"><?php echo getLocalizedText('view_details', $lang, $translations); ?></button>
+                    </div>
                 </div>
             </div>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p class="text-red-500"><?= $translations[$language]['no_results'] ?></p>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal<?php echo $row['book_id']; ?>">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5><?php echo $row['book_name']; ?></h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="uploads/<?php echo $row['cover_image']; ?>" class="w-100 mb-3" alt="Cover" onerror="this.src='uploads/default.jpg'">
+                        <p><strong><?php echo getLocalizedText('author_name', $lang, $translations); ?>:</strong> <?php echo $row['author_name']; ?></p>
+                        <p><strong><?php echo getLocalizedText('isbn_number', $lang, $translations); ?>:</strong> <?php echo $row['isbn_number']; ?></p>
+                        <p><strong><?php echo getLocalizedText('publication_date', $lang, $translations); ?>:</strong> <?php echo $row['publication_date']; ?></p>
+                        <p><strong><?php echo getLocalizedText('publisher', $lang, $translations); ?>:</strong> <?php echo $row['publisher']; ?></p>
+                        <p><strong><?php echo getLocalizedText('description', $lang, $translations); ?>:</strong> <?php echo $row['description']; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endwhile; else: ?>
+        <p class="text-center w-100"><?php echo getLocalizedText('no_books_found', $lang, $translations); ?></p>
     <?php endif; ?>
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -140,24 +140,33 @@ $result = $conn->query($sql);
         $isbn_number = $row['isbn_number'];
         $genre = $row['genre'];
         $cover_image = $row['cover_image'];
-        $pdf = $row['pdf']; // PDF download link
+        $pdf = $row['pdf'];
         $publication_date = $row['publication_date'];
         $publisher = $row['publisher'];
         $type = isset($row['type']) ? $row['type'] : '';
         $type_key = strtolower($type);
 
         // Build image path (handle spaces and special chars)
-        $img_src = !empty($cover_image) ? 'uploads/' . rawurlencode($cover_image) : 'uploads/default-cover.jpg';
+        $img_src = (!empty($cover_image) && file_exists(__DIR__ . '/uploads/' . $cover_image))
+          ? 'uploads/' . rawurlencode($cover_image)
+          : 'uploads/default-cover.jpg';
     ?>
     <!-- Book Card Start -->
     <div class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden border border-gray-100">
       <img 
-        src="<?php echo !empty($cover_image) ? 'uploads/' . rawurlencode($cover_image) : 'uploads/default-cover.jpg'; ?>" 
+        src="<?php echo $img_src; ?>" 
         alt="Cover"
         class="w-11/12 mx-auto h-64 sm:h-72 object-contain bg-white rounded-t-xl mt-4 mb-2 transition-all duration-300"
         onerror="this.onerror=null;this.src='uploads/default-cover.jpg';" 
       />
       <div class="p-4 flex-1 flex flex-col">
+        <?php if (!empty($type)): ?>
+          <div class="flex justify-center mb-2">
+            <span class="bg-blue-600 text-white text-xl font-extrabold px-6 py-2 rounded-full shadow-lg uppercase tracking-wide">
+              <?php echo htmlspecialchars($type); ?>
+            </span>
+          </div>
+        <?php endif; ?>
         <h2 class="text-lg font-bold mb-2 text-blue-800 break-words leading-snug">
           <?php echo htmlspecialchars($book_name); ?>
         </h2>
@@ -191,12 +200,6 @@ $result = $conn->query($sql);
              class="text-sm text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 text-center transition">
              <?php echo $translations['download_button']; ?>
           </a>
-          <!-- Uncomment for read button
-          <a href="<?php echo htmlspecialchars($pdf); ?>" target="_blank"
-             class="text-sm text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 text-center transition">
-             <?php echo $translations['read_button']; ?>
-          </a>
-          -->
         </div>
       </div>
     </div>
