@@ -12,7 +12,6 @@ include 'connection.php';
 // Localization function
 function getLocalizedText($key, $lang) {
     $translations = [
-
     'en' => [
         'book_name' => 'Book Name',
         'author_name' => 'Author Name',
@@ -35,7 +34,10 @@ function getLocalizedText($key, $lang) {
         'english' => 'English',
         'pashto' => 'Pashto',
         'dari' => 'Dari',
-        'close' => 'Close'
+        'close' => 'Close',
+        'type' => 'Type',
+        'all_types' => 'All Types',
+        'filter' => 'Filter'
     ],
     'ps' => [
         'book_name' => 'د کتاب نوم',
@@ -59,7 +61,10 @@ function getLocalizedText($key, $lang) {
         'english' => 'انګلیسي',
         'pashto' => 'پښتو',
         'dari' => 'دری',
-        'close' => 'بند'
+        'close' => 'بند',
+        'type' => 'ډول',
+        'all_types' => 'ټول ډولونه',
+        'filter' => 'فلټر'
     ],
     'fa' => [
         'book_name' => 'نام کتاب',
@@ -83,7 +88,10 @@ function getLocalizedText($key, $lang) {
         'english' => 'انگلیسی',
         'pashto' => 'پشتو',
         'dari' => 'دری',
-        'close' => 'بستن'
+        'close' => 'بستن',
+        'type' => 'نوع',
+        'all_types' => 'همه نوع‌ها',
+        'filter' => 'فیلتر'
     ]
 ];
  // same as your provided translations
@@ -119,11 +127,24 @@ if (isset($_GET['download'])) {
 }
 
 $search_query = $_GET['search'] ?? '';
-$sql = "SELECT * FROM books";
+$filter_genre = $_GET['genre'] ?? '';
+$sql = "SELECT * FROM books WHERE 1";
 if (!empty($search_query)) {
-    $sql .= " WHERE book_name LIKE '%$search_query%' OR isbn_number LIKE '%$search_query%'";
+    $sql .= " AND (book_name LIKE '%$search_query%' OR isbn_number LIKE '%$search_query%')";
+}
+if (!empty($filter_genre)) {
+    $sql .= " AND genre = '" . $conn->real_escape_string($filter_genre) . "'";
 }
 $result = $conn->query($sql);
+
+// Get all unique genres for the filter dropdown
+$genre_options = [];
+$genre_sql = "SELECT DISTINCT genre FROM books WHERE genre IS NOT NULL AND genre != '' ORDER BY genre ASC";
+$genre_result = $conn->query($genre_sql);
+while ($row_genre = $genre_result->fetch_assoc()) {
+    $genre_options[] = $row_genre['genre'];
+}
+$filter_type = $_GET['genre'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -134,20 +155,62 @@ $result = $conn->query($sql);
     <title>View Books</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+            font-size: 0.87rem;
+            background: #f4f6fa;
+        }
         .container-box {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px 18px;
+            border-radius: 12px;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.10);
         }
         .card-title {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #234078;
+        }
+        .card-text {
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        .btn, .modal-title, .modal-body, .modal-footer {
+            font-size: 0.91rem;
+        }
+        .btn-success {
+            background: #2563eb;
+            border: none;
+        }
+        .btn-success:hover {
+            background: #1d4ed8;
+        }
+        .card-img-top {
+            border-radius: 12px 12px 0 0;
+            background: #f8fafc;
+        }
+        .navbar, .navbar-brand {
+            font-size: 1rem;
         }
         @media (max-width: 576px) {
             .card-title {
                 white-space: normal;
+            }
+            .container-box {
+                padding: 10px 4px;
             }
         }
     </style>
@@ -182,6 +245,14 @@ $result = $conn->query($sql);
     <form method="GET" action="" class="mb-4">
         <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
+            <select name="type" class="custom-select ml-2" style="max-width: 200px;">
+                <option value=""><?php echo getLocalizedText('type', $lang) ?? 'All Types'; ?></option>
+                <?php foreach ($type_options as $type): ?>
+                    <option value="<?php echo htmlspecialchars($type); ?>" <?php if ($filter_type == $type) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($type); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit"><?php echo getLocalizedText('search_button', $lang); ?></button>
             </div>
@@ -196,12 +267,27 @@ $result = $conn->query($sql);
                         <img src="<?php echo $row['cover_image']; ?>" class="card-img-top img-fluid" alt="Book Cover" style="height: 250px; object-fit: contain;">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><?php echo htmlspecialchars($row['book_name']); ?></h5>
-                            <p class="card-text text-muted mb-1"><strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>
-                            <p class="card-text text-muted mb-2"><strong><?php echo getLocalizedText('genre', $lang); ?>:</strong> <?php echo htmlspecialchars($row['genre']); ?></p>
+                            <p class="card-text text-muted mb-1">
+                                <strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong>
+                                <?php echo htmlspecialchars($row['author_name']); ?>
+                            </p>
+                            <p class="card-text text-muted mb-1">
+                                <strong><?php echo getLocalizedText('genre', $lang); ?>:</strong>
+                                <?php echo htmlspecialchars($row['genre']); ?>
+                            </p>
+                            <p class="card-text text-muted mb-1">
+                                <strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong>
+                                <?php echo htmlspecialchars($row['isbn_number']); ?>
+                            </p>
+                            <p class="card-text text-muted mb-1">
+                                <strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong>
+                                <?php echo htmlspecialchars($row['publication_date']); ?>
+                            </p>
+                            <p class="card-text text-muted mb-2">
+                                <strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong>
+                                <?php echo htmlspecialchars($row['publisher']); ?>
+                            </p>
                             <div class="mt-auto">
-                                <button type="button" class="btn btn-info btn-sm mb-2 w-100" data-toggle="modal" data-target="#bookModal<?php echo $row['book_id']; ?>">
-                                    <?php echo getLocalizedText('view_details', $lang); ?>
-                                </button>
                                 <a href="?download=<?php echo $row['pdf']; ?>" class="btn btn-success btn-sm w-100"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
                             </div>
                         </div>
@@ -239,6 +325,7 @@ $result = $conn->query($sql);
         <p class="text-center"><?php echo getLocalizedText('no_books_found', $lang); ?></p>
     <?php endif; ?>
 </div>
+<?php include('back-to-top.html'); ?>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
