@@ -245,11 +245,11 @@ $filter_type = $_GET['genre'] ?? '';
     <form method="GET" action="" class="mb-4">
         <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
-            <select name="type" class="custom-select ml-2" style="max-width: 200px;">
-                <option value=""><?php echo getLocalizedText('type', $lang) ?? 'All Types'; ?></option>
-                <?php foreach ($type_options as $type): ?>
-                    <option value="<?php echo htmlspecialchars($type); ?>" <?php if ($filter_type == $type) echo 'selected'; ?>>
-                        <?php echo htmlspecialchars($type); ?>
+            <select name="genre" class="custom-select ml-2" style="max-width: 200px;">
+                <option value=""><?php echo getLocalizedText('genre', $lang) ?? 'All Genres'; ?></option>
+                <?php foreach ($genre_options as $genre): ?>
+                    <option value="<?php echo htmlspecialchars($genre); ?>" <?php if ($filter_genre == $genre) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($genre); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
