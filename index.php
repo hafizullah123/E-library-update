@@ -5,7 +5,7 @@ $lang = $_GET['lang'] ?? 'en';
 
 $texts = [
   'en' => [
-    'title' => 'International University E-Library',
+    'title' => ' Kabul Education University E-Library',
     'site_title' => 'Kabul Education University E-Library',
     'home' => 'Home',
     'services' => 'Services',
@@ -209,8 +209,6 @@ $t = $texts[$lang];
   <a href="?lang=fa" class="px-2 py-1 bg-blue-700 text-white rounded"><?= $t['lang_fa'] ?></a>
   <a href="?lang=en" class="px-2 py-1 bg-blue-700 text-white rounded"><?= $t['lang_en'] ?></a>
 </div>
-
-
 <!-- Navbar -->
 <header class="bg-blue-800 text-white shadow">
   <div class="container mx-auto p-4">

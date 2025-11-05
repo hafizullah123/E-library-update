@@ -110,16 +110,17 @@ if (isset($_GET['lang'])) {
 }
 
 if (isset($_GET['download'])) {
-    $file = $_GET['download'];
-    if (file_exists($file)) {
+    $file = basename($_GET['download']); // Prevent directory traversal
+    $filepath = 'uploads/' . $file;
+    if (file_exists($filepath)) {
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        readfile($file);
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
         exit;
     } else {
         echo "File not found.";
@@ -145,20 +146,33 @@ while ($row_genre = $genre_result->fetch_assoc()) {
     $genre_options[] = $row_genre['genre'];
 }
 $filter_type = $_GET['genre'] ?? '';
+
+function isImage($filename) {
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    return in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp']);
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>" <?php echo ($lang == 'ps' || $lang == 'fa') ? 'dir="rtl"' : ''; ?>>
+<html lang="<?php echo $lang; ?>" <?php echo ($lang == 'ps' || $lang == 'fa') ? 'dir="rtl"' : 'dir="ltr"'; ?>>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Books</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
             font-size: 0.87rem;
             background: #f4f6fa;
+            <?php if ($lang == 'ps' || $lang == 'fa') : ?>
+            direction: rtl;
+            text-align: right;
+            <?php else: ?>
+            direction: ltr;
+            text-align: left;
+            <?php endif; ?>
         }
         .container-box {
             background-color: #fff;
@@ -206,11 +220,64 @@ $filter_type = $_GET['genre'] ?? '';
             font-size: 1rem;
         }
         @media (max-width: 576px) {
-            .card-title {
-                white-space: normal;
-            }
             .container-box {
-                padding: 10px 4px;
+                padding: 6px 2px !important;
+                margin-top: 10px !important;
+            }
+            .list-group-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 14px 8px !important;
+            }
+            .list-group-item > .d-flex {
+                min-width: 100% !important;
+                margin-bottom: 10px !important;
+                justify-content: flex-start !important;
+            }
+            .img-thumbnail {
+                width: 90px !important;
+                height: 120px !important;
+                margin-right: 0 !important;
+                margin-bottom: 10px !important;
+            }
+            .flex-grow-1 {
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            .ml-auto {
+                margin-left: 0 !important;
+                margin-top: 10px !important;
+                width: 100%;
+                justify-content: flex-end !important;
+                display: flex !important;
+            }
+            .btn-lg {
+                width: 100% !important;
+                font-size: 1rem !important;
+                padding: 10px 0 !important;
+            }
+            h5.mb-2 {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .mb-2, .mb-1 {
+                font-size: 0.97rem !important;
+            }
+            /* Each feature in one line on mobile */
+            .book-feature-row {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                margin-bottom: 6px !important;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .book-feature-row span,
+            .book-feature-row .badge {
+                margin-bottom: 0 !important;
+                margin-right: 0 !important;
+                margin-left: 0 !important;
             }
         }
     </style>
@@ -240,12 +307,35 @@ $filter_type = $_GET['genre'] ?? '';
 </nav>
 
 <div class="container container-box">
-    <h2 class="text-center mb-4"><?php echo getLocalizedText('books', $lang); ?></h2>
+    <h2 class="text-center mb-4" style="font-size:2rem; font-weight:700; color:#234078; letter-spacing:1px;">
+        <i class="fas fa-book-open mr-2 text-primary"></i>
+        <?php echo getLocalizedText('books', $lang); ?>
+    </h2>
+
+    <?php
+    // --- Sorting logic for SQL ---
+    $sort = $_GET['sort'] ?? '';
+    $order_by = "ORDER BY book_name ASC";
+    if ($sort == 'name_desc') $order_by = "ORDER BY book_name DESC";
+    elseif ($sort == 'date_new') $order_by = "ORDER BY publication_date DESC";
+    elseif ($sort == 'date_old') $order_by = "ORDER BY publication_date ASC";
+
+    // Re-run the query with sorting
+    $sql = "SELECT * FROM books WHERE 1";
+    if (!empty($search_query)) {
+        $sql .= " AND (book_name LIKE '%$search_query%' OR isbn_number LIKE '%$search_query%')";
+    }
+    if (!empty($filter_genre)) {
+        $sql .= " AND genre = '" . $conn->real_escape_string($filter_genre) . "'";
+    }
+    $sql .= " $order_by";
+    $result = $conn->query($sql);
+    ?>
 
     <form method="GET" action="" class="mb-4">
         <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
-            <select name="genre" class="custom-select ml-2" style="max-width: 200px;">
+            <input type="text" name="search" class="form-control search-input" style="font-size:1rem;" placeholder="<?php echo getLocalizedText('search_placeholder', $lang); ?>" value="<?php echo htmlspecialchars($search_query); ?>">
+            <select name="genre" class="custom-select ml-2" style="max-width: 200px; font-size:1rem;">
                 <option value=""><?php echo getLocalizedText('genre', $lang) ?? 'All Genres'; ?></option>
                 <?php foreach ($genre_options as $genre): ?>
                     <option value="<?php echo htmlspecialchars($genre); ?>" <?php if ($filter_genre == $genre) echo 'selected'; ?>>
@@ -254,75 +344,70 @@ $filter_type = $_GET['genre'] ?? '';
                 <?php endforeach; ?>
             </select>
             <div class="input-group-append">
-                <button class="btn btn-primary" type="submit"><?php echo getLocalizedText('search_button', $lang); ?></button>
+                <button class="btn btn-primary search-btn" style="font-size:1rem;" type="submit">
+                    <i class="fas fa-search mr-1"></i><?php echo getLocalizedText('search_button', $lang); ?>
+                </button>
             </div>
         </div>
     </form>
 
     <?php if ($result->num_rows > 0) : ?>
-        <div class="row">
+        <div class="list-group">
             <?php while ($row = $result->fetch_assoc()) : ?>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex align-items-stretch">
-                    <div class="card w-100 shadow-sm">
-                        <img src="<?php echo $row['cover_image']; ?>" class="card-img-top img-fluid" alt="Book Cover" style="height: 250px; object-fit: contain;">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><?php echo htmlspecialchars($row['book_name']); ?></h5>
-                            <p class="card-text text-muted mb-1">
-                                <strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong>
-                                <?php echo htmlspecialchars($row['author_name']); ?>
-                            </p>
-                            <p class="card-text text-muted mb-1">
-                                <strong><?php echo getLocalizedText('genre', $lang); ?>:</strong>
-                                <?php echo htmlspecialchars($row['genre']); ?>
-                            </p>
-                            <p class="card-text text-muted mb-1">
-                                <strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong>
-                                <?php echo htmlspecialchars($row['isbn_number']); ?>
-                            </p>
-                            <p class="card-text text-muted mb-1">
-                                <strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong>
-                                <?php echo htmlspecialchars($row['publication_date']); ?>
-                            </p>
-                            <p class="card-text text-muted mb-2">
-                                <strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong>
-                                <?php echo htmlspecialchars($row['publisher']); ?>
-                            </p>
-                            <div class="mt-auto">
-                                <a href="?download=<?php echo $row['pdf']; ?>" class="btn btn-success btn-sm w-100"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
-                            </div>
+                <?php
+                    $cover = $row['cover_image'];
+                    if (strpos($cover, 'uploads/') === 0) {
+                        $img_src = $cover;
+                    } else {
+                        $img_src = 'uploads/' . $cover;
+                    }
+                ?>
+                <div class="list-group-item mb-4 py-4 px-3 d-flex align-items-center rounded shadow-sm flex-column flex-sm-row" style="background:#f8fafc; border:1px solid #e3e8f0;">
+                    <div class="d-flex align-items-center justify-content-center mb-3 mb-sm-0" style="min-width:180px;">
+                        <img src="<?php echo htmlspecialchars($img_src); ?>"
+                             alt="Book Cover"
+                             class="img-thumbnail mr-0 mr-sm-4"
+                             style="width: 180px; height: 250px; object-fit: cover; border-radius:12px; background:#f8fafc; box-shadow:0 2px 8px rgba(44,62,80,0.08);">
+                    </div>
+                    <div class="flex-grow-1 w-100" style="margin-<?php echo ($lang == 'ps' || $lang == 'fa') ? 'right' : 'left'; ?>:32px;">
+                        <h5 class="mb-2" style="font-size:1.35rem; color:#234078; font-weight:700; letter-spacing:0.5px;">
+                            <?php echo htmlspecialchars($row['book_name']); ?>
+                        </h5>
+                        <div class="book-feature-row mb-2" style="font-size:1.08rem;">
+                            <span class="badge badge-primary mr-2 mb-1" style="font-size:0.98rem;">
+                                <i class="fas fa-user mr-1"></i><?php echo getLocalizedText('author_name', $lang); ?>
+                            </span>
+                            <span class="text-secondary mr-3"><?php echo htmlspecialchars($row['author_name']); ?></span>
+                        </div>
+                        <div class="book-feature-row mb-2" style="font-size:1.03rem;">
+                            <span class="badge badge-secondary mr-2 mb-1" style="font-size:0.98rem;">
+                                <i class="fas fa-barcode mr-1"></i><?php echo getLocalizedText('isbn_number', $lang); ?>
+                            </span>
+                            <span class="text-secondary mr-3"><?php echo htmlspecialchars($row['isbn_number']); ?></span>
+                        </div>
+                        <div class="book-feature-row mb-2" style="font-size:1.03rem;">
+                            <span class="badge badge-warning mr-2 mb-1" style="font-size:0.98rem;">
+                                <i class="fas fa-calendar-alt mr-1"></i><?php echo getLocalizedText('publication_date', $lang); ?>
+                            </span>
+                            <span class="text-secondary"><?php echo htmlspecialchars($row['publication_date']); ?></span>
+                        </div>
+                        <div class="book-feature-row mb-2" style="font-size:1.03rem;">
+                            <span class="badge badge-success mr-2 mb-1" style="font-size:0.98rem;">
+                                <i class="fas fa-building mr-1"></i><?php echo getLocalizedText('publisher', $lang); ?>
+                            </span>
+                            <span class="text-secondary"><?php echo htmlspecialchars($row['publisher']); ?></span>
                         </div>
                     </div>
-                </div>
-
-                <!-- Modal -->
-                <div class="modal fade" id="bookModal<?php echo $row['book_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel<?php echo $row['book_id']; ?>" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title"><?php echo htmlspecialchars($row['book_name']); ?></h5>
-                                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <img src="<?php echo $row['cover_image']; ?>" class="img-fluid mb-3" alt="Cover Image" style="max-height: 200px; object-fit: contain;">
-                                <p><strong><?php echo getLocalizedText('author_name', $lang); ?>:</strong> <?php echo htmlspecialchars($row['author_name']); ?></p>
-                                <p><strong><?php echo getLocalizedText('isbn_number', $lang); ?>:</strong> <?php echo htmlspecialchars($row['isbn_number']); ?></p>
-                                <p><strong><?php echo getLocalizedText('genre', $lang); ?>:</strong> <?php echo htmlspecialchars($row['genre']); ?></p>
-                                <p><strong><?php echo getLocalizedText('publication_date', $lang); ?>:</strong> <?php echo htmlspecialchars($row['publication_date']); ?></p>
-                                <p><strong><?php echo getLocalizedText('publisher', $lang); ?>:</strong> <?php echo htmlspecialchars($row['publisher']); ?></p>
-                                <p><strong><?php echo getLocalizedText('description', $lang); ?>:</strong> <?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo getLocalizedText('close', $lang); ?></button>
-                                <a href="?download=<?php echo $row['pdf']; ?>" class="btn btn-primary"><?php echo getLocalizedText('download_pdf', $lang); ?></a>
-                            </div>
-                        </div>
+                    <div class="ml-auto d-flex flex-column align-items-center mt-3 mt-sm-0">
+                        <a href="?download=<?php echo urlencode(basename($row['pdf'])); ?>" class="btn btn-success btn-lg mb-2" style="min-width:140px;">
+                            <i class="fas fa-download mr-2"></i><?php echo getLocalizedText('download_pdf', $lang); ?>
+                        </a>
                     </div>
                 </div>
-
             <?php endwhile; ?>
         </div>
     <?php else: ?>
-        <p class="text-center"><?php echo getLocalizedText('no_books_found', $lang); ?></p>
+        <p class="text-center text-muted" style="font-size:1.1rem;"><?php echo getLocalizedText('no_books_found', $lang); ?></p>
     <?php endif; ?>
 </div>
 <?php include('back-to-top.html'); ?>
