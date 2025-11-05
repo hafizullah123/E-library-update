@@ -9,6 +9,7 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['en','ps','fa'])) {
 }
 $lang = $_SESSION['lang'];
 
+// Localization function
 function getLocalizedText($key, $lang){
     $translations = [
         'en' => [
@@ -28,15 +29,16 @@ function getLocalizedText($key, $lang){
             'pdf'=>'PDF File',
             'submit'=>'Submit Paper',
             'language'=>'Language',
+            'success'=>'Paper registered successfully!',
+            'error_upload'=>'Failed to upload file!',
         ],
         'ps'=>[
             'home'=>'کور',
             'book'=>'کتاب',
-
             'register_paper'=>'مقاله ثبت کړئ',
             'logout'=>'وتل',
-            'university'=>' پوهنتون نوم',
-            'paper_title'=>'د مقالی نوم په انکلیسی',
+            'university'=>'پوهنتون',
+            'paper_title'=>'د مقالې نوم په انګلیسي',
             'paper_title_ps'=>'د مقالې نوم (پښتو)',
             'paper_title_fa'=>'د مقالې نوم (دري)',
             'author_name'=>'د لیکوال نوم',
@@ -48,26 +50,29 @@ function getLocalizedText($key, $lang){
             'pdf'=>'PDF فایل',
             'submit'=>'مقاله ثبت کړئ',
             'language'=>'ژبه',
+            'success'=>'مقاله په بریالیتوب سره ثبت شوه!',
+            'error_upload'=>'فایل اپلوډ نشو کړای!',
         ],
         'fa'=>[
-                        'book'=>'کتاب',
-
             'home'=>'خانه',
+            'book'=>'کتاب',
             'register_paper'=>'ثبت مقاله',
             'logout'=>'خروج',
             'university'=>'نام پوهنتون',
-            'paper_title'=>'عنوان مقاله به انګلیسی',
+            'paper_title'=>'عنوان مقاله به انگلیسی',
             'paper_title_ps'=>'عنوان مقاله (پشتو)',
             'paper_title_fa'=>'عنوان مقاله (دری)',
             'author_name'=>'نام نویسنده',
             'publication_date'=>'تاریخ انتشار',
             'description'=>'توضیحات',
-            'guider'=>'استاد رهنما',
+            'guider'=>'استاد راهنما',
             'type'=>'نوعیت',
             'department'=>'دیپارتمنت',
             'pdf'=>'فایل PDF',
             'submit'=>'ثبت مقاله',
             'language'=>'زبان',
+            'success'=>'مقاله با موفقیت ثبت شد!',
+            'error_upload'=>'بارگذاری فایل موفقیت آمیز نبود!',
         ]
     ];
     return $translations[$lang][$key] ?? $key;
@@ -87,7 +92,7 @@ while($row = $deptQuery->fetch_assoc()){
     $departments[] = $row;
 }
 
-// Handle form
+// Handle form submission
 if($_SERVER['REQUEST_METHOD']==='POST'){
     $university = $_POST['university'] ?? '';
     $title = $_POST['title'] ?? '';
@@ -100,26 +105,43 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $type_id = $_POST['type_id'] ?? null;
     $department_id = $_POST['department_id'] ?? null;
 
+    // File upload handling
     $pdf = '';
-    if(isset($_FILES['pdf']) && $_FILES['pdf']['error']===UPLOAD_ERR_OK){
-        $pdf = time().'_'.basename($_FILES['pdf']['name']);
-        move_uploaded_file($_FILES['pdf']['tmp_name'],'uploads/'.$pdf);
+    $uploadDir = __DIR__ . '/paperpage/'; // ensure folder path
+
+    // Create folder if not exists
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
 
-    $stmt = $conn->prepare("INSERT INTO research_papers 
-        (university, title, title_pashto, title_dari, author_name, publication_date, description, pdf, guider, type_id, department_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssiii",
-        $university, $title, $title_ps, $title_fa, $author_name, 
-        $publication_date, $description, $pdf, $guider, $type_id, $department_id
-    );
+    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
+        // Sanitize filename
+        $filename = time() . '_' . preg_replace('/[^\w.-]/u', '_', $_FILES['pdf']['name']);
+        $targetFile = $uploadDir . $filename;
 
-    if($stmt->execute()){
-        $success = true;
-    } else {
-        $error = $stmt->error;
+        if (move_uploaded_file($_FILES['pdf']['tmp_name'], $targetFile)) {
+            $pdf = $filename; // store filename in DB
+        } else {
+            $error = getLocalizedText('error_upload', $lang);
+        }
     }
-    $stmt->close();
+
+    if(empty($error)){
+        $stmt = $conn->prepare("INSERT INTO research_papers 
+            (university, title, title_pashto, title_dari, author_name, publication_date, description, pdf, guider, type_id, department_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssiii",
+            $university, $title, $title_ps, $title_fa, $author_name, 
+            $publication_date, $description, $pdf, $guider, $type_id, $department_id
+        );
+
+        if($stmt->execute()){
+            $success = getLocalizedText('success',$lang);
+        } else {
+            $error = $stmt->error;
+        }
+        $stmt->close();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -128,60 +150,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     <meta charset="UTF-8">
     <title><?= getLocalizedText('register_paper',$lang) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script>
-        // Simple JS toggle for responsive menu
-        function toggleMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-    </script>
 </head>
 <body class="bg-gray-100 min-h-screen">
-
-<!-- Responsive Navbar -->
-<nav class="bg-white shadow sticky top-0 z-10">
-    <div class="max-w-6xl mx-auto px-4">
-        <div class="flex justify-between items-center py-3">
-            <!-- Logo / Title -->
-            <div class="flex items-center space-x-2">
-                <a href="index.php" class="text-blue-700 font-bold text-xl"><?= getLocalizedText('home',$lang) ?></a>
-                                <a href="downbook-p.php" class="text-blue-700 font-bold text-xl"><?= getLocalizedText('book',$lang) ?></a>
-                
-            </div>
-
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-4 items-center">
-                <a href="register_paper.php" class="text-blue-600 font-semibold"><?= getLocalizedText('register_paper',$lang) ?></a>
-                <div class="flex space-x-2">
-                    <a href="?lang=en" class="px-3 py-1 rounded-lg <?= ($lang=='en')?'bg-blue-600 text-white':'text-blue-700' ?>">EN</a>
-                    <a href="?lang=ps" class="px-3 py-1 rounded-lg <?= ($lang=='ps')?'bg-blue-600 text-white':'text-blue-700' ?>">PS</a>
-                    <a href="?lang=fa" class="px-3 py-1 rounded-lg <?= ($lang=='fa')?'bg-blue-600 text-white':'text-blue-700' ?>">FA</a>
-                </div>
-                <a href="logout.php" class="text-red-500 px-3 py-1 rounded-lg"><?= getLocalizedText('logout',$lang) ?></a>
-            </div>
-
-            <!-- Hamburger Icon for Mobile -->
-            <div class="md:hidden">
-                <button onclick="toggleMenu()" class="text-blue-600 focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16m-7 6h7"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden flex flex-col space-y-2 pb-3">
-            <a href="register_paper.php" class="block text-blue-600 font-semibold"><?= getLocalizedText('register_paper',$lang) ?></a>
-            <div class="flex space-x-2 justify-center">
-                <a href="?lang=en" class="px-3 py-1 rounded-lg <?= ($lang=='en')?'bg-blue-600 text-white':'text-blue-700' ?>">EN</a>
-                <a href="?lang=ps" class="px-3 py-1 rounded-lg <?= ($lang=='ps')?'bg-blue-600 text-white':'text-blue-700' ?>">PS</a>
-                <a href="?lang=fa" class="px-3 py-1 rounded-lg <?= ($lang=='fa')?'bg-blue-600 text-white':'text-blue-700' ?>">FA</a>
-            </div>
-            <a href="logout.php" class="block text-red-500 text-center"><?= getLocalizedText('logout',$lang) ?></a>
-        </div>
-    </div>
-</nav>
 
 <!-- Form Section -->
 <div class="flex justify-center items-center py-10 px-4">
@@ -189,7 +159,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         <h2 class="text-3xl font-bold text-center text-blue-700 mb-6"><?= getLocalizedText('register_paper',$lang) ?></h2>
 
         <?php if(!empty($success)): ?>
-            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded text-center">✅ Paper registered successfully!</div>
+            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded text-center">✅ <?= $success ?></div>
         <?php elseif(!empty($error)): ?>
             <div class="mb-4 p-3 bg-red-100 text-red-800 rounded text-center">❌ <?= $error ?></div>
         <?php endif; ?>
